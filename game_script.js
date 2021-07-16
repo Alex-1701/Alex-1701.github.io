@@ -72,11 +72,22 @@ function showColor(color_number) {
 	console.log(example.innerText);
 }
 
+function test(event) {
+	console.log(event);
+}
+
 function userTurn(x, y, color) {
 	console.log('[' + x + ';' + y + '] cl:' + color);
 	table.data_object.grid[x][y] = 0; //Number(color);
 	console.log(table.data_object.grid);
+
+	table.changeColor(x, y, 0);
 }
+
+function enemyTurn() {
+
+}
+
 
 function main() {
 	// создать объект класса таблица таблица.
@@ -85,7 +96,7 @@ function main() {
 	// вставить табицу в страницу.
 	table.generateTable();
 
-	while (true) {
+	while (false) {
 		console.log('Ход игрока');
 		
 	}
@@ -94,6 +105,5 @@ function main() {
 	
 	//console.log(t.data_object);
 }
-
 
 main();
