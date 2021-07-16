@@ -23,6 +23,7 @@ td {
 div {
     border: 1px dashed red;
     margin: 5px;
+    padding: 5px;
 }
 
 header {
