@@ -1,6 +1,6 @@
 'use strict';
 
-//const { mainModule } = require("node:process");
+var table;
 
 function getGridObject() {
 	var object = {
@@ -72,16 +72,27 @@ function showColor(color_number) {
 	console.log(example.innerText);
 }
 
+function userTurn(x, y, color) {
+	console.log('[' + x + ';' + y + '] cl:' + color);
+	table.data_object.grid[x][y] = 0; //Number(color);
+	console.log(table.data_object.grid);
+}
+
 function main() {
 	// создать объект класса таблица таблица.
-	var t = new Table(getGridObject(), 'grid');
+	table = new Table(getGridObject(), 'grid');
 	
 	// вставить табицу в страницу.
-	t.generateTable();
+	table.generateTable();
+
+	while (true) {
+		console.log('Ход игрока');
+		
+	}
 
 	//build_select_panel();
 	
-	console.log(t.data_object);
+	//console.log(t.data_object);
 }
 
 

@@ -19,7 +19,14 @@ class Table {
 			var row = document.createElement('tr');
 			for (let j = 0; j < arr[i].length; j++) {
 				var cell = document.createElement('td');
-				cell.setAttribute('onclick', `console.log(${arr[i][j]})`);
+				cell.setAttribute('data-x', i);
+				cell.setAttribute('data-y', j);
+				cell.setAttribute('data-cl', arr[i][j]);
+
+				//cell.setAttribute('onclick', `console.log('[' + this.dataset.x + ';' + this.dataset.y + '] cl:' + this.dataset.cl)`);
+				//cell.setAttribute('onclick', 'userTurn(this.dataset.x, this.dataset.y, this.dataset.cl)');
+				cell.setAttribute('onclick', 'alert("lol")');
+
 				cell.setAttribute('onmouseover', "style.borderColor = 'red'; style.borderWidth = '2px'");
 				cell.setAttribute('onmouseout', `style.borderColor = 'black'; style.borderWidth = '2px'`);
 				cell.style.backgroundColor = COLORS[arr[i][j]];
@@ -28,5 +35,11 @@ class Table {
 			}
 			grid.appendChild(row);
 		}
+	}
+
+	changeColor(x, y, color) {
+		console.log('[' + x + ';' + y + '] cl:' + color);
+		data_object[x][y] = color;
+		console.log(this.data_object);
 	}
 }
