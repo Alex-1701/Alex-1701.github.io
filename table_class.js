@@ -23,10 +23,10 @@ class Table {
 				cell.setAttribute('data-y', j);
 				cell.setAttribute('data-cl', arr[i][j]);
 
-				cell.setAttribute('onclick', `console.log('[' + this.dataset.x + ';' + this.dataset.y + '] cl:' + this.dataset.cl)`);
+				//cell.setAttribute('onclick', `console.log('[' + this.dataset.x + ';' + this.dataset.y + '] cl:' + this.dataset.cl)`);
 				//cell.addEventListener('click', test);
 
-				//cell.setAttribute('onclick', 'userTurn(this.dataset.x, this.dataset.y, this.dataset.cl)');
+				cell.setAttribute('onclick', 'if(!playerAllowed) {console.log("Низя ходить")} else {userTurn(this.dataset.x, this.dataset.y, this.dataset.cl)}');
 				//cell.setAttribute('onclick', 'alert("lol")');
 
 				cell.setAttribute('onmouseover', "style.borderColor = 'red'; style.borderWidth = '2px'");
@@ -45,7 +45,7 @@ class Table {
 		//cell
 
 		console.log('[' + x + ';' + y + '] cl:' + color);
-		data_object.grid[x][y] = color;
+		this.data_object.grid[x][y] = color;
 		console.log(this.data_object);
 	}
 }

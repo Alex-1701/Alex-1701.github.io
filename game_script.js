@@ -1,6 +1,8 @@
 'use strict';
 
-var table;
+var table = new Table;
+var playerAllowed = false;
+var enemyAllowed = false;
 
 function getGridObject() {
 	var object = {
@@ -18,7 +20,7 @@ function getGridObject() {
 	return object;
 }
 
-// Цвета должня быть адаптивными к входящему объекту.
+// Цвета должны быть адаптивными к входящему объекту.
 var COLORS = {
 	0 : 'grey',
 	1 : 'rgb(255, 0, 0)', // red
@@ -28,6 +30,90 @@ var COLORS = {
 	5 : 'green',
 	6 : 'MediumVioletRed',
 }
+
+function showColor(color_number) {
+	var example = document.getElementById('example');
+	example.style.backgroundColor = COLORS[color_number];
+	console.log(example.innerText);
+}
+
+function test(event) {
+	console.log(event);
+}
+
+function userTurn(x, y, color) {
+	console.log('Действие игрока');
+
+	if (playerAllowed) {
+		enemyAllowed = false;
+		console.log('Ход игрока');
+		//console.log('[' + x + ';' + y + '] cl:' + color);
+		//table.data_object.grid[x][y] = 0; //Number(color);		
+		//console.log(table.data_object.grid);
+		
+		//table.changeColor(x, y, 0);
+
+		playerAllowed = false;
+		enemyAllowed = true;
+
+		console.log('Игрок походил');
+		enemyTurn();
+	}
+	else {
+		console.log('Игрок не может ходить');
+	}
+}
+
+function enemyTurn() {
+	if (enemyAllowed) {
+		playerAllowed = false;
+		console.log('Ход противника...');
+		console.log(playerAllowed);
+		sleep(1*1000);
+		console.log(playerAllowed);
+		console.log('Противник походил');
+
+		playerAllowed = true;
+		enemyAllowed = false;
+		console.log(playerAllowed);
+	}
+	else {
+		console.log('Противник не может ходить');
+	}
+}
+
+function sleep(ms) {
+	// Нужна асинхронность!
+	/*ms += new Date().getTime();
+	while (new Date() < ms){}*/
+	setInterval(() => {
+		autoSendMessages(f.id, groupListSendMessage); 
+	}, ms);
+} 
+
+function main() {
+	console.log('main');
+	// создать объект класса таблица таблица.
+	table = new Table(getGridObject(), 'grid');
+	
+	// вставить табицу в страницу.
+	table.generateTable();
+	
+	playerAllowed = true;
+
+	while (false) {
+		console.log('Ход игрока');
+		
+	}
+	
+	//build_select_panel();
+	
+	//console.log(t.data_object);
+}
+
+main();
+
+
 /*
 function generateGrid(object) {
 	var grid = document.getElementById('grid');
@@ -65,45 +151,3 @@ function build_select_panel() {
 	panel.appendChild(table);
 }
 */
-
-function showColor(color_number) {
-	var example = document.getElementById('example');
-	example.style.backgroundColor = COLORS[color_number];
-	console.log(example.innerText);
-}
-
-function test(event) {
-	console.log(event);
-}
-
-function userTurn(x, y, color) {
-	console.log('[' + x + ';' + y + '] cl:' + color);
-	table.data_object.grid[x][y] = 0; //Number(color);
-	console.log(table.data_object.grid);
-
-	table.changeColor(x, y, 0);
-}
-
-function enemyTurn() {
-
-}
-
-
-function main() {
-	// создать объект класса таблица таблица.
-	table = new Table(getGridObject(), 'grid');
-	
-	// вставить табицу в страницу.
-	table.generateTable();
-
-	while (false) {
-		console.log('Ход игрока');
-		
-	}
-
-	//build_select_panel();
-	
-	//console.log(t.data_object);
-}
-
-main();
