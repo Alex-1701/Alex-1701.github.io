@@ -57,6 +57,7 @@ function userTurn(x, y, color) {
 		enemyAllowed = true;
 
 		console.log('Игрок походил');
+		console.log('!!!' + ' ' + playerAllowed);
 		enemyTurn();
 	}
 	else {
@@ -86,9 +87,7 @@ function sleep(ms) {
 	// Нужна асинхронность!
 	/*ms += new Date().getTime();
 	while (new Date() < ms){}*/
-	setInterval(() => {
-		autoSendMessages(f.id, groupListSendMessage); 
-	}, ms);
+	setTimeout(() => console.log('f'), ms);
 } 
 
 function main() {
