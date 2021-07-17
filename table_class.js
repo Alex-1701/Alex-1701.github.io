@@ -42,7 +42,7 @@ class Table {
 	changeColor(x, y, color) {
 		var cell = document.getElementById(x + '/' + y);
 
-		cell
+		//cell
 
 		console.log('[' + x + ';' + y + '] cl:' + color);
 		data_object.grid[x][y] = color;
