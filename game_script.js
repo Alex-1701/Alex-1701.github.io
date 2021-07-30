@@ -1,20 +1,37 @@
 'use strict';
 
-var table = new Table;
-var playerAllowed = false;
-var enemyAllowed = false;
+var table = null;
 
 function getGridObject() {
+	// Функция должна отдавать готовую играбельную таблицу.
+	var myMatrix = 
+	[
+		[1, 1, 3, 4, 5, 4],
+		[1, 1, 0, 0, 2, 1],
+		[4, 3, 0, 0, 1, 3],
+		[2, 5, 0, 0, 4, 4],
+		[1, 3, 4, 3, 4, 4],
+	];
+
+	var randX = 10; 
+	var randY = 10;
+	var randMatrix = new Array(randX);
+	for (var i = 0; i < randX; i++) {
+		randMatrix[i] = new Array(randY);
+		for (var j = 0; j < randY; j++) {
+			randMatrix[i][j] = Math.floor(Math.random() * (7-1) + 1);
+		}
+	}
+
 	var object = {
-		player_position: [0, 0],
-		enemy_position: [5, 5],
-		grid : [
-			[1, 2, 3, 4, 5, 4],
-			[1, 3, 0, 0, 2, 1],
-			[4, 3, 0, 0, 4, 3],
-			[2, 5, 0, 0, 5, 1],
-			[1, 3, 4, 3, 2, 3],
-		]
+		// Матрица цветов клеток.
+		grid: myMatrix,
+		// Массив клеток принадлежащих игроку.
+		player_array: [[0, 0], [0, 1], [1, 0], [1, 1]],
+		player_color: 1,
+		// Массив клеток принадлежащих противнику.
+		enemy_array: [[4, 4], [3, 5], [3, 4], [4, 5]],
+		enemy_color: 2
 	};
 
 	return object;
@@ -42,45 +59,22 @@ function test(event) {
 }
 
 function userTurn(x, y, color) {
-	console.log('Действие игрока');
-
-	if (playerAllowed) {
-		enemyAllowed = false;
-		console.log('Ход игрока');
-		//console.log('[' + x + ';' + y + '] cl:' + color);
-		//table.data_object.grid[x][y] = 0; //Number(color);		
-		//console.log(table.data_object.grid);
-		
-		//table.changeColor(x, y, 0);
-
-		playerAllowed = false;
-		enemyAllowed = true;
-
+	console.log('Ход игрока');
+	//var finished = false;
+	if(table.changeAreaColor(x, y, 'player')) {
 		console.log('Игрок походил');
-		console.log('!!!' + ' ' + playerAllowed);
 		enemyTurn();
 	}
 	else {
-		console.log('Игрок не может ходить');
+		console.log('низя так ходить');
 	}
 }
 
 function enemyTurn() {
-	if (enemyAllowed) {
-		playerAllowed = false;
-		console.log('Ход противника...');
-		console.log(playerAllowed);
-		sleep(1*1000);
-		console.log(playerAllowed);
-		console.log('Противник походил');
-
-		playerAllowed = true;
-		enemyAllowed = false;
-		console.log(playerAllowed);
-	}
-	else {
-		console.log('Противник не может ходить');
-	}
+	console.log('Ход противника...');
+	//console.log(Enemy.turn(table.getTableData()));
+	//table.changeAreaColor(x, y, 'enemy');
+	console.log('Противник походил');
 }
 
 function sleep(ms) {
@@ -91,14 +85,11 @@ function sleep(ms) {
 } 
 
 function main() {
-	console.log('main');
-	// создать объект класса таблица таблица.
+	// Создаём объект класса таблица таблица.
 	table = new Table(getGridObject(), 'grid');
 	
-	// вставить табицу в страницу.
+	// Вставляем табицу в страницу.
 	table.generateTable();
-	
-	playerAllowed = true;
 
 	while (false) {
 		console.log('Ход игрока');

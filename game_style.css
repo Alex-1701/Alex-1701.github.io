@@ -12,12 +12,17 @@ table {
     height: 100%;*/
 	border: 1px solid black;
     background-color: white;
+    /*border-collapse: separate;*/
 }
 
 td {
 	width: 30px;
 	height: 30px;
 	border: 2px solid black;
+}
+
+td:hover {
+	border: 2px solid lightgray;
 }
 
 div {
@@ -43,6 +48,29 @@ main {
     justify-content: center;
     background-position: center;
 }
+
+.player {
+    border-color: greenyellow;
+}
+.player:hover {
+    border-color: grey;
+}
+
+.enemy {
+    border-color: lightseagreen;
+}
+.enemy:hover {
+    border-color: magenta;
+}
+
+.neutral {
+    border-color: grey;
+    background-color: grey;
+}
+.neutral:hover {
+    border-color: grey;
+}
+
 
 /*
 	table, th, td {
