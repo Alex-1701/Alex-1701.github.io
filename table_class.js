@@ -120,14 +120,31 @@ class Table {
 			if (result) {
 				// Получаем цвет ячейки на которую нажал игрок.
 				var new_color = this.grid[x][y];
-	
+				
 				// Цикл по массиву ячеек игрока.
 				this.player_area.forEach(cell => {
 					// Изменяем содержимое матрицы.
 					this.changeTableCellColor(cell[0], cell[1], new_color);
 					// Изменяем отображение матрицы в таблице.
 					this.grid[cell[0]][cell[1]] = new_color;
+					
+					// Если соседняя клетка нейтральная
+					this.player_area.forEach(element => {
+						if (element != cell) {
+							console.log('lol');
+						}
+					});
+					
+					/*
+					if () {
+
+					}
+					if (this.grid[cell[0] + 1][cell[1]] == new_color && this.player_area[cell[0] + 1][cell[1]] == undefined){
+						
+					}*/
 				});
+
+
 			}
 	
 		} else if (turn == 'enemy') {

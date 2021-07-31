@@ -4,10 +4,17 @@ var table = null;
 
 function getGridObject() {
 	// Функция должна отдавать готовую играбельную таблицу.
+	var cell = {
+		color: 1,
+		owner: 0,
+	}
+
+	console.log(cell);
+
 	var myMatrix = 
 	[
-		[1, 1, 3, 4, 5, 4],
-		[1, 1, 0, 0, 2, 1],
+		[1, 1, 3, 3, 5, 4],
+		[1, 1, 0, 0, 3, 1],
 		[4, 3, 0, 0, 1, 3],
 		[2, 5, 0, 0, 4, 4],
 		[1, 3, 4, 3, 4, 4],
@@ -46,6 +53,13 @@ var COLORS = {
 	4 : 'blue',
 	5 : 'green',
 	6 : 'MediumVioletRed',
+}
+
+var OWNERS = {
+	0 : 'free',
+	1 : 'player',
+	2 : 'enemy',
+	3 : 'none'
 }
 
 function showColor(color_number) {
