@@ -8,7 +8,7 @@ class Table {
   //player_cells_counter;
   //enemy_cells_counter;
 
-  constructor(object, table_id) {
+  constructor (object, table_id) {
     console.log('Инициализация объекта таблицы');
 
     this.DOM_table_id = table_id;
@@ -52,21 +52,20 @@ class Table {
           // Привязываем вызов функции к клетке.
           cell.setAttribute('onclick', 'userTurn(this.dataset.x, this.dataset.y)');
           // Раскрашиваем клетку.
-          // Цвета можно вынести в css, а тут просто раздавать классы.
-          cell.style.backgroundColor = COLORS[matrix[i][j][0]];
+          cell.className = 'color_' + matrix[i][j][0];
 
           // По умолчанию клетка свободная.
           //cell.className = 'free';
 
           if (matrix[i][j][1] == 1) {
             // Выделение клеток из областей игрока.
-            cell.className = 'player';
+            cell.className = cell.className + ' player';
           } else if (matrix[i][j][1] == 2) {
             // Выделение клеток из областей противника.
-            cell.className = 'enemy';
+            cell.className = cell.className + ' enemy';
           } else if (matrix[i][j][1] == 3) {
             // Выделение свободных клеток
-            cell.className = 'free';
+            cell.className = cell.className + ' free';
           }
 
           // Выделение клеток из областей игрока.
@@ -85,7 +84,7 @@ class Table {
         }
 
         //cell.innerText = matrix[i][j][0];
-        cell.innerText = i + ' ' + j;
+        //cell.innerText = i + ' ' + j;
         row.appendChild(cell);
       }
       DOM_table.appendChild(row);

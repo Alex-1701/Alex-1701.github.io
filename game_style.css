@@ -11,18 +11,61 @@ table {
     /*width: 100%;
     height: 100%;*/
 	border: 1px solid black;
-    background-color: white;
+    background-color: lightgray;
     /*border-collapse: separate;*/
 }
 
 td {
 	width: 30px;
 	height: 30px;
-	border: 2px solid black;
+	border: 3px solid transparent;
 }
 
 td:hover {
-	border: 2px solid lightgray;
+    /*border: 3px solid black;*/
+}
+
+td.color_1 {
+    background-color: red;
+}
+td.color_1:hover {
+    background-color: rgb(255, 146, 146);
+}
+
+td.color_2 {
+    background-color: orange;
+}
+td.color_2:hover {
+    background-color: rgb(255, 208, 119);
+}
+
+
+td.color_3 {
+    background-color: yellow;
+}
+td.color_3:hover {
+    background-color: rgb(255, 255, 167);
+}
+
+td.color_4 {
+    background-color: blue;
+}
+td.color_4:hover {
+    background-color: rgb(118, 118, 255);
+}
+
+td.color_5 {
+    background-color: green;
+}
+td.color_5:hover {
+    background-color: rgb(21, 197, 21);
+}
+
+td.color_6 {
+    background-color: mediumvioletred;
+}
+td.color_6:hover {
+    background-color: rgb(218, 129, 185);
 }
 
 div {
@@ -51,16 +94,18 @@ main {
 
 .player {
     border-color: greenyellow;
+    border-width: 3px;
 }
 .player:hover {
     border-color: grey;
 }
 
 .enemy {
-    border-color: lightseagreen;
+    border-color: black;
 }
 .enemy:hover {
-    border-color: magenta;
+    /*border-color: magenta;*/
+    border-color: white;
 }
 
 .neutral {
