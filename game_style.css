@@ -7,6 +7,30 @@ body {
     background-position: center;
 }
 
+div {
+    border: 1px dashed red;
+    margin: 5px;
+    padding: 5px;
+}
+
+header {
+    border: 1px dashed green;
+    margin: 5px;
+}
+
+main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-position: center;
+}
+
+footer {
+    border: 1px dashed yellow;
+    margin: 5px;
+}
+
 table {
     /*width: 100%;
     height: 100%;*/
@@ -19,10 +43,6 @@ td {
 	width: 30px;
 	height: 30px;
 	border: 3px solid transparent;
-}
-
-td:hover {
-    /*border: 3px solid black;*/
 }
 
 td.color_1 {
@@ -38,7 +58,6 @@ td.color_2 {
 td.color_2:hover {
     background-color: rgb(255, 208, 119);
 }
-
 
 td.color_3 {
     background-color: yellow;
@@ -68,33 +87,9 @@ td.color_6:hover {
     background-color: rgb(218, 129, 185);
 }
 
-div {
-    border: 1px dashed red;
-    margin: 5px;
-    padding: 5px;
-}
-
-header {
-    border: 1px dashed green;
-    margin: 5px;
-}
-
-footer {
-    border: 1px dashed yellow;
-    margin: 5px;
-}
-
-main {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    background-position: center;
-}
 
 .player {
     border-color: greenyellow;
-    border-width: 3px;
 }
 .player:hover {
     border-color: grey;
