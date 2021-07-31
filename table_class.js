@@ -5,10 +5,8 @@ class Table {
   grid;
   player_color;
   enemy_color;
-  player_cells_counter;
-  enemy_cells_counter;
-  /*player_area;
-  enemy_area;*/
+  //player_cells_counter;
+  //enemy_cells_counter;
 
   constructor(object, table_id) {
     console.log('Инициализация объекта таблицы');
@@ -16,43 +14,39 @@ class Table {
     this.DOM_table_id = table_id;
     this.grid = object.matrix;
 
+    // Определяем цвета игроков и счёт.
     this.grid.forEach(line => {
       line.forEach(cell => {
         if (cell[1] == 1) {
           this.player_color = cell[0];
-          this.player_cells_counter++;
+          //this.player_cells_counter++;
         }
         if (cell[1] == 2) {
           this.enemy_color = cell[0];
-          this.enemy_cells_counter++;
+          //this.enemy_cells_counter++;
         }
       });
     });
-
-    //this.player_area = object.player_array;
-    //this.enemy_area = object.enemy_array;
-    //this.player_color = object.player_color;
-    //this.enemy_color = object.enemy_color;
   }
 
   generateTable() {
     // Метод собирает и вставляем DOM таблицу.
     var DOM_table = document.getElementById(this.DOM_table_id);
-    
+
     //Удаляем всех потомков, на случай если они уже были.
     this.removeAllChildNodes(DOM_table);
     var matrix = this.grid;
-    
+
     for (let i = 0; i < matrix.length; i++) {
       var row = document.createElement('tr');
       for (let j = 0; j < matrix[i].length; j++) {
         var cell = document.createElement('td');
         cell.setAttribute('data-x', i);
         cell.setAttribute('data-y', j);
-        
-        if(matrix[i][j][1] == 0) {
+
+        if (matrix[i][j][1] == 0) {
           // Если это не играбельная клетка.
-          cell.className = 'neutral';          
+          cell.className = 'neutral';
         } else {
           // Если это обычная клетка.
           // Привязываем вызов функции к клетке.
@@ -60,7 +54,7 @@ class Table {
           // Раскрашиваем клетку.
           // Цвета можно вынести в css, а тут просто раздавать классы.
           cell.style.backgroundColor = COLORS[matrix[i][j][0]];
-          
+
           // По умолчанию клетка свободная.
           //cell.className = 'free';
 
@@ -107,7 +101,7 @@ class Table {
       if (element.getAttribute("data-y") == y)
         cell = element;
     });
-    
+
     cell.style.backgroundColor = COLORS[color];
     cell.innerText = color;
 
@@ -130,12 +124,12 @@ class Table {
     if (turn == 'player') {
       // Игрок ходит
       // Игрок может нажать на свою область, на ничью область, на область противника, на неигровую область.
-      
+
       // Проверка нажатия на свою область.
       if (this.grid[x][y][1] == 1) {
-          // Значит ткнул на себя.
-          console.log('warning: ' + 'ткнул на себя');
-          result = false;
+        // Значит ткнул на себя.
+        console.log('warning: ' + 'ткнул на себя');
+        result = false;
       }
 
       // Проверка нажатия на область противника.
@@ -187,40 +181,40 @@ class Table {
           var height = this.grid[0].length;
           console.log(cell);
 
-          if (i+1 >= 0 && i+1 < width && j >= 0 && j < height && this.grid[i+1][j][0] == new_color && this.grid[i+1][j][1] == 3) {
+          if (i + 1 >= 0 && i + 1 < width && j >= 0 && j < height && this.grid[i + 1][j][0] == new_color && this.grid[i + 1][j][1] == 3) {
             //console.log('bottom');
             // Если элемент уникальный - добавляем.
-            if (!this.isContained(player_cells, [i+1, j]))
-              player_cells.push([i+1, j]);
-            free_colored_cells.push([i+1, j]);
+            if (!this.isContained(player_cells, [i + 1, j]))
+              player_cells.push([i + 1, j]);
+            free_colored_cells.push([i + 1, j]);
           }
-          if (i-1 >= 0 && i-1 < width && j >= 0 && j < height && this.grid[i-1][j][0] == new_color && this.grid[i-1][j][1] == 3) {
+          if (i - 1 >= 0 && i - 1 < width && j >= 0 && j < height && this.grid[i - 1][j][0] == new_color && this.grid[i - 1][j][1] == 3) {
             //console.log('top');
             // Если элемент уникальный - добавляем.
-            if (!this.isContained(player_cells, [i-1, j]))
-              player_cells.push([i-1, j]);
-            free_colored_cells.push([i-1, j]);
+            if (!this.isContained(player_cells, [i - 1, j]))
+              player_cells.push([i - 1, j]);
+            free_colored_cells.push([i - 1, j]);
           }
-          if (i >= 0 && i < width && j+1 >= 0 && j+1 < height && this.grid[i][j+1][0] == new_color && this.grid[i][j+1][1] == 3) {
+          if (i >= 0 && i < width && j + 1 >= 0 && j + 1 < height && this.grid[i][j + 1][0] == new_color && this.grid[i][j + 1][1] == 3) {
             //console.log('right');
             // Если элемент уникальный - добавляем.
-            if (!this.isContained(player_cells, [i, j+1]))
-              player_cells.push([i, j+1]);
-            free_colored_cells.push([i, j+1]);
+            if (!this.isContained(player_cells, [i, j + 1]))
+              player_cells.push([i, j + 1]);
+            free_colored_cells.push([i, j + 1]);
           }
-          if (i >= 0 && i < width && j-1 >= 0 && j-1 < height && this.grid[i][j-1][0] == new_color && this.grid[i][j-1][1] == 3) {
+          if (i >= 0 && i < width && j - 1 >= 0 && j - 1 < height && this.grid[i][j - 1][0] == new_color && this.grid[i][j - 1][1] == 3) {
             //console.log('left');
             // Если элемент уникальный - добавляем.
-            if (!this.isContained(player_cells, [i, j-1]))
-              player_cells.push([i, j-1]);
-            free_colored_cells.push([i, j-1]);
+            if (!this.isContained(player_cells, [i, j - 1]))
+              player_cells.push([i, j - 1]);
+            free_colored_cells.push([i, j - 1]);
           }
         }
 
         // Удаляем повторяющиеся элементы из массива.
         free_colored_cells = this.uniqueArray(free_colored_cells);
         console.log(free_colored_cells);
-        
+
         if (free_colored_cells.length == 0) {
           console.log('warning: ' + 'нет подходящих клеток для захвата');
           result = false;
@@ -229,13 +223,14 @@ class Table {
 
       // Собственно перекраска и присвоение области 
       if (result) {
-
+        // Переприсваиваем выбранные клетки.
         free_colored_cells.forEach(cell => {
           var i = cell[0];
           var j = cell[1];
           this.grid[i][j][1] = 1;
         });
 
+        // Перекрашиваем клетки игрока.
         player_cells.forEach(cell => {
           var i = cell[0];
           var j = cell[1];
@@ -245,7 +240,7 @@ class Table {
         this.player_color = new_color;
         this.generateTable();
       }
-  
+
     } else if (turn == 'enemy') {
       // Противник ходит
     }
@@ -266,7 +261,7 @@ class Table {
   }
 
   // Возвращает массив без повторяющихся элементов.
-  uniqueArray (arr) {
+  uniqueArray(arr) {
     let res = [];
     for (let a of arr) {
       var find = false;
@@ -274,15 +269,15 @@ class Table {
       for (let b of res)
         if (a[0] == b[0] && a[1] == b[1])
           find = true;
-      
+
       if (!find)
         res.push(a);
-    }  
+    }
     return res;
   }
 
   // Проверка на содержание подмассива в массиве.
-  isContained (arr, obj) {
+  isContained(arr, obj) {
     // Если arr содержит obj - возвращает true, иначе - false.
     var res = false;
     arr.forEach(a => {
@@ -293,9 +288,47 @@ class Table {
   }
 
   // Удаляет всех потомков DOM элемента.
-  removeAllChildNodes (parent) {
+  removeAllChildNodes(parent) {
     while (parent.firstChild) {
-        parent.removeChild(parent.firstChild);
+      parent.removeChild(parent.firstChild);
     }
+  }
+
+  // Возвращает счёт игры.
+  getScore() {
+    var result = {
+      player_score: 0,
+      enemy_score: 0
+    }
+
+    this.grid.forEach(line => {
+      line.forEach(cell => {
+        if (cell[1] == 1) {
+          result.player_score++;
+        }
+        if (cell[1] == 2) {
+          result.enemy_score++;
+        }
+      });
+    });
+
+    return result;
+  }
+
+  // Определяет завершена ли игра.
+  isGameOver() {
+    var result = true;
+    
+    // Простая проверка на наличие свободных клеток.
+    // Это временная мера.
+    this.grid.forEach(line => {
+      line.forEach(cell => {
+        if (cell[1] == 3) {
+          result = false;
+        }
+      });
+    });
+
+    return result;
   }
 }

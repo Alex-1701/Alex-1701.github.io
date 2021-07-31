@@ -3,33 +3,33 @@
 var table = null;
 
 var OWNERS = {
-  0 : 'none',
-  1 : 'player',
-  2 : 'enemy',
-  3 : 'free'
+  0: 'none',
+  1: 'player',
+  2: 'enemy',
+  3: 'free'
 }
 
 function getGridObject() {
   // Функция должна отдавать готовую играбельную таблицу.
 
   //[color,owner]
-  var myMatrix = 
-  [
-    /*
-    [[1,1], [6,3], [3,3], [3,3], [5,3], [4,3]],
-    [[2,3], [1,1], [5,3], [6,3], [3,3], [4,3]],
-    [[4,3], [4,3], [2,3], [5,3], [1,3], [4,3]],
-    [[2,3], [4,3], [4,3], [4,3], [4,3], [4,3]],
-    [[1,3], [3,3], [4,3], [3,3], [4,3], [4,3]],
-    */
-    [[1,1], [1,1], [3,3], [3,3], [5,3], [4,3]],
-    [[1,1], [1,1], [0,0], [0,0], [3,3], [1,3]],
-    [[4,3], [3,3], [0,0], [0,0], [1,3], [3,3]],
-    [[2,3], [5,3], [0,0], [0,0], [4,2], [4,2]],
-    [[1,3], [3,3], [4,3], [3,3], [4,2], [4,2]],
-  ];
+  var myMatrix =
+    [
+      /*
+      [[1,1], [6,3], [3,3], [3,3], [5,3], [4,3]],
+      [[2,3], [1,1], [5,3], [6,3], [3,3], [4,3]],
+      [[4,3], [4,3], [2,3], [5,3], [1,3], [4,3]],
+      [[2,3], [4,3], [4,3], [4,3], [4,3], [4,3]],
+      [[1,3], [3,3], [4,3], [3,3], [4,3], [4,3]],
+      */
+      [[1, 1], [1, 1], [3, 3], [3, 3], [5, 3], [4, 3]],
+      [[1, 1], [1, 1], [0, 0], [0, 0], [3, 3], [1, 3]],
+      [[4, 3], [3, 3], [0, 0], [0, 0], [1, 3], [3, 3]],
+      [[2, 3], [5, 3], [0, 0], [0, 0], [4, 2], [4, 2]],
+      [[1, 3], [3, 3], [4, 3], [3, 3], [4, 2], [4, 2]],
+    ];
 
-  var randX = 10; 
+  var randX = 10;
   var randY = 10;
   var randMatrix = new Array(randX);
   for (var i = 0; i < randX; i++) {
@@ -46,12 +46,6 @@ function getGridObject() {
   var object = {
     // Матрица цветов клеток.
     matrix: myMatrix,
-    // Массив клеток принадлежащих игроку.
-    //player_array: [[0, 0], [0, 1], [1, 0], [1, 1]],
-    //player_color: 1,
-    // Массив клеток принадлежащих противнику.
-    //enemy_array: [[4, 4], [3, 5], [3, 4], [4, 5]],
-    //enemy_color: 2
   };
 
   return object;
@@ -59,13 +53,13 @@ function getGridObject() {
 
 // Цвета должны быть адаптивными к входящему объекту.
 var COLORS = {
-  0 : 'grey',
-  1 : 'rgb(255, 0, 0)', // red
-  2 : 'orange',
-  3 : 'yellow',
-  4 : 'blue',
-  5 : 'green',
-  6 : 'MediumVioletRed',
+  0: 'grey',
+  1: 'rgb(255, 0, 0)', // red
+  2: 'orange',
+  3: 'yellow',
+  4: 'blue',
+  5: 'green',
+  6: 'MediumVioletRed',
 }
 
 function showColor(color_number) {
@@ -81,8 +75,10 @@ function test(event) {
 function userTurn(x, y, color) {
   console.log('Ход игрока');
   //var finished = false;
-  if(table.changeAreaColor(x, y, 'player')) {
+  if (table.changeAreaColor(x, y, 'player')) {
     console.log('Игрок походил');
+    
+    checkGameOver()
     enemyTurn();
   }
   else {
@@ -94,6 +90,8 @@ function enemyTurn() {
   console.log('Ход противника...');
   //console.log(Enemy.turn(table.getTableData()));
   //table.changeAreaColor(x, y, 'enemy');
+  
+  checkGameOver();
   console.log('Противник походил');
 }
 
@@ -102,22 +100,47 @@ function sleep(ms) {
   /*ms += new Date().getTime();
   while (new Date() < ms){}*/
   setTimeout(() => console.log('f'), ms);
-} 
+}
+
+// Выводит в span инфу о счёте игроков.
+function updateScore() {
+  var playerSpan = document.getElementById('player_score');
+  var enemySpan = document.getElementById('enemy_score');
+
+  var score = table.getScore();
+
+  playerSpan.innerHTML = score.player_score;
+  enemySpan.innerHTML = score.enemy_score;
+}
+
+// Проверка окончания игры и уведомление об окончании.
+function checkGameOver() {
+  updateScore();
+  // Задержка какая-то залипает последнее нажатие игрока.
+  if(table.isGameOver()) {
+    console.log('lol');
+    sleep(3*1000);
+    alert('GAME OVER');
+  }
+}
 
 function main() {
   // Создаём объект класса таблица таблица.
   table = new Table(getGridObject(), 'grid');
-  
+
   // Вставляем табицу в страницу.
   table.generateTable();
 
+  // Выводим начальный счёт.
+  updateScore();
+
   while (false) {
     console.log('Ход игрока');
-    
+
   }
-  
+
   //build_select_panel();
-  
+
   //console.log(t.data_object);
 }
 
@@ -149,14 +172,14 @@ function build_select_panel() {
   var panel = document.getElementById('select_panel');
   var table = document.createElement('table');
   var row = document.createElement('tr');
-  
+
   Object.keys(COLORS).forEach(e => {
     var cell = document.createElement('td');
     console.log(e + "\t" + COLORS[e]);
     cell.style.backgroundColor = COLORS[e];
     row.appendChild(cell);
   });
-  
+
   table.appendChild(row);
   panel.appendChild(table);
 }
