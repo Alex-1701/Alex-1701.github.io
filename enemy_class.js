@@ -1,9 +1,10 @@
 'use strict';
 
 class Enemy {
-	static turn(object) {
-		console.log(object);
+	static turn(table) {
+		console.log(table.getTableData());
+
 		
-		return [0, 0];
+		return true;
 	}
 }

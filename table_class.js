@@ -67,20 +67,6 @@ class Table {
             // Выделение свободных клеток
             cell.className = cell.className + ' free';
           }
-
-          // Выделение клеток из областей игрока.
-          /*this.player_area.forEach(element => {
-            if (element[0] == i && element[1] == j){
-              cell.className = 'player';
-            }
-          });
-
-          // Выделение клеток из областей противника.
-          this.enemy_area.forEach(element => {
-            if (element[0] == i && element[1] == j){
-              cell.className = 'enemy';
-            }
-          });*/
         }
 
         //cell.innerText = matrix[i][j][0];
@@ -171,14 +157,16 @@ class Table {
         for (var cell of player_cells) {
           // Противорекурсин. Одна заглушка.
           counter++;
-          if (counter > 50)
+          if (counter > 50) {
+            console.log('warning: зациклился!');
             return 0;
+          }
 
           var i = cell[0];
           var j = cell[1];
           var width = this.grid.length;
           var height = this.grid[0].length;
-          console.log(cell);
+          //console.log(cell);
 
           if (i + 1 >= 0 && i + 1 < width && j >= 0 && j < height && this.grid[i + 1][j][0] == new_color && this.grid[i + 1][j][1] == 3) {
             //console.log('bottom');
@@ -212,7 +200,7 @@ class Table {
 
         // Удаляем повторяющиеся элементы из массива.
         free_colored_cells = this.uniqueArray(free_colored_cells);
-        console.log(free_colored_cells);
+        //console.log(free_colored_cells);
 
         if (free_colored_cells.length == 0) {
           console.log('warning: ' + 'нет подходящих клеток для захвата');
@@ -251,8 +239,6 @@ class Table {
   getTableData() {
     var object = {
       grid: this.grid,
-      player_area: this.player_area,
-      enemy_area: this.enemy_area,
       player_color: this.player_color,
       enemy_color: this.enemy_color,
     }
@@ -330,4 +316,10 @@ class Table {
 
     return result;
   }
-}
+
+  getAssignedCells (owner) {
+    if (owner == 1) {
+      // Выбираем
+    }
+  }
+}0
