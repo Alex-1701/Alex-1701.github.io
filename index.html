@@ -11,49 +11,13 @@
 </head>
 
 <body>
-	<div id='page_wrapper'>
-		<!--
-		<header>
-			<h1>Приложение Squares</h1>
-		</header>
-		-->
-		<main>
+	<div id='game_area'>
+		<div id='info_panel'>
+			<span>Игрок: </span><span id='player_score'>0</span>
+			<span>Бот: </span> <span id='enemy_score'>0</span>
+		</div><br>
 
-			<div id='sidebar' style="float: left; width: 30%;">
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis molestiae quos assumenda vel rerum
-					porro, eligendi quae doloribus similique nulla reprehenderit ad aspernatur velit explicabo
-					voluptatem. Laborum, id? Nulla, consectetur.</p>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis molestiae quos assumenda vel rerum
-					porro, eligendi quae doloribus similique nulla reprehenderit ad aspernatur velit explicabo
-					voluptatem. Laborum, id? Nulla, consectetur.</p>
-			</div>
-
-			<div id='game_area' style="width: 70%;">
-				<div onload="build_info_panel()" id='info_panel'>
-					<span>Игрок: </span><span id='player_score'>0</span>
-					<span>Бот: </span> <span id='enemy_score'>0</span>
-				</div><br>
-
-				<table id='grid'></table>
-
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis molestiae quos assumenda vel rerum
-					porro, eligendi quae doloribus similique nulla reprehenderit ad aspernatur velit explicabo
-					voluptatem. Laborum, id? Nulla, consectetur.</p>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis molestiae quos assumenda vel rerum
-					porro, eligendi quae doloribus similique nulla reprehenderit ad aspernatur velit explicabo
-					voluptatem. Laborum, id? Nulla, consectetur.</p>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis molestiae quos assumenda vel rerum
-					porro, eligendi quae doloribus similique nulla reprehenderit ad aspernatur velit explicabo
-					voluptatem. Laborum, id? Nulla, consectetur.</p>
-				<button id='example'>color</button><br><br>
-			</div>
-		</main>
-
-		<footer>
-			<hr>
-			<p>email </p>
-		</footer>
-
+		<table id='grid'></table>
 	</div>
 
 	<script src='table_class.js'></script>
