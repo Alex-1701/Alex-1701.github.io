@@ -1,5 +1,5 @@
 import React from "react";
-import { GameTable } from "./components/GameTable";
+import { GameTable } from "./components";
 
 import styles from "./App.module.scss";
 
