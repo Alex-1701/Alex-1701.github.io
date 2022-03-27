@@ -54,7 +54,7 @@ const tableData = {
 };
 
 export function GameTable() {
-  let [dataObject, setDataObject] = useState(tableData);
+  const [dataObject, setDataObject] = useState(tableData);
 
   // Цвета должны быть адаптивными к входящему объекту.
   // Или нет XD
