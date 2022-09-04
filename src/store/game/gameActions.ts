@@ -8,7 +8,7 @@ const mockGameData = {
   matrix: [
     [[1, 1], [1, 1], [3, 3], [3, 3], [5, 3], [4, 3],],
     [[1, 1], [1, 1], [0, 0], [0, 0], [3, 3], [1, 3],],
-    [[4, 3], [3, 3], [0, 0], [0, 0], [1, 3], [3, 3],],
+    [[4, 3], [3, 3], [0, 0], [0, 0], [5, 3], [3, 3],],
     [[2, 3], [5, 3], [0, 0], [0, 0], [4, 2], [4, 2],],
     [[1, 3], [3, 3], [4, 3], [3, 3], [4, 2], [4, 2],],
   ],
@@ -52,5 +52,15 @@ export const registerPlayerOneTurn = createAsyncThunk(
   }
 );
 
+export const registerPlayerTwoTurn = createAsyncThunk(
+  "game/registerPlayerTwoTurn",
+  async (coords: ICoordinates, thunkApi) => {
+    try {
+      return coords;
+    } catch {
+      return thunkApi.rejectWithValue("something went wrong");
+    }
+  }
+);
 
 export const recalculate = createAction("game/recalculate");

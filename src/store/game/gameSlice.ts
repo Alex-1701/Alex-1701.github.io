@@ -6,20 +6,25 @@ import {
   ITableField,
   ITableLine,
   PLAYER_ONE,
+  PLAYER_TWO,
   UNAVAILABLE,
 } from "../../shared/types";
 import {
   recalculate,
   registerPlayerOneTurn,
+  registerPlayerTwoTurn,
   requestGameData,
 } from "./gameActions";
+import {
+  findAllFreeNeighbors,
+  registerTurn,
+  selectColorsFromArray,
+} from "../../shared/GameFunctions";
 
 interface GameState {
   isRequestingGameData: boolean;
   gameField: ITableField;
   PlayerTurn: number;
-  currentPlayerNumber: number;
-  enemyPlayerNumber: number;
   PlayerOneColor: number;
   PlayerTwoColor: number;
   availableCellsCount: number;
@@ -29,72 +34,10 @@ interface GameState {
   PlayerTwoAvailableColors: number[];
 }
 
-const checkCellOwner = (
-  matrix: ITableField,
-  x: number,
-  y: number,
-  target: number,
-  type: "color" | "owner"
-): boolean => {
-  if (y >= 0 && y < matrix.length && x >= 0 && x < matrix[y].length) {
-    return matrix[y][x][type] === target;
-  }
-  return false;
-};
-
-const checkNeighbors = (
-  matrix: ITableField,
-  x: number,
-  y: number,
-  target: number,
-  type: "color" | "owner"
-): boolean =>
-  checkCellOwner(matrix, x, y - 1, target, type) ||
-  checkCellOwner(matrix, x, y + 1, target, type) ||
-  checkCellOwner(matrix, x + 1, y, target, type) ||
-  checkCellOwner(matrix, x - 1, y, target, type);
-
-const findAllFreeNeighbors = (
-  matrix: ITableField,
-  target: number
-): ICoordinates[] => {
-  const res: ICoordinates[] = [];
-
-  for (let i = 0; i < matrix.length; i += 1) {
-    for (let j = 0; j < matrix[i].length; j += 1) {
-      // console.log(i, j, checkNeighbors(matrix, j, i, target, "owner"));
-
-      if (
-        checkNeighbors(matrix, j, i, target, "owner") &&
-        matrix[i][j].owner === FREE
-      )
-        res.push({ x: j, y: i });
-    }
-  }
-
-  return res;
-};
-
-const selectColorsFromArray = (
-  matrix: ITableField,
-  array: ICoordinates[]
-): number[] => {
-  const colors: number[] = [];
-  for (let i = 0; i < array.length; i += 1) {
-    const { color } = matrix[array[i].y][array[i].x];
-    if (!colors.includes(color)) {
-      colors.push(color);
-    }
-  }
-  return colors;
-};
-
 const initialState: GameState = {
   isRequestingGameData: false,
   gameField: [],
   PlayerTurn: 0,
-  currentPlayerNumber: 0,
-  enemyPlayerNumber: 0,
   PlayerOneColor: 0,
   PlayerTwoColor: 0,
   availableCellsCount: 0,
@@ -130,16 +73,14 @@ export const gameSlice = createSlice({
       }
 
       state.PlayerTurn = action.payload.playerTurn;
-      state.currentPlayerNumber = action.payload.currentPlayerNumber;
-      state.enemyPlayerNumber = action.payload.enemyPlayerNumber;
 
       // Now we know color of each player.
       for (const line of state.gameField) {
         for (const cell of line) {
-          if (cell.owner === state.currentPlayerNumber) {
+          if (cell.owner === PLAYER_ONE) {
             state.PlayerOneColor = cell.color;
           }
-          if (cell.owner === state.enemyPlayerNumber) {
+          if (cell.owner === PLAYER_TWO) {
             state.PlayerTwoColor = cell.color;
           }
         }
@@ -164,88 +105,49 @@ export const gameSlice = createSlice({
 
       // If this is P1 turn and cell is free.
       if (
-        state.currentPlayerNumber === PLAYER_ONE &&
+        state.PlayerTurn === PLAYER_ONE &&
         state.gameField[y][x].owner === FREE
       ) {
-
-
-
-
-
-
-        const freeNeighbors: ICoordinates[] = findAllFreeNeighbors(
+        let freeNeighbors: ICoordinates[] = findAllFreeNeighbors(
           state.gameField,
           PLAYER_ONE
         );
-        console.log(freeNeighbors);
-
-        // Collect all available colors.
-        const freeNeighborsColors = selectColorsFromArray(
+        let freeNeighborsColors = selectColorsFromArray(
           state.gameField,
           freeNeighbors
         );
-        console.log(freeNeighborsColors);
 
-        // If chosen color exist in neighbors.
-        if (freeNeighborsColors.includes(chosenColor)) {
-          console.log("color allowed");
-
-          // Initiate recolor...
-
-          let hasAvailableCells = true;
-          while (hasAvailableCells) {
-            const newFreeNeighbors: ICoordinates[] = findAllFreeNeighbors(
-              state.gameField,
-              PLAYER_ONE
-            );
-            console.log(newFreeNeighbors);
-
-            for (let i = 0; i < newFreeNeighbors.length; i += 1) {
-              if (
-                state.gameField[newFreeNeighbors[i].y][newFreeNeighbors[i].x]
-                  .color === chosenColor
-              ) {
-                console.log(
-                  "x: ",
-                  newFreeNeighbors[i].x,
-                  " ; y: ",
-                  newFreeNeighbors[i].y
-                );
-                state.gameField[newFreeNeighbors[i].y][
-                  newFreeNeighbors[i].x
-                ].owner = state.currentPlayerNumber;
-                state.gameField[newFreeNeighbors[i].y][
-                  newFreeNeighbors[i].x
-                ].color = state.PlayerOneColor;
-              }
-            }
-
-            const againFreeNeighbors: ICoordinates[] = findAllFreeNeighbors(
-              state.gameField,
-              PLAYER_ONE
-            );
-            const againFreeColors = selectColorsFromArray(
-              state.gameField,
-              againFreeNeighbors
-            );
-            console.log(againFreeNeighbors);
-            console.log(againFreeColors);
-
-            if (againFreeColors.includes(chosenColor)) {
-              hasAvailableCells = true;
-            } else {
-              hasAvailableCells = false;
+        do {
+          for (let i = 0; i < freeNeighbors.length; i += 1) {
+            if (
+              state.gameField[freeNeighbors[i].y][freeNeighbors[i].x].color ===
+              chosenColor
+            ) {
+              state.gameField[freeNeighbors[i].y][freeNeighbors[i].x].owner =
+                state.PlayerTurn;
+              state.gameField[freeNeighbors[i].y][freeNeighbors[i].x].color =
+                state.PlayerOneColor;
             }
           }
-        } else {
-          console.log("color NOT allowed");
+
+          freeNeighbors = findAllFreeNeighbors(state.gameField, PLAYER_ONE);
+
+          freeNeighborsColors = selectColorsFromArray(
+            state.gameField,
+            freeNeighbors
+          );
+        } while (freeNeighborsColors.includes(chosenColor));
+
+        for (let i = 0; i < state.gameField.length; i += 1) {
+          for (let j = 0; j < state.gameField[i].length; j += 1) {
+            if (state.gameField[i][j].owner === PLAYER_ONE)
+              state.gameField[i][j].color = chosenColor;
+          }
         }
 
-        // state.gameField[y][x].owner = PLAYER_ONE;
-        // state.gameField[y][x].color = state.PlayerOneColor;
-
-        // This is for next turn.
-        // state.currentPlayerNumber = PLAYER_TWO;
+        // This is for initiate next turn.
+        state.PlayerTurn = PLAYER_TWO;
+        state.PlayerOneColor = chosenColor;
       } else {
         console.log("forbidden");
       }
@@ -254,6 +156,26 @@ export const gameSlice = createSlice({
       // console.log("rejected");
     },
     // ---
+
+    [registerPlayerTwoTurn.pending.type]: (state) => {
+      // console.log("pending");
+    },
+    [registerPlayerTwoTurn.fulfilled.type]: (
+      state,
+      action: PayloadAction<ICoordinates>
+    ) => {
+      const { x, y } = action.payload;
+      if (x === -1 && y === -1) {
+        // P2 lose
+        console.log("P2 LOSE");
+      } else {
+        state.gameField = registerTurn(state.gameField, PLAYER_TWO, { x, y });
+        state.PlayerTurn = PLAYER_ONE;
+      }
+    },
+    [registerPlayerTwoTurn.rejected.type]: (state) => {
+      // console.log("rejected");
+    },
 
     [recalculate.type]: (state) => {
       // Get new count. Should be called after every turn.
@@ -266,11 +188,11 @@ export const gameSlice = createSlice({
             tempAvailableCellsCount += 1;
           }
 
-          if (cell.owner === state.currentPlayerNumber) {
+          if (cell.owner === PLAYER_ONE) {
             tempPlayerOneCellsCount += 1;
           }
 
-          if (cell.owner === state.enemyPlayerNumber) {
+          if (cell.owner === PLAYER_TWO) {
             tempPlayerTwoCellsCount += 1;
           }
         }

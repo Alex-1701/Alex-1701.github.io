@@ -5,12 +5,24 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
   recalculate,
   registerPlayerOneTurn,
+  registerPlayerTwoTurn,
 } from "../../store/game/gameActions";
+import { PLAYER_TWO } from "../../shared/types";
+import { EasyBot } from "../../enemy";
 
 export function GameTable() {
   const dispatch = useAppDispatch();
 
-  const { gameField } = useAppSelector((state) => state.game);
+  const { gameField, PlayerTurn, PlayerOneColor } = useAppSelector((state) => state.game);
+
+  useEffect(() => {
+    if (PlayerTurn === PLAYER_TWO) {
+      console.log("lol");
+
+      // dispatch(registerPlayerTwoTurn({ x: 4, y: 2 }));
+      dispatch(registerPlayerTwoTurn(EasyBot(gameField, PlayerOneColor)));
+    }
+  }, [PlayerTurn]);
 
   const onUserClick = async (x: number, y: number) => {
     await dispatch(registerPlayerOneTurn({ x, y }));
