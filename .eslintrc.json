@@ -13,7 +13,16 @@
   "parser": "@typescript-eslint/parser",
   "rules": {
     "import/prefer-default-export": 0,
-    "react/jsx-filename-extension": [2, {"extensions": [".js",".ts",".tsx"]}],
+    "react/jsx-filename-extension": [
+      2,
+      {
+        "extensions": [
+          ".js",
+          ".ts",
+          ".tsx"
+        ]
+      }
+    ],
     "import/no-unresolved": 0,
     "import/extensions": [
       "error",
@@ -23,6 +32,16 @@
         "jsx": "never",
         "ts": "never",
         "tsx": "never"
+      }
+    ],
+    "no-restricted-syntax": [
+      "warn",
+      "ForInStatement"
+    ],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": false
       }
     ]
   },
