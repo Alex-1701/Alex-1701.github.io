@@ -1,7 +1,7 @@
 td {
   width: 25px;
   height: 25px;
-  border: 3px solid transparent;
+  border: 2px solid #464646;
   cursor: pointer;
 
   div {
@@ -14,7 +14,7 @@ td {
 }
 
 .color_1 {
-  background-color: red;
+  background-color: #ff2b2b;
 }
 
 .color_1:hover {
@@ -22,7 +22,7 @@ td {
 }
 
 .color_2 {
-  background-color: orange;
+  background-color: #ff9b4c;
 }
 
 .color_2:hover {
@@ -30,7 +30,7 @@ td {
 }
 
 .color_3 {
-  background-color: yellow;
+  background-color: #ffff40;
 }
 
 .color_3:hover {
@@ -38,7 +38,7 @@ td {
 }
 
 .color_4 {
-  background-color: blue;
+  background-color: #5b5be3;
 }
 
 .color_4:hover {
@@ -46,7 +46,7 @@ td {
 }
 
 .color_5 {
-  background-color: green;
+  background-color: #199b19;
 }
 
 .color_5:hover {
@@ -54,7 +54,7 @@ td {
 }
 
 .color_6 {
-  background-color: mediumvioletred;
+  background-color: #ff3cb5;
 }
 
 .color_6:hover {
@@ -62,7 +62,7 @@ td {
 }
 
 .player {
-  border-color: greenyellow;
+  //border-color: greenyellow;
 }
 
 .player:hover {
@@ -70,7 +70,7 @@ td {
 }
 
 .enemy {
-  border-color: black;
+  //border-color: black;
 }
 
 .enemy:hover {
@@ -79,10 +79,10 @@ td {
 }
 
 .neutral {
-  border-color: #3d3d3d;
-  background-color: #3d3d3d;
+  border-color: #311111;
+  background-color: #311111;
 }
 
 .neutral:hover {
-  border-color: #3d3d3d;
+  border-color: #311111;
 }
