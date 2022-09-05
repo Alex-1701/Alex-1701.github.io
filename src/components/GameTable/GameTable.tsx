@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { TableCell } from "../TableCell";
 import styles from "./GameTable.module.scss";
 import { useAppDispatch, useAppSelector } from "../../hooks";
@@ -7,20 +7,21 @@ import {
   registerPlayerOneTurn,
   registerPlayerTwoTurn,
 } from "../../store/game/gameActions";
-import { PLAYER_TWO } from "../../shared/types";
+import { PLAYER_TWO } from "../../shared/constants";
 import { EasyBot } from "../../enemy";
 
 export function GameTable() {
   const dispatch = useAppDispatch();
 
-  const { gameField, PlayerTurn, PlayerOneColor } = useAppSelector((state) => state.game);
+  const { gameField, PlayerTurn, PlayerOneColor } = useAppSelector(
+    (state) => state.game
+  );
 
   useEffect(() => {
     if (PlayerTurn === PLAYER_TWO) {
-      console.log("lol");
-
-      // dispatch(registerPlayerTwoTurn({ x: 4, y: 2 }));
-      dispatch(registerPlayerTwoTurn(EasyBot(gameField, PlayerOneColor)));
+      setTimeout(() => {
+        dispatch(registerPlayerTwoTurn(EasyBot(gameField, PlayerOneColor)));
+      }, 200);
     }
   }, [PlayerTurn]);
 

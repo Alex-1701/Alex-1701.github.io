@@ -13,22 +13,20 @@ interface Props {
 const OWNERS = ["neutral", "player", "enemy", "free"];
 
 export function TableCell({ x, y, color, owner, onUserClick }: Props) {
-  function click() {
-    // console.log("click", x, y);
+  function handleClick() {
     onUserClick(x, y);
   }
 
   const colorClass = `color_${color}`;
   const ownerClass = OWNERS[owner];
 
-  // let onClick = props.onClick;
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
     <td
       className={clsx(styles[colorClass], styles[ownerClass])}
-      onClick={click}
+      onClick={handleClick}
     >
-      <div>{`${owner}-${color}`}</div>
+      {/* <div>{`${owner}-${color}`}</div> */}
     </td>
   );
 }

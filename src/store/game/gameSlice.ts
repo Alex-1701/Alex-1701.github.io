@@ -1,15 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  FREE,
   ICoordinates,
   IMockGameData,
   ITableField,
   ITableLine,
-  PLAYER_ONE,
-  PLAYER_TWO,
-  UNAVAILABLE,
 } from "../../shared/types";
 import {
+  generateGameData,
   recalculate,
   registerPlayerOneTurn,
   registerPlayerTwoTurn,
@@ -17,9 +14,16 @@ import {
 } from "./gameActions";
 import {
   findAllFreeNeighbors,
+  generateMatrix,
   registerTurn,
   selectColorsFromArray,
 } from "../../shared/GameFunctions";
+import {
+  FREE,
+  PLAYER_ONE,
+  PLAYER_TWO,
+  UNAVAILABLE,
+} from "../../shared/constants";
 
 interface GameState {
   isRequestingGameData: boolean;
@@ -200,6 +204,10 @@ export const gameSlice = createSlice({
       state.availableCellsCount = tempAvailableCellsCount;
       state.PlayerOneCellsCount = tempPlayerOneCellsCount;
       state.PlayerTwoCellsCount = tempPlayerTwoCellsCount;
+    },
+
+    [generateGameData.type]: (state) => {
+      state.gameField = generateMatrix(15, 15);
     },
   },
 });

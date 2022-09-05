@@ -1,3 +1,3 @@
 export { store } from "./store";
 export type { RootState, AppDispatch } from "./store";
-export { requestGameData } from "./game";
+export { requestGameData, generateGameData } from "./game";

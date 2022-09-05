@@ -1,8 +1,5 @@
-import {
-  FREE,
-  ICoordinates,
-  ITableField,
-} from "../types";
+import { ICoordinates, ITableField, ITableLine } from "../types";
+import {FREE} from "../constants";
 
 export const checkCellOwner = (
   matrix: ITableField,
@@ -95,6 +92,38 @@ export const registerTurn = (
   } else {
     console.log("forbidden");
   }
+
+  return matrix;
+};
+
+export const randomInt = (min: number, max: number): number => Math.round(Math.random() * (max - min) + min)
+
+export const generateMatrix = (width: number, height: number) => {
+  const matrix: ITableField = [];
+  const pureMatrix: number[][][] = [];
+
+  const w = 15;
+  const h = 15;
+
+  for (let i = 0; i < h; i += 1) {
+    const newLine: ITableLine = [];
+    const pureLine: number[][] = [];
+    for (let j = 0; j < w; j += 1) {
+      const color = randomInt(1, 6);
+      const owner = 3;
+
+      newLine.push({
+        color,
+        owner,
+      });
+
+      pureLine.push([color, owner]);
+    }
+    matrix.push(newLine);
+    pureMatrix.push(pureLine);
+  }
+
+  console.log(pureMatrix);
 
   return matrix;
 };

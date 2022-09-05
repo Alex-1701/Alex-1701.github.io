@@ -1,8 +1,9 @@
 td {
-  width: 60px;
-  height: 60px;
+  width: 25px;
+  height: 25px;
   border: 3px solid transparent;
   cursor: pointer;
+
   div {
     margin: auto;
     padding: 0;
@@ -78,10 +79,10 @@ td {
 }
 
 .neutral {
-  border-color: grey;
-  background-color: grey;
+  border-color: #3d3d3d;
+  background-color: #3d3d3d;
 }
 
 .neutral:hover {
-  border-color: grey;
+  border-color: #3d3d3d;
 }
