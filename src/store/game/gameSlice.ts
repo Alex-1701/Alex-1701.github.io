@@ -7,14 +7,13 @@ import {
 } from "../../shared/types";
 import {
   generateGameData,
-  recalculate,
   registerPlayerOneTurn,
   registerPlayerTwoTurn,
   requestGameData,
 } from "./gameActions";
 import {
   findAllFreeNeighbors,
-  generateMatrix,
+  generateMatrix, recalculate,
   registerTurn,
   selectColorsFromArray,
 } from "../../shared/GameFunctions";
@@ -90,6 +89,8 @@ export const gameSlice = createSlice({
         }
       }
 
+      [state.availableCellsCount, state.PlayerOneCellsCount, state.PlayerTwoCellsCount] = recalculate(state.gameField);
+
       state.isRequestingGameData = false;
     },
     [requestGameData.rejected.type]: (state) => {
@@ -152,6 +153,7 @@ export const gameSlice = createSlice({
         // This is for initiate next turn.
         state.PlayerTurn = PLAYER_TWO;
         state.PlayerOneColor = chosenColor;
+        [state.availableCellsCount, state.PlayerOneCellsCount, state.PlayerTwoCellsCount] = recalculate(state.gameField);
       } else {
         console.log("forbidden");
       }
@@ -174,6 +176,8 @@ export const gameSlice = createSlice({
         console.log("P2 LOSE");
       } else {
         state.gameField = registerTurn(state.gameField, PLAYER_TWO, { x, y });
+        [state.availableCellsCount, state.PlayerOneCellsCount, state.PlayerTwoCellsCount] = recalculate(state.gameField);
+        [state.availableCellsCount, state.PlayerOneCellsCount, state.PlayerTwoCellsCount] = recalculate(state.gameField);
         state.PlayerTurn = PLAYER_ONE;
       }
     },
@@ -181,30 +185,7 @@ export const gameSlice = createSlice({
       // console.log("rejected");
     },
 
-    [recalculate.type]: (state) => {
-      // Get new count. Should be called after every turn.
-      let tempAvailableCellsCount = 0;
-      let tempPlayerOneCellsCount = 0;
-      let tempPlayerTwoCellsCount = 0;
-      for (const line of state.gameField) {
-        for (const cell of line) {
-          if (cell.owner !== UNAVAILABLE) {
-            tempAvailableCellsCount += 1;
-          }
 
-          if (cell.owner === PLAYER_ONE) {
-            tempPlayerOneCellsCount += 1;
-          }
-
-          if (cell.owner === PLAYER_TWO) {
-            tempPlayerTwoCellsCount += 1;
-          }
-        }
-      }
-      state.availableCellsCount = tempAvailableCellsCount;
-      state.PlayerOneCellsCount = tempPlayerOneCellsCount;
-      state.PlayerTwoCellsCount = tempPlayerTwoCellsCount;
-    },
 
     [generateGameData.type]: (state) => {
       state.gameField = generateMatrix(15, 15);

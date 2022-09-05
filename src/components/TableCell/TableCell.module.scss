@@ -4,12 +4,16 @@ td {
   border: 2px solid #464646;
   cursor: pointer;
 
+
   div {
-    margin: auto;
-    padding: 0;
-    width: fit-content;
-    font-size: 20px;
-    font-weight: bolder;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    //margin: auto;
+    //padding: 0;
+    //width: fit-content;
+    //font-size: 20px;
+    //font-weight: bolder;
   }
 }
 
@@ -66,7 +70,7 @@ td {
 }
 
 .player:hover {
-  border-color: grey;
+  //border-color: grey;
 }
 
 .enemy {
@@ -75,7 +79,7 @@ td {
 
 .enemy:hover {
   /*border-color: magenta;*/
-  border-color: white;
+  //border-color: white;
 }
 
 .neutral {
@@ -84,5 +88,5 @@ td {
 }
 
 .neutral:hover {
-  border-color: #311111;
+  //border-color: #311111;
 }

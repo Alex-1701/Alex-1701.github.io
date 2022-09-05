@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import styles from "./TableCell.module.scss";
-import {PLAYER_ONE, PLAYER_TWO} from "../../shared/constants";
+import { PLAYER_ONE, PLAYER_TWO } from "../../shared/constants";
 
 interface Props {
   x: number;
@@ -27,9 +27,10 @@ export function TableCell({ x, y, color, owner, onUserClick }: Props) {
       className={clsx(styles[colorClass], styles[ownerClass])}
       onClick={handleClick}
     >
-      {/* <div>{`${owner}-${color}`}</div> */}
-      {owner === PLAYER_TWO && '💀'}
-      {owner === PLAYER_ONE && '😀'}
+      <div>
+        {owner === PLAYER_TWO && "💀"}
+        {owner === PLAYER_ONE && "😀"}
+      </div>
     </td>
   );
 }

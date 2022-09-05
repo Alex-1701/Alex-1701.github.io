@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { GameTable } from "./components";
 import {generateGameData, requestGameData} from "./store";
-import { recalculate } from "./store/game/gameActions";
+// import { recalculate } from "./store/game/gameActions";
 
 import styles from "./App.module.scss";
 
@@ -19,8 +19,9 @@ export function App() {
   useEffect(() => {
     const initiateGameField = async () => {
       await dispatch(requestGameData());
+
       // await dispatch(generateGameData());
-      await dispatch(recalculate());
+      // await dispatch(recalculate());
     };
     initiateGameField();
   }, []);

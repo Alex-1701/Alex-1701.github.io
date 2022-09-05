@@ -3,7 +3,7 @@ import { TableCell } from "../TableCell";
 import styles from "./GameTable.module.scss";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
-  recalculate,
+  // recalculate,
   registerPlayerOneTurn,
   registerPlayerTwoTurn,
 } from "../../store/game/gameActions";
@@ -21,13 +21,14 @@ export function GameTable() {
     if (PlayerTurn === PLAYER_TWO) {
       setTimeout(() => {
         dispatch(registerPlayerTwoTurn(EasyBot(gameField, PlayerOneColor)));
+        // dispatch(recalculate());
       }, 200);
     }
   }, [PlayerTurn]);
 
   const onUserClick = async (x: number, y: number) => {
     await dispatch(registerPlayerOneTurn({ x, y }));
-    await dispatch(recalculate());
+    // await dispatch(recalculate());
   };
 
   const listRows = useMemo(() => {

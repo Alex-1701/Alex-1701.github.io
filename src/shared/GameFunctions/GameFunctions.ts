@@ -1,5 +1,5 @@
 import { ICoordinates, ITableField, ITableLine } from "../types";
-import {FREE} from "../constants";
+import { FREE, PLAYER_ONE, PLAYER_TWO, UNAVAILABLE } from "../constants";
 
 export const checkCellOwner = (
   matrix: ITableField,
@@ -96,7 +96,8 @@ export const registerTurn = (
   return matrix;
 };
 
-export const randomInt = (min: number, max: number): number => Math.round(Math.random() * (max - min) + min)
+export const randomInt = (min: number, max: number): number =>
+  Math.round(Math.random() * (max - min) + min);
 
 export const generateMatrix = (width: number, height: number) => {
   const matrix: ITableField = [];
@@ -126,4 +127,27 @@ export const generateMatrix = (width: number, height: number) => {
   console.log(pureMatrix);
 
   return matrix;
+};
+
+export const recalculate = (matrix: ITableField) => {
+  console.log("recalculate");
+  let availableCellsCount = 0;
+  let PlayerOneCellsCount = 0;
+  let PlayerTwoCellsCount = 0;
+  for (const line of matrix) {
+    for (const cell of line) {
+      if (cell.owner !== UNAVAILABLE) {
+        availableCellsCount += 1;
+      }
+
+      if (cell.owner === PLAYER_ONE) {
+        PlayerOneCellsCount += 1;
+      }
+
+      if (cell.owner === PLAYER_TWO) {
+        PlayerTwoCellsCount += 1;
+      }
+    }
+  }
+  return [availableCellsCount, PlayerOneCellsCount, PlayerTwoCellsCount];
 };
