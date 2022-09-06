@@ -1,28 +1,27 @@
 td {
   width: 25px;
   height: 25px;
-  border: 2px solid #464646;
   cursor: pointer;
-
+  border: 3px solid transparent;
 
   div {
     display: flex;
     align-items: center;
     justify-content: center;
-    //margin: auto;
-    //padding: 0;
-    //width: fit-content;
-    //font-size: 20px;
-    //font-weight: bolder;
+  }
+
+  &:hover {
+    border: 3px solid black;
   }
 }
+
 
 .color_1 {
   background-color: #ff2b2b;
 }
 
 .color_1:hover {
-  background-color: rgb(255, 146, 146);
+  //background-color: rgb(255, 146, 146);
 }
 
 .color_2 {
@@ -83,10 +82,9 @@ td {
 }
 
 .neutral {
-  border-color: #311111;
   background-color: #311111;
 }
 
 .neutral:hover {
-  //border-color: #311111;
+  border: 3px solid transparent;
 }
