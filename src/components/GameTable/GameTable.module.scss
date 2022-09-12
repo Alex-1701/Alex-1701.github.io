@@ -1,4 +1,7 @@
+@import "src/global";
+
 .game-table {
-  border: 25px solid #311111;
-  background: #464646;
+  border: 33px solid $table-background;
+  background: $table-background;
+  width: fit-content;
 }

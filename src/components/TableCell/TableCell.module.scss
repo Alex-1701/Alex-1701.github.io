@@ -1,6 +1,12 @@
+@import "src/global";
+
 td {
   min-width: 25px;
   min-height: 25px;
+
+  max-width: 25px;
+  max-height: 25px;
+
   width: 25px;
   height: 25px;
   cursor: pointer;
@@ -55,7 +61,7 @@ td {
 }
 
 .neutral {
-  background-color: #311111;
+  background-color: $table-background;
 
   &:hover {
     border-color: transparent;
