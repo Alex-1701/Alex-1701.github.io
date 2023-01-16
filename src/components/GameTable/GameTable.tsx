@@ -9,6 +9,7 @@ import {
 } from "../../store/game/gameActions";
 import { PLAYER_TWO } from "../../shared/constants";
 import { EasyBot } from "../../enemy";
+import {GameClass} from "../../shared/GameClass";
 
 export function GameTable() {
   const dispatch = useAppDispatch();
@@ -27,7 +28,9 @@ export function GameTable() {
   }, [PlayerTurn]);
 
   const onUserClick = async (x: number, y: number) => {
-    await dispatch(registerPlayerOneTurn({ x, y }));
+    GameClass.registerPlayerOneTurn({x, y});
+    // await dispatch(registerPlayerOneTurn({ x, y }));
+
     // await dispatch(recalculate());
   };
 

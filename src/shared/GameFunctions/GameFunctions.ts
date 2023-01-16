@@ -151,3 +151,17 @@ export const recalculate = (matrix: ITableField) => {
   }
   return [availableCellsCount, PlayerOneCellsCount, PlayerTwoCellsCount];
 };
+
+export const findIsolatedAreas = (matrix: ITableField) => {
+  // const isolatedAreas: ICoordinates[];
+
+  for (let i = 0; i < matrix.length; i += 1) {
+    for (let j = 0; j < matrix[i].length; j += 1) {
+      if (matrix[i][j].owner === FREE) {
+        console.log("free");
+
+
+      }
+    }
+  }
+};

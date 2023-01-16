@@ -9,11 +9,12 @@ import {
   generateGameData,
   registerPlayerOneTurn,
   registerPlayerTwoTurn,
-  requestGameData,
+  requestGameData, updateState,
 } from "./gameActions";
 import {
-  findAllFreeNeighbors,
-  generateMatrix, recalculate,
+  findAllFreeNeighbors, findIsolatedAreas,
+  generateMatrix,
+  recalculate,
   registerTurn,
   selectColorsFromArray,
 } from "../../shared/GameFunctions";
@@ -23,10 +24,11 @@ import {
   PLAYER_TWO,
   UNAVAILABLE,
 } from "../../shared/constants";
+import {GameClass} from "../../shared/GameClass";
 
 interface GameState {
-  isRequestingGameData: boolean;
   gameField: ITableField;
+  isRequestingGameData: boolean;
   PlayerTurn: number;
   PlayerOneColor: number;
   PlayerTwoColor: number;
@@ -35,11 +37,12 @@ interface GameState {
   PlayerTwoCellsCount: number;
   PlayerOneAvailableColors: number[];
   PlayerTwoAvailableColors: number[];
+  winner: 0 | 1 | 2;
 }
 
 const initialState: GameState = {
-  isRequestingGameData: false,
   gameField: [],
+  isRequestingGameData: false,
   PlayerTurn: 0,
   PlayerOneColor: 0,
   PlayerTwoColor: 0,
@@ -48,6 +51,7 @@ const initialState: GameState = {
   PlayerTwoCellsCount: 0,
   PlayerOneAvailableColors: [],
   PlayerTwoAvailableColors: [],
+  winner: 0,
 };
 
 export const gameSlice = createSlice({
@@ -89,7 +93,11 @@ export const gameSlice = createSlice({
         }
       }
 
-      [state.availableCellsCount, state.PlayerOneCellsCount, state.PlayerTwoCellsCount] = recalculate(state.gameField);
+      [
+        state.availableCellsCount,
+        state.PlayerOneCellsCount,
+        state.PlayerTwoCellsCount,
+      ] = recalculate(state.gameField);
 
       state.isRequestingGameData = false;
     },
@@ -108,20 +116,21 @@ export const gameSlice = createSlice({
       const { x, y } = action.payload;
       const chosenColor = state.gameField[y][x].color;
 
+      let freeNeighbors: ICoordinates[] = findAllFreeNeighbors(
+        state.gameField,
+        PLAYER_ONE
+      );
+      let freeNeighborsColors = selectColorsFromArray(
+        state.gameField,
+        freeNeighbors
+      );
+
       // If this is P1 turn and cell is free.
       if (
         state.PlayerTurn === PLAYER_ONE &&
-        state.gameField[y][x].owner === FREE
+        state.gameField[y][x].owner === FREE &&
+        freeNeighborsColors.includes(chosenColor)
       ) {
-        let freeNeighbors: ICoordinates[] = findAllFreeNeighbors(
-          state.gameField,
-          PLAYER_ONE
-        );
-        let freeNeighborsColors = selectColorsFromArray(
-          state.gameField,
-          freeNeighbors
-        );
-
         do {
           for (let i = 0; i < freeNeighbors.length; i += 1) {
             if (
@@ -153,9 +162,20 @@ export const gameSlice = createSlice({
         // This is for initiate next turn.
         state.PlayerTurn = PLAYER_TWO;
         state.PlayerOneColor = chosenColor;
-        [state.availableCellsCount, state.PlayerOneCellsCount, state.PlayerTwoCellsCount] = recalculate(state.gameField);
+        [
+          state.availableCellsCount,
+          state.PlayerOneCellsCount,
+          state.PlayerTwoCellsCount,
+        ] = recalculate(state.gameField);
       } else {
-        console.log("forbidden");
+        console.log("forbidden", freeNeighborsColors.length);
+
+        if (freeNeighborsColors.length === 0) {
+          state.winner = 2;
+
+        }
+
+        console.log(state.winner);
       }
     },
     [registerPlayerOneTurn.rejected.type]: (state) => {
@@ -174,10 +194,21 @@ export const gameSlice = createSlice({
       if (x === -1 && y === -1) {
         // P2 lose
         console.log("P2 LOSE");
+        findIsolatedAreas(state.gameField);
+        state.winner = 1;
+
       } else {
         state.gameField = registerTurn(state.gameField, PLAYER_TWO, { x, y });
-        [state.availableCellsCount, state.PlayerOneCellsCount, state.PlayerTwoCellsCount] = recalculate(state.gameField);
-        [state.availableCellsCount, state.PlayerOneCellsCount, state.PlayerTwoCellsCount] = recalculate(state.gameField);
+        [
+          state.availableCellsCount,
+          state.PlayerOneCellsCount,
+          state.PlayerTwoCellsCount,
+        ] = recalculate(state.gameField);
+        [
+          state.availableCellsCount,
+          state.PlayerOneCellsCount,
+          state.PlayerTwoCellsCount,
+        ] = recalculate(state.gameField);
         state.PlayerTurn = PLAYER_ONE;
       }
     },
@@ -185,11 +216,13 @@ export const gameSlice = createSlice({
       // console.log("rejected");
     },
 
-
-
     [generateGameData.type]: (state) => {
       state.gameField = generateMatrix(15, 15);
     },
+
+    [updateState.type]: (state) => {
+      state.gameField = GameClass.matrix;
+    }
   },
 });
 
