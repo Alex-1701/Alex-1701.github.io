@@ -3,6 +3,16 @@
   "version": "0.1.0",
   "homepage": "https://alex-1701.github.io",
   "private": true,
+  "scripts": {
+    "prettier": "prettier -c ./**/*.{js,jsx,ts,tsx,scss,html} --write",
+    "lint": "eslint \"src",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -b main -d build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.5",
     "@types/jest": "^27.4.1",
@@ -21,15 +31,16 @@
     "sass-loader": "^12.6.0",
     "style-loader": "^3.3.1"
   },
-  "scripts": {
-    "prettier": "prettier -c ./**/*.{js,jsx,ts,tsx,scss,html} --write",
-    "lint": "eslint \"src",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -b main -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "eslint": "^8.12.0",
+    "eslint-config-airbnb-typescript": "^16.1.4",
+    "eslint-config-prettier": "^8.5.0",
+    "gh-pages": "^3.2.3",
+    "prettier": "2.6.1",
+    "ts-loader": "^9.2.8",
+    "typescript": "^4.6.3"
   },
   "eslintConfig": {
     "extends": [
@@ -48,16 +59,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.16.0",
-    "eslint": "^8.12.0",
-    "eslint-config-airbnb-typescript": "^16.1.4",
-    "eslint-config-prettier": "^8.5.0",
-    "gh-pages": "^3.2.3",
-    "prettier": "2.6.1",
-    "ts-loader": "^9.2.8",
-    "typescript": "^4.6.3"
   }
 }

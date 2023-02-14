@@ -22,3 +22,10 @@ export interface ICoordinates {
   x: number;
   y: number;
 }
+
+export interface IGameData {
+  matrix: number[][][],
+  currentPlayerNumber: number,
+  enemyPlayerNumber: number,
+  playerTurn: number,
+}

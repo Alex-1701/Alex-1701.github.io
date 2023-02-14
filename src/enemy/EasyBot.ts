@@ -6,6 +6,7 @@ import {
   selectColorsFromArray,
 } from "../shared/GameFunctions";
 
+/// TODO refactor to return color.
 export function EasyBot(
   matrix: ITableField,
   PlayerOneColor: number

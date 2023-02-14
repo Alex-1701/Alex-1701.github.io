@@ -12,7 +12,7 @@
   ],
   "parser": "@typescript-eslint/parser",
   "rules": {
-    "lines-between-class-members": ["warn", "always"],
+    "lines-between-class-members": ["warn", "never"],
     "import/prefer-default-export": 0,
     "react/jsx-filename-extension": [
       2,
