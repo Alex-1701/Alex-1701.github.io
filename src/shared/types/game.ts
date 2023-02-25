@@ -7,8 +7,16 @@ export interface ITableLine extends Array<ITableCell> {
   [index: number]: ITableCell;
 }
 
+export interface ITableLineEmoji extends Array<string> {
+  [index: number]: string;
+}
+
 export interface ITableField extends Array<ITableLine> {
   [index: number]: ITableLine;
+}
+
+export interface ITableFieldEmoji extends Array<ITableLineEmoji> {
+  [index: number]: ITableLineEmoji;
 }
 
 export interface IMockGameData {

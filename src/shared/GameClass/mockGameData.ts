@@ -1,6 +1,4 @@
 export const mockGameData = {
-  matrixWidth: 4,
-  matrixHeight: 4,
   // prettier-ignore
   // matrix: [
   //   [[1, 1], [1, 1], [3, 3], [3, 3], [5, 3], [4, 3],],

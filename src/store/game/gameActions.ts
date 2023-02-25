@@ -2,8 +2,6 @@ import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { ICoordinates } from "../../shared/types";
 
 const mockGameData = {
-  matrixWidth: 6,
-  matrixHeight: 5,
   // prettier-ignore
   // matrix: [
   //   [[1, 1], [1, 1], [3, 3], [3, 3], [5, 3], [4, 3],],

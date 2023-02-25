@@ -125,7 +125,7 @@ export const generateMatrix = (width: number, height: number) => {
     pureMatrix.push(pureLine);
   }
 
-  console.log(pureMatrix);
+  // console.log(pureMatrix);
 
   return matrix;
 };
