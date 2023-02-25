@@ -307,7 +307,7 @@ export class GameClass {
         let newCell: number[];
 
         switch (emojiMatrix[i][j]) {
-          case "♥":
+          case "❤️":
             // newCell = {color: 1, owner: 1}
             newCell = [1, 1];
             break;
