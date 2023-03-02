@@ -11,6 +11,11 @@
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "react-hooks"
+  ],
   "rules": {
     "lines-between-class-members": ["warn", "never"],
     "import/prefer-default-export": 0,
@@ -44,7 +49,10 @@
       {
         "props": false
       }
-    ]
+    ],
+    "react-hooks/rules-of-hooks": "error",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error"
   },
   "settings": {
     "import/resolver": {

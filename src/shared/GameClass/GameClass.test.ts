@@ -126,33 +126,61 @@ describe("test", () => {
 });
 
 describe("methods", () => {
-  test("emojiConverter", () => {
-    const gameData = {
-      // prettier-ignore
-      matrix: [
-        [[3, 1], [5, 3]],
-        [[2, 3], [4, 3]],
-        [[6, 3], [1, 2]],
-      ],
-      currentPlayerNumber: 1,
-      enemyPlayerNumber: 2,
-      playerTurn: 1,
-    };
-
-    const gameClass = new GameClass(gameData);
-
-    // prettier-ignore
-    const resMatrix: ITableField = [
-      [{color: 3, owner: 1}, {color: 5, owner: 3},],
-      [{color: 2, owner: 3}, {color: 4, owner: 3},],
-      [{color: 6, owner: 3}, {color: 1, owner: 2},],
+  test("emojiToMatrixConverter", () => {
+    const matrixEmoji1: ITableFieldEmoji = [
+      ["🧡", "🔴", "🟢"],
+      ["🟠", "🟡", "🟣"],
+      ["🟣", "🟠", "🟥"],
     ];
+    const matrix1 = GameClass.emojiToMatrixConverter(matrixEmoji1);
+    // prettier-ignore
+    const matrixNumber1: number[][][] = [
+      [[2, 1], [1, 3], [5, 3]],
+      [[2, 3], [3, 3], [6, 3]],
+      [[6, 3], [2, 3], [1, 2]],
+    ]
+    expect(matrix1).toEqual(matrixNumber1);
 
-    expect(gameClass.matrix).toEqual(resMatrix);
-    expect(gameClass.matrixHeight).toEqual(3);
-    expect(gameClass.matrixWidth).toEqual(2);
+    const matrixEmoji2: ITableFieldEmoji = [
+      ["🧡", "🔴", "🟢", "🟣"],
+      ["🟠", "🟡", "🟣", "🟥"],
+    ];
+    const matrix2 = GameClass.emojiToMatrixConverter(matrixEmoji2);
+    // prettier-ignore
+    const matrixNumber2: number[][][] = [
+      [[2, 1], [1, 3], [5, 3], [6, 3]],
+      [[2, 3], [3, 3], [6, 3], [1, 2]],
+    ]
+    expect(matrix2).toEqual(matrixNumber2);
   });
 
+  test("matrixToEmojiConverter", () => {
+    // prettier-ignore
+    const matrixNumber1: number[][][] = [
+      [[2, 1], [1, 3], [5, 3]],
+      [[2, 3], [3, 3], [6, 3]],
+      [[6, 3], [2, 3], [1, 2]],
+    ]
+    const matrix1 = GameClass.matrixToEmojiConverter(matrixNumber1);
+    const matrixEmoji1: ITableFieldEmoji = [
+      ["🧡", "🔴", "🟢"],
+      ["🟠", "🟡", "🟣"],
+      ["🟣", "🟠", "🟥"],
+    ];
+    expect(matrix1).toEqual(matrixEmoji1);
+
+    // prettier-ignore
+    const matrixNumber2: number[][][] = [
+      [[2, 1], [1, 3], [5, 3], [6, 3]],
+      [[2, 3], [3, 3], [6, 3], [1, 2]],
+    ]
+    const matrix2 = GameClass.matrixToEmojiConverter(matrixNumber2);
+    const matrixEmoji2: ITableFieldEmoji = [
+      ["🧡", "🔴", "🟢", "🟣"],
+      ["🟠", "🟡", "🟣", "🟥"],
+    ];
+    expect(matrix2).toEqual(matrixEmoji2);
+  });
 
   test("checkCell", () => {
     const gameData = {
@@ -215,7 +243,7 @@ describe("methods", () => {
       ["🟣", "🟠", "🟥"],
     ];
 
-    const matrix = GameClass.emojiConverter(matrixEmoji);
+    const matrix = GameClass.emojiToMatrixConverter(matrixEmoji);
 
     const gameData = {
       matrix,
@@ -225,8 +253,6 @@ describe("methods", () => {
     };
 
     const gameClass = new GameClass(gameData);
-
-
 
     const playerOneNeighbors: ICoordinates[] = [
       { x: 1, y: 0 },
@@ -238,9 +264,36 @@ describe("methods", () => {
       { x: 1, y: 2 },
     ];
 
-    console.log(gameClass.findAllFreeNeighbors(2))
-
     expect(gameClass.findAllFreeNeighbors(1)).toEqual(playerOneNeighbors);
     expect(gameClass.findAllFreeNeighbors(2)).toEqual(playerTwoNeighbors);
+  });
+
+  test("selectColorsFromArray", () => {
+    const matrixEmoji: ITableFieldEmoji = [
+      ["🧡", "🔴", "🟢"],
+      ["🟠", "🟡", "🟣"],
+      ["🟣", "🟠", "🟥"],
+    ];
+
+    const matrix = GameClass.emojiToMatrixConverter(matrixEmoji);
+
+    const gameData = {
+      matrix,
+      currentPlayerNumber: 1,
+      enemyPlayerNumber: 2,
+      playerTurn: 1,
+    };
+
+    const gameClass = new GameClass(gameData);
+
+    const cells: ICoordinates[] = [
+      { x: 0, y: 0 },
+      { x: 0, y: 1 },
+      { x: 2, y: 2 },
+      { x: 2, y: 1 },
+    ];
+    const colorArray = gameClass.selectColorsFromArray(cells);
+
+    expect([2, 1, 6]).toEqual(colorArray);
   });
 });

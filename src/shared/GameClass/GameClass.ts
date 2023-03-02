@@ -4,16 +4,12 @@ import {
   ITableField,
   ITableFieldEmoji,
   ITableLine,
+  ITableLineEmoji,
 } from "../types";
-import { mockGameData } from "./mockGameData";
-import { FREE, PLAYER_ONE, PLAYER_TWO } from "../constants";
-import { store } from "../../store";
-import { updateState } from "../../store/game/gameActions";
-import {
-  findAllFreeNeighbors,
-  recalculate,
-  selectColorsFromArray,
-} from "../GameFunctions";
+import {mockGameData} from "./mockGameData";
+import {emojiCells, FREE, PLAYER_ONE, PLAYER_TWO, UNAVAILABLE} from "../constants";
+import {store} from "../../store";
+import {updateState} from "../../store/game/gameActions";
 
 export class GameClass {
   private gameField: ITableField = [];
@@ -35,7 +31,7 @@ export class GameClass {
   }
 
   public initGame(gameData?: IGameData): void {
-    const { matrix, playerTurn } = gameData || mockGameData;
+    const {matrix, playerTurn} = gameData || mockGameData;
 
     // Matrix should be rectangle!!!
     // console.log(matrix);
@@ -109,20 +105,14 @@ export class GameClass {
   }
 
   public registerPlayerOneTurn(turn: ICoordinates): void {
-    const { x, y } = turn;
+    const {x, y} = turn;
 
     if (x >= 0 && x < this.matrixWidth && y >= 0 && y < this.matrixHeight) {
       // const chosenColor = this.gameField[y][x].color; // get color is easy to move in method.
       const chosenColor = this.color(x, y); // get color is easy to move in method.
 
-      let freeNeighbors: ICoordinates[] = findAllFreeNeighbors(
-        this.gameField,
-        PLAYER_ONE
-      );
-      let freeNeighborsColors = selectColorsFromArray(
-        this.gameField,
-        freeNeighbors
-      );
+      let freeNeighbors: ICoordinates[] = this.findAllFreeNeighbors(PLAYER_ONE);
+      let freeNeighborsColors = this.selectColorsFromArray(freeNeighbors);
 
       // If this is P1 turn and cell is free.
       if (
@@ -142,12 +132,9 @@ export class GameClass {
             }
           }
 
-          freeNeighbors = findAllFreeNeighbors(this.gameField, PLAYER_ONE);
+          freeNeighbors = this.findAllFreeNeighbors(PLAYER_ONE);
 
-          freeNeighborsColors = selectColorsFromArray(
-            this.gameField,
-            freeNeighbors
-          );
+          freeNeighborsColors = this.selectColorsFromArray(freeNeighbors);
         } while (freeNeighborsColors.includes(chosenColor));
 
         for (let i = 0; i < this.gameField.length; i += 1) {
@@ -164,7 +151,7 @@ export class GameClass {
           this.availableCellsCount,
           this.PlayerOneCellsCount,
           this.PlayerTwoCellsCount,
-        ] = recalculate(this.gameField);
+        ] = this.recalculate();
       } else {
         console.log("forbidden", freeNeighborsColors.length);
 
@@ -183,19 +170,13 @@ export class GameClass {
   }
 
   public registerPlayerTwoTurn(turn: ICoordinates): void {
-    const { x, y } = turn;
+    const {x, y} = turn;
 
     if (x >= 0 && x < this.matrixWidth && y >= 0 && y < this.matrixHeight) {
       const chosenColor = this.color(x, y);
 
-      let freeNeighbors: ICoordinates[] = findAllFreeNeighbors(
-        this.gameField,
-        PLAYER_TWO
-      );
-      let freeNeighborsColors = selectColorsFromArray(
-        this.gameField,
-        freeNeighbors
-      );
+      let freeNeighbors: ICoordinates[] = this.findAllFreeNeighbors(PLAYER_TWO);
+      let freeNeighborsColors = this.selectColorsFromArray(freeNeighbors);
 
       // If this is P1 turn and cell is free.
       if (
@@ -215,12 +196,9 @@ export class GameClass {
             }
           }
 
-          freeNeighbors = findAllFreeNeighbors(this.gameField, PLAYER_TWO);
+          freeNeighbors = this.findAllFreeNeighbors(PLAYER_TWO);
 
-          freeNeighborsColors = selectColorsFromArray(
-            this.gameField,
-            freeNeighbors
-          );
+          freeNeighborsColors = this.selectColorsFromArray(freeNeighbors);
         } while (freeNeighborsColors.includes(chosenColor));
 
         for (let i = 0; i < this.gameField.length; i += 1) {
@@ -237,7 +215,7 @@ export class GameClass {
           this.availableCellsCount,
           this.PlayerOneCellsCount,
           this.PlayerTwoCellsCount,
-        ] = recalculate(this.gameField);
+        ] = this.recalculate();
       } else {
         console.log("forbidden", freeNeighborsColors.length);
 
@@ -292,110 +270,83 @@ export class GameClass {
           this.checkCellNeighbors(j, i, target, "owner") &&
           this.gameField[i][j].owner === FREE
         )
-          res.push({ x: j, y: i });
+          res.push({x: j, y: i});
       }
     }
 
     return res;
   };
 
-  public static emojiConverter(emojiMatrix: ITableFieldEmoji): number[][][] {
-    const resMatrix: number[][][] = [];
-    for (let i = 0; i < emojiMatrix[0].length; i += 1) {
-      const newLine: number[][] = [];
-      for (let j = 0; j < emojiMatrix[0][0].length; j += 1) {
-        let newCell: number[];
+  public selectColorsFromArray = (array: ICoordinates[]): number[] => {
+    const colors: number[] = [];
+    for (let i = 0; i < array.length; i += 1) {
+      const {color} = this.matrix[array[i].y][array[i].x];
+      if (!colors.includes(color)) {
+        colors.push(color);
+      }
+    }
+    return colors;
+  };
 
-        switch (emojiMatrix[i][j]) {
-          case "❤️":
-            // newCell = {color: 1, owner: 1}
-            newCell = [1, 1];
-            break;
-          case "🟥":
-            // newCell = {color: 1, owner: 2}
-            newCell = [1, 2];
-            break;
-          case "🔴":
-            // newCell = {color: 1, owner: 3}
-            newCell = [1, 3];
-            break;
-
-          case "🧡":
-            // newCell = {color: 2, owner: 1}
-            newCell = [2, 1];
-            break;
-          case "🟧":
-            // newCell = {color: 2, owner: 2}
-            newCell = [2, 2];
-            break;
-          case "🟠":
-            // newCell = {color: 2, owner: 3}
-            newCell = [2, 3];
-            break;
-
-          case "💛":
-            // newCell = {color: 3, owner: 1}
-            newCell = [3, 1];
-            break;
-          case "🟨":
-            // newCell = {color: 3, owner: 2}
-            newCell = [3, 2];
-            break;
-          case "🟡":
-            // newCell = {color: 3, owner: 3}
-            newCell = [3, 3];
-            break;
-
-          case "💙":
-            // newCell = {color: 4, owner: 1}
-            newCell = [4, 1];
-            break;
-          case "🟦":
-            // newCell = {color: 4, owner: 2}
-            newCell = [4, 2];
-            break;
-          case "🔵":
-            // newCell = {color: 4, owner: 3}
-            newCell = [4, 3];
-            break;
-
-          case "💚":
-            // newCell = {color: 5, owner: 1}
-            newCell = [5, 1];
-            break;
-          case "🟩":
-            // newCell = {color: 5, owner: 2}
-            newCell = [5, 2];
-            break;
-          case "🟢":
-            // newCell = {color: 5, owner: 3}
-            newCell = [5, 3];
-            break;
-
-          case "💜":
-            // newCell = {color: 6, owner: 1}
-            newCell = [6, 1];
-            break;
-          case "🟪":
-            // newCell = {color: 6, owner: 2}
-            newCell = [6, 2];
-            break;
-          case "🟣":
-            // newCell = {color: 6, owner: 3}
-            newCell = [6, 3];
-            break;
-
-          default:
-            // newCell = {color: 1, owner: 3}
-            newCell = [1, 1];
-            break;
+  public recalculate = (): number[] => {
+    let availableCellsCount = 0;
+    let PlayerOneCellsCount = 0;
+    let PlayerTwoCellsCount = 0;
+    for (const line of this.matrix) {
+      for (const cell of line) {
+        if (cell.owner !== UNAVAILABLE) {
+          availableCellsCount += 1;
         }
+
+        if (cell.owner === PLAYER_ONE) {
+          PlayerOneCellsCount += 1;
+        }
+
+        if (cell.owner === PLAYER_TWO) {
+          PlayerTwoCellsCount += 1;
+        }
+      }
+    }
+    return [availableCellsCount, PlayerOneCellsCount, PlayerTwoCellsCount];
+  };
+
+  public static emojiToMatrixConverter(
+    emojiMatrix: ITableFieldEmoji
+  ): number[][][] {
+    const resMatrix: number[][][] = [];
+    for (let i = 0; i < emojiMatrix.length; i += 1) {
+      const newLine: number[][] = [];
+      for (let j = 0; j < emojiMatrix[0].length; j += 1) {
+        const emojiCell = emojiCells.find(
+          (cell) => cell.emoji === emojiMatrix[i][j]
+        );
+        const newCell: number[] = emojiCell
+          ? emojiCell.cell
+          : emojiCells[0].cell;
         newLine.push(newCell);
       }
       resMatrix.push(newLine);
     }
-
     return resMatrix;
+  }
+
+  public static matrixToEmojiConverter(matrix: number[][][]): ITableFieldEmoji {
+    const resEmojiMatrix: ITableFieldEmoji = [];
+    for (let i = 0; i < matrix.length; i += 1) {
+      const newEmojiLine: ITableLineEmoji = [];
+      for (let j = 0; j < matrix[0].length; j += 1) {
+        const emojiCell = emojiCells.find(
+          (cell) =>
+            cell.cell[0] === matrix[i][j][0] && cell.cell[1] === matrix[i][j][1]
+        );
+        const newCell: string = emojiCell
+          ? emojiCell.emoji
+          : emojiCells[0].emoji;
+        newEmojiLine.push(newCell);
+      }
+      resEmojiMatrix.push(newEmojiLine);
+    }
+    return resEmojiMatrix;
   }
 
   private static executeTurn(player: number, newColor: number): void {
