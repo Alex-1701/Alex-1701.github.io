@@ -3,6 +3,7 @@ import {
   IGameData,
   ITableField,
   ITableFieldEmoji,
+  ITableFieldNumeric,
   ITableLine,
   ITableLineEmoji,
 } from "../types";
@@ -14,7 +15,6 @@ import { IWinner, Winner } from "../constants/winner";
 
 export class GameClass {
   private gameField: ITableField = [];
-  // private isRequestingGameData: boolean;
   private PlayerTurn = 0;
   private PlayerOneColor = 0;
   private PlayerTwoColor = 0;
@@ -42,7 +42,6 @@ export class GameClass {
     const { matrix, playerTurn } = gameData || mockGameData;
 
     // Matrix should be rectangle!!!
-    // console.log(matrix);
 
     this.MatrixHeight = matrix.length;
     this.MatrixWidth = matrix[0].length;
@@ -72,6 +71,7 @@ export class GameClass {
       }
     }
 
+    this.recalculate();
     this.notifyRedux();
   }
 
@@ -79,8 +79,8 @@ export class GameClass {
     return this.gameField;
   }
 
-  public get matrixNumbers(): number[][][] {
-    const resMatrix: number[][][] = [];
+  public get matrixNumbers(): ITableFieldNumeric {
+    const resMatrix: ITableFieldNumeric = [];
     for (let i = 0; i < this.matrixHeight; i += 1) {
       const newLine: number[][] = [];
       for (let j = 0; j < this.matrixWidth; j += 1) {
@@ -118,7 +118,16 @@ export class GameClass {
 
   // eslint-disable-next-line class-methods-use-this
   private notifyRedux(): void {
-    store.dispatch(updateState());
+    store.dispatch(
+      updateState({
+        gameField: this.matrix,
+        availableCellsCount: this.availableCellsCount,
+        PlayerOneCellsCount: this.PlayerOneCellsCount,
+        PlayerTwoCellsCount: this.PlayerTwoCellsCount,
+        PlayerTurn: this.PlayerTurn,
+        winner: this.winner,
+      })
+    );
   }
 
   public color(x: number, y: number): number {
@@ -208,8 +217,8 @@ export class GameClass {
 
   public static emojiToMatrixConverter(
     emojiMatrix: ITableFieldEmoji
-  ): number[][][] {
-    const resMatrix: number[][][] = [];
+  ): ITableFieldNumeric {
+    const resMatrix: ITableFieldNumeric = [];
     for (let i = 0; i < emojiMatrix.length; i += 1) {
       const newLine: number[][] = [];
       for (let j = 0; j < emojiMatrix[0].length; j += 1) {
@@ -226,7 +235,9 @@ export class GameClass {
     return resMatrix;
   }
 
-  public static matrixToEmojiConverter(matrix: number[][][]): ITableFieldEmoji {
+  public static matrixToEmojiConverter(
+    matrix: ITableFieldNumeric
+  ): ITableFieldEmoji {
     const resEmojiMatrix: ITableFieldEmoji = [];
     for (let i = 0; i < matrix.length; i += 1) {
       const newEmojiLine: ITableLineEmoji = [];
@@ -245,7 +256,10 @@ export class GameClass {
     return resEmojiMatrix;
   }
 
-  public registerTurn(turn: ICoordinates, player: 1 | 2): void {
+  public registerTurn(
+    turn: ICoordinates,
+    player: Owner.playerOne | Owner.playerTwo
+  ): void {
     const { x, y } = turn;
 
     if (x >= 0 && x < this.matrixWidth && y >= 0 && y < this.matrixHeight) {
@@ -307,11 +321,9 @@ export class GameClass {
                 : Owner.playerTwo;
           }
         }
-      } else {
-        if (freeNeighborsColors.length === 0) {
-          this.winner =
-            player === Owner.playerOne ? Owner.playerTwo : Owner.playerOne;
-        }
+      } else if (freeNeighborsColors.length === 0) {
+        this.winner =
+          player === Owner.playerOne ? Owner.playerTwo : Owner.playerOne;
       }
 
       this.notifyRedux();

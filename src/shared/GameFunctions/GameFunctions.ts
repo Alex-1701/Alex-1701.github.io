@@ -1,4 +1,4 @@
-import { ICoordinates, ITableField, ITableLine } from "../types";
+import {ICoordinates, ITableField, ITableFieldNumeric, ITableLine} from "../types";
 import { Owner } from "../constants";
 
 // I should move all this functions inside GameClass
@@ -102,7 +102,7 @@ export const randomInt = (min: number, max: number): number =>
 
 export const generateMatrix = (width: number, height: number) => {
   const matrix: ITableField = [];
-  const pureMatrix: number[][][] = [];
+  const pureMatrix: ITableFieldNumeric = [];
 
   const w = 15;
   const h = 15;

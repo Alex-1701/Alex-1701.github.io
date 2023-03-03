@@ -1,5 +1,5 @@
 import { ICoordinates, ITableField } from "../shared/types";
-import { Owner.playerTwo } from "../shared/constants";
+import { Owner } from "../shared/constants";
 import {
   findAllFreeNeighbors,
   randomInt,

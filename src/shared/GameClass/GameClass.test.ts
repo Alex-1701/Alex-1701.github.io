@@ -1,5 +1,5 @@
 import { GameClass } from "./GameClass";
-import { ICoordinates, ITableField, ITableFieldEmoji } from "../types";
+import {ICoordinates, ITableField, ITableFieldEmoji, ITableFieldNumeric} from "../types";
 import { Owner } from "../constants";
 
 describe("test", () => {
@@ -277,7 +277,7 @@ describe("methods", () => {
     ];
     const matrix1 = GameClass.emojiToMatrixConverter(matrixEmoji1);
     // prettier-ignore
-    const matrixNumber1: number[][][] = [
+    const matrixNumber1: ITableFieldNumeric = [
       [[2, 1], [1, 3], [5, 3]],
       [[2, 3], [3, 3], [6, 3]],
       [[6, 3], [2, 3], [1, 2]],
@@ -290,7 +290,7 @@ describe("methods", () => {
     ];
     const matrix2 = GameClass.emojiToMatrixConverter(matrixEmoji2);
     // prettier-ignore
-    const matrixNumber2: number[][][] = [
+    const matrixNumber2: ITableFieldNumeric = [
       [[2, 1], [1, 3], [5, 3], [6, 3]],
       [[2, 3], [3, 3], [6, 3], [1, 2]],
     ]
@@ -299,7 +299,7 @@ describe("methods", () => {
 
   test("matrixToEmojiConverter", () => {
     // prettier-ignore
-    const matrixNumber1: number[][][] = [
+    const matrixNumber1: ITableFieldNumeric = [
       [[2, 1], [1, 3], [5, 3]],
       [[2, 3], [3, 3], [6, 3]],
       [[6, 3], [2, 3], [1, 2]],
@@ -313,7 +313,7 @@ describe("methods", () => {
     expect(matrix1).toEqual(matrixEmoji1);
 
     // prettier-ignore
-    const matrixNumber2: number[][][] = [
+    const matrixNumber2: ITableFieldNumeric = [
       [[2, 1], [1, 3], [5, 3], [6, 3]],
       [[2, 3], [3, 3], [6, 3], [1, 2]],
     ]

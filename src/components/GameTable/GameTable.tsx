@@ -1,35 +1,40 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { TableCell } from "../TableCell";
 import styles from "./GameTable.module.scss";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import {
-  registerPlayerTwoTurn,
-} from "../../store/game/gameActions";
 import { Owner } from "../../shared/constants";
-import { EasyBot } from "../../enemy";
-import {GameClass} from "../../shared/GameClass";
+import { GameClass } from "../../shared/GameClass";
+import { requestGameData } from "../../store";
+import { IGameData } from "../../shared/types";
 
 export function GameTable() {
-  const dispatch = useAppDispatch();
+  const [gameInstance, setGameInstance] = useState<GameClass>();
 
-  const { gameField, PlayerTurn, PlayerOneColor } = useAppSelector(
-    (state) => state.game
-  );
+  const dispatch = useAppDispatch();
+  const { gameField, PlayerTurn } = useAppSelector((state) => state.game);
+
+  useEffect(() => {
+    setGameInstance(() => new GameClass());
+    const fetchGameData = async () => dispatch(requestGameData()).unwrap();
+
+    fetchGameData().then((data: IGameData) => {
+      gameInstance?.initGame(data);
+    });
+  }, []);
 
   useEffect(() => {
     if (PlayerTurn === Owner.playerTwo) {
       setTimeout(() => {
-        dispatch(registerPlayerTwoTurn(EasyBot(gameField, PlayerOneColor)));
+        // gameInstance.registerTurn(Owner.playerTwo);
+        // dispatch(registerPlayerTwoTurn(EasyBot(gameField)));
         // dispatch(recalculate());
       }, 200);
     }
   }, [PlayerTurn]);
 
   const onUserClick = async (x: number, y: number) => {
-    GameClass.registerTurn({x, y}, Owner.playerOne);
-    // await dispatch(registerPlayerOneTurn({ x, y }));
-
-    // await dispatch(recalculate());
+    gameInstance?.registerTurn({ x, y }, Owner.playerOne);
+    // dispatch(recalculate());
   };
 
   const listRows = useMemo(() => {
@@ -59,6 +64,7 @@ export function GameTable() {
           </tr>
         );
         y += 1;
+
         return resRow;
       });
     }

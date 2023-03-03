@@ -1,6 +1,15 @@
+// import {ITurn} from "../constants";
+import {IWinner} from "../constants/winner";
+
 export interface ITableCell {
   color: number;
   owner: number;
+}
+
+type ITableCellEmoji = string;
+
+export interface ITableCellNumeric {
+  [index: number]: number;
 }
 
 export interface ITableLine extends Array<ITableCell> {
@@ -8,7 +17,11 @@ export interface ITableLine extends Array<ITableCell> {
 }
 
 export interface ITableLineEmoji extends Array<string> {
-  [index: number]: string;
+  [index: number]: ITableCellEmoji;
+}
+
+export interface ITableLineNumeric extends Array<ITableCellNumeric> {
+  [index: number]: ITableCellNumeric;
 }
 
 export interface ITableField extends Array<ITableLine> {
@@ -19,11 +32,8 @@ export interface ITableFieldEmoji extends Array<ITableLineEmoji> {
   [index: number]: ITableLineEmoji;
 }
 
-export interface IMockGameData {
-  matrix: number[][][];
-  currentPlayerNumber: number;
-  enemyPlayerNumber: number;
-  playerTurn: number;
+export interface ITableFieldNumeric extends Array<ITableLineNumeric> {
+  [index: number]: ITableLineNumeric;
 }
 
 export interface ICoordinates {
@@ -32,8 +42,17 @@ export interface ICoordinates {
 }
 
 export interface IGameData {
-  matrix: number[][][],
-  currentPlayerNumber: number,
-  enemyPlayerNumber: number,
-  playerTurn: number,
+  matrix: ITableFieldNumeric;
+  currentPlayerNumber: number;
+  enemyPlayerNumber: number;
+  playerTurn: number;
+}
+
+export interface IGameDataForRedux {
+  gameField: ITableField;
+  availableCellsCount: number;
+  PlayerOneCellsCount: number,
+  PlayerTwoCellsCount: number,
+  PlayerTurn: number,
+  winner: IWinner,
 }

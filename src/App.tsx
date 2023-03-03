@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useAppSelector } from "./hooks";
 import { GameTable } from "./components";
 
 import styles from "./App.module.scss";
-import { GameClass } from "./shared/GameClass";
 
 export function App() {
   const {
@@ -13,11 +12,6 @@ export function App() {
     PlayerTurn,
     winner,
   } = useAppSelector((state) => state.game);
-
-  useEffect(() => {
-    const gameClass = new GameClass();
-    gameClass.initGame();
-  }, []);
 
   return (
     <div className={styles.App}>

@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import styles from "./TableCell.module.scss";
-import {Owner, Owner.playerOne, Owner.playerTwo} from "../../shared/constants";
+import {Owner} from "../../shared/constants";
 
 interface Props {
   x: number;
