@@ -1,5 +1,5 @@
 import { ICoordinates, ITableField } from "../shared/types";
-import { PLAYER_TWO } from "../shared/constants";
+import { Owner.playerTwo } from "../shared/constants";
 import {
   findAllFreeNeighbors,
   randomInt,
@@ -11,7 +11,7 @@ export function EasyBot(
   matrix: ITableField,
   PlayerOneColor: number
 ): ICoordinates {
-  const allFreeNeighbors = findAllFreeNeighbors(matrix, PLAYER_TWO);
+  const allFreeNeighbors = findAllFreeNeighbors(matrix, Owner.playerTwo);
   const allFreeColors = selectColorsFromArray(matrix, allFreeNeighbors);
   const allAvailableColors = allFreeColors.filter((c) => c !== PlayerOneColor);
   const allAvailableNeighbors = allFreeNeighbors.filter((neighbor) =>

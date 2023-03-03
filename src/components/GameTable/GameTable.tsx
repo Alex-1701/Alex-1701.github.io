@@ -3,11 +3,9 @@ import { TableCell } from "../TableCell";
 import styles from "./GameTable.module.scss";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
-  // recalculate,
-  registerPlayerOneTurn,
   registerPlayerTwoTurn,
 } from "../../store/game/gameActions";
-import { PLAYER_TWO } from "../../shared/constants";
+import { Owner } from "../../shared/constants";
 import { EasyBot } from "../../enemy";
 import {GameClass} from "../../shared/GameClass";
 
@@ -19,7 +17,7 @@ export function GameTable() {
   );
 
   useEffect(() => {
-    if (PlayerTurn === PLAYER_TWO) {
+    if (PlayerTurn === Owner.playerTwo) {
       setTimeout(() => {
         dispatch(registerPlayerTwoTurn(EasyBot(gameField, PlayerOneColor)));
         // dispatch(recalculate());
@@ -28,7 +26,7 @@ export function GameTable() {
   }, [PlayerTurn]);
 
   const onUserClick = async (x: number, y: number) => {
-    GameClass.registerPlayerOneTurn({x, y});
+    GameClass.registerTurn({x, y}, Owner.playerOne);
     // await dispatch(registerPlayerOneTurn({ x, y }));
 
     // await dispatch(recalculate());

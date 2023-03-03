@@ -1,5 +1,5 @@
 import { ICoordinates, ITableField, ITableLine } from "../types";
-import { FREE, PLAYER_ONE, PLAYER_TWO, UNAVAILABLE } from "../constants";
+import { Owner } from "../constants";
 
 // I should move all this functions inside GameClass
 export const checkCellOwner = (
@@ -37,7 +37,7 @@ export const findAllFreeNeighbors = (
     for (let j = 0; j < matrix[i].length; j += 1) {
       if (
         checkNeighbors(matrix, j, i, target, "owner") &&
-        matrix[i][j].owner === FREE
+        matrix[i][j].owner === Owner.free
       )
         res.push({ x: j, y: i });
     }
@@ -65,7 +65,7 @@ export const registerTurn = (
   player: number,
   turn: ICoordinates
 ): ITableField => {
-  if (matrix[turn.y][turn.x].owner === FREE) {
+  if (matrix[turn.y][turn.x].owner === Owner.free) {
     const chosenColor = matrix[turn.y][turn.x].color;
 
     let freeNeighbors: ICoordinates[] = findAllFreeNeighbors(matrix, player);
@@ -137,15 +137,15 @@ export const recalculate = (matrix: ITableField) => {
   let PlayerTwoCellsCount = 0;
   for (const line of matrix) {
     for (const cell of line) {
-      if (cell.owner !== UNAVAILABLE) {
+      if (cell.owner !== Owner.unavailable) {
         availableCellsCount += 1;
       }
 
-      if (cell.owner === PLAYER_ONE) {
+      if (cell.owner === Owner.playerOne) {
         PlayerOneCellsCount += 1;
       }
 
-      if (cell.owner === PLAYER_TWO) {
+      if (cell.owner === Owner.playerTwo) {
         PlayerTwoCellsCount += 1;
       }
     }
@@ -158,8 +158,8 @@ export const findIsolatedAreas = (matrix: ITableField) => {
 
   for (let i = 0; i < matrix.length; i += 1) {
     for (let j = 0; j < matrix[i].length; j += 1) {
-      if (matrix[i][j].owner === FREE) {
-        console.log("free");
+      if (matrix[i][j].owner === Owner.free) {
+        console.log("Owner.free");
       }
     }
   }

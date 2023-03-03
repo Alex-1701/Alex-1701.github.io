@@ -1,30 +1,35 @@
+import { Owner } from "./owners";
+import { Color } from "./color";
+
 export interface EmojiCell {
   emoji: string;
   cell: number[];
 }
 
 export const emojiCells: EmojiCell[] = [
-  { emoji: "❤️", cell: [1, 1] },
-  { emoji: "🟥", cell: [1, 2] },
-  { emoji: "🔴", cell: [1, 3] },
+  { emoji: "❌", cell: [Color.gray, Owner.unavailable] },
 
-  { emoji: "🧡", cell: [2, 1] },
-  { emoji: "🟧", cell: [2, 2] },
-  { emoji: "🟠", cell: [2, 3] },
+  { emoji: "❤️", cell: [Color.red, Owner.playerOne] },
+  { emoji: "🟥", cell: [Color.red, Owner.playerTwo] },
+  { emoji: "🔴", cell: [Color.red, Owner.free] },
 
-  { emoji: "💛", cell: [3, 1] },
-  { emoji: "🟨", cell: [3, 2] },
-  { emoji: "🟡", cell: [3, 3] },
+  { emoji: "🧡", cell: [Color.orange, Owner.playerOne] },
+  { emoji: "🟧", cell: [Color.orange, Owner.playerTwo] },
+  { emoji: "🟠", cell: [Color.orange, Owner.free] },
 
-  { emoji: "💙", cell: [4, 1] },
-  { emoji: "🟦", cell: [4, 2] },
-  { emoji: "🔵", cell: [4, 3] },
+  { emoji: "💛", cell: [Color.yellow, Owner.playerOne] },
+  { emoji: "🟨", cell: [Color.yellow, Owner.playerTwo] },
+  { emoji: "🟡", cell: [Color.yellow, Owner.free] },
 
-  { emoji: "💚", cell: [5, 1] },
-  { emoji: "🟩", cell: [5, 2] },
-  { emoji: "🟢", cell: [5, 3] },
+  { emoji: "💙", cell: [Color.blue, Owner.playerOne] },
+  { emoji: "🟦", cell: [Color.blue, Owner.playerTwo] },
+  { emoji: "🔵", cell: [Color.blue, Owner.free] },
 
-  { emoji: "💜", cell: [6, 1] },
-  { emoji: "🟪", cell: [6, 2] },
-  { emoji: "🟣", cell: [6, 3] },
+  { emoji: "💚", cell: [Color.green, Owner.playerOne] },
+  { emoji: "🟩", cell: [Color.green, Owner.playerTwo] },
+  { emoji: "🟢", cell: [Color.green, Owner.free] },
+
+  { emoji: "💜", cell: [Color.violet, Owner.playerOne] },
+  { emoji: "🟪", cell: [Color.violet, Owner.playerTwo] },
+  { emoji: "🟣", cell: [Color.violet, Owner.free] },
 ];

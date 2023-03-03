@@ -17,7 +17,7 @@
     "react-hooks"
   ],
   "rules": {
-    "lines-between-class-members": ["warn", "never"],
+    "lines-between-class-members": "off",
     "import/prefer-default-export": 0,
     "react/jsx-filename-extension": [
       2,

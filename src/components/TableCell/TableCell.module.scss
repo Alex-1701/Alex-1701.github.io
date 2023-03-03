@@ -48,19 +48,19 @@ td {
   background-color: #ff3cb5;
 }
 
-.player {
+.playerOne {
   &:hover {
     border-color: transparent;
   }
 }
 
-.enemy {
+.playerTwo {
   &:hover {
     border-color: transparent;
   }
 }
 
-.neutral {
+.unavailable {
   background-color: $table-background;
 
   &:hover {

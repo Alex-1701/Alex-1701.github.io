@@ -19,10 +19,7 @@ import {
   selectColorsFromArray,
 } from "../../shared/GameFunctions";
 import {
-  FREE,
-  PLAYER_ONE,
-  PLAYER_TWO,
-  UNAVAILABLE,
+  Owner
 } from "../../shared/constants";
 import {GameClass} from "../../shared/GameClass";
 
@@ -84,10 +81,10 @@ export const gameSlice = createSlice({
       // Now we know color of each player.
       for (const line of state.gameField) {
         for (const cell of line) {
-          if (cell.owner === PLAYER_ONE) {
+          if (cell.owner === Owner.playerOne) {
             state.PlayerOneColor = cell.color;
           }
-          if (cell.owner === PLAYER_TWO) {
+          if (cell.owner === Owner.playerTwo) {
             state.PlayerTwoColor = cell.color;
           }
         }
@@ -118,17 +115,17 @@ export const gameSlice = createSlice({
 
       let freeNeighbors: ICoordinates[] = findAllFreeNeighbors(
         state.gameField,
-        PLAYER_ONE
+        Owner.playerOne
       );
       let freeNeighborsColors = selectColorsFromArray(
         state.gameField,
         freeNeighbors
       );
 
-      // If this is P1 turn and cell is free.
+      // If this is P1 turn and cell is Owner.free.
       if (
-        state.PlayerTurn === PLAYER_ONE &&
-        state.gameField[y][x].owner === FREE &&
+        state.PlayerTurn === Owner.playerOne &&
+        state.gameField[y][x].owner === Owner.free &&
         freeNeighborsColors.includes(chosenColor)
       ) {
         do {
@@ -144,7 +141,7 @@ export const gameSlice = createSlice({
             }
           }
 
-          freeNeighbors = findAllFreeNeighbors(state.gameField, PLAYER_ONE);
+          freeNeighbors = findAllFreeNeighbors(state.gameField, Owner.playerOne);
 
           freeNeighborsColors = selectColorsFromArray(
             state.gameField,
@@ -154,13 +151,13 @@ export const gameSlice = createSlice({
 
         for (let i = 0; i < state.gameField.length; i += 1) {
           for (let j = 0; j < state.gameField[i].length; j += 1) {
-            if (state.gameField[i][j].owner === PLAYER_ONE)
+            if (state.gameField[i][j].owner === Owner.playerOne)
               state.gameField[i][j].color = chosenColor;
           }
         }
 
         // This is for initiate next turn.
-        state.PlayerTurn = PLAYER_TWO;
+        state.PlayerTurn = Owner.playerTwo;
         state.PlayerOneColor = chosenColor;
         [
           state.availableCellsCount,
@@ -198,7 +195,7 @@ export const gameSlice = createSlice({
         state.winner = 1;
 
       } else {
-        state.gameField = registerTurn(state.gameField, PLAYER_TWO, { x, y });
+        state.gameField = registerTurn(state.gameField, Owner.playerTwo, { x, y });
         [
           state.availableCellsCount,
           state.PlayerOneCellsCount,
@@ -209,7 +206,7 @@ export const gameSlice = createSlice({
           state.PlayerOneCellsCount,
           state.PlayerTwoCellsCount,
         ] = recalculate(state.gameField);
-        state.PlayerTurn = PLAYER_ONE;
+        state.PlayerTurn = Owner.playerOne;
       }
     },
     [registerPlayerTwoTurn.rejected.type]: (state) => {
