@@ -1,17 +1,17 @@
+// import * as _ from "lodash";
 import {
   ICoordinates,
   IGameData,
+  IGameDataForDisplay,
   ITableField,
   ITableFieldEmoji,
   ITableFieldNumeric,
   ITableLine,
   ITableLineEmoji,
 } from "../types";
-import { mockGameData } from "./mockGameData";
-import { emojiCells, Owner } from "../constants";
-import { store } from "../../store";
-import { updateState } from "../../store/game/gameActions";
-import { IWinner, Winner } from "../constants/winner";
+import {mockGameData} from "./mockGameData";
+import {emojiCells, Owner} from "../constants";
+import {IWinner, Winner} from "../constants/winner";
 
 export class GameClass {
   private gameField: ITableField = [];
@@ -31,15 +31,11 @@ export class GameClass {
    * @private
    */
   private winner: IWinner = null;
-  private MatrixHeight = 0;
-  private MatrixWidth = 0;
+  private readonly MatrixHeight: number;
+  private readonly MatrixWidth: number;
 
   public constructor(gameData?: IGameData) {
-    this.initGame(gameData);
-  }
-
-  public initGame(gameData?: IGameData): void {
-    const { matrix, playerTurn } = gameData || mockGameData;
+    const {matrix, playerTurn} = gameData || mockGameData;
 
     // Matrix should be rectangle!!!
 
@@ -72,7 +68,15 @@ export class GameClass {
     }
 
     this.recalculate();
-    this.notifyRedux();
+  }
+
+  public clone(): GameClass {
+    return new GameClass({
+      matrix: this.matrixNumbers,
+      currentPlayerNumber: 1,
+      enemyPlayerNumber: 2,
+      playerTurn: this.PlayerTurn,
+    });
   }
 
   public get matrix(): ITableField {
@@ -84,7 +88,7 @@ export class GameClass {
     for (let i = 0; i < this.matrixHeight; i += 1) {
       const newLine: number[][] = [];
       for (let j = 0; j < this.matrixWidth; j += 1) {
-        const { color, owner } = this.matrix[i][j];
+        const {color, owner} = this.matrix[i][j];
         newLine.push([color, owner]);
       }
       resMatrix.push(newLine);
@@ -116,19 +120,31 @@ export class GameClass {
     return this.MatrixWidth;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  private notifyRedux(): void {
-    store.dispatch(
-      updateState({
-        gameField: this.matrix,
-        availableCellsCount: this.availableCellsCount,
-        PlayerOneCellsCount: this.PlayerOneCellsCount,
-        PlayerTwoCellsCount: this.PlayerTwoCellsCount,
-        PlayerTurn: this.PlayerTurn,
-        winner: this.winner,
-      })
-    );
+  public returnMainData(): IGameDataForDisplay {
+    return {
+      gameField: this.matrix,
+      availableCellsCount: this.availableCellsCount,
+      PlayerOneCellsCount: this.PlayerOneCellsCount,
+      PlayerTwoCellsCount: this.PlayerTwoCellsCount,
+      PlayerTurn: this.PlayerTurn,
+      winner: this.winner,
+    };
   }
+
+  // public notifyRedux(): void {
+  //   const data: IGameDataForDisplay = {
+  //     gameField: this.matrix,
+  //     availableCellsCount: this.availableCellsCount,
+  //     PlayerOneCellsCount: this.PlayerOneCellsCount,
+  //     PlayerTwoCellsCount: this.PlayerTwoCellsCount,
+  //     PlayerTurn: this.PlayerTurn,
+  //     winner: this.winner,
+  //   };
+  //   // Aaaand this is solution of binding to redux. But not the case I will use.
+  //   const clone: IGameDataForDisplay = _.cloneDeep(data);
+  //
+  //   store.dispatch(updateState(clone));
+  // }
 
   public color(x: number, y: number): number {
     return this.gameField[y][x].color;
@@ -173,7 +189,7 @@ export class GameClass {
           this.checkCellNeighbors(j, i, target, "owner") &&
           this.gameField[i][j].owner === Owner.free
         )
-          res.push({ x: j, y: i });
+          res.push({x: j, y: i});
       }
     }
 
@@ -182,7 +198,7 @@ export class GameClass {
   public selectColorsFromArray = (array: ICoordinates[]): number[] => {
     const colors: number[] = [];
     for (let i = 0; i < array.length; i += 1) {
-      const { color } = this.matrix[array[i].y][array[i].x];
+      const {color} = this.matrix[array[i].y][array[i].x];
       if (!colors.includes(color)) {
         colors.push(color);
       }
@@ -193,7 +209,8 @@ export class GameClass {
   /**
    * calculate new count after turn.
    * @returns {Array} playableCells, playerOneCells, playerTwoCells
-   */ public recalculate = (): number[] => {
+   */
+  public recalculate = (): number[] => {
     let availableCellsCount = 0;
     let PlayerOneCellsCount = 0;
     let PlayerTwoCellsCount = 0;
@@ -256,11 +273,16 @@ export class GameClass {
     return resEmojiMatrix;
   }
 
+  /**
+   * @return is turn successful
+   * @param turn
+   * @param player
+   */
   public registerTurn(
     turn: ICoordinates,
     player: Owner.playerOne | Owner.playerTwo
   ): void {
-    const { x, y } = turn;
+    const {x, y} = turn;
 
     if (x >= 0 && x < this.matrixWidth && y >= 0 && y < this.matrixHeight) {
       const chosenColor = this.color(x, y);
@@ -326,7 +348,7 @@ export class GameClass {
           player === Owner.playerOne ? Owner.playerTwo : Owner.playerOne;
       }
 
-      this.notifyRedux();
+      // return <IGameDataForRedux>
     } else {
       console.log("Error: out of matrix");
     }

@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IGameDataForRedux, ITableField } from "../../shared/types";
+import { IGameDataForDisplay, ITableField } from "../../shared/types";
 import { generateGameData, requestGameData, updateState } from "./gameActions";
 import { generateMatrix } from "../../shared/GameFunctions";
-import {  Owner } from "../../shared/constants";
+import { Owner } from "../../shared/constants";
 import { IWinner } from "../../shared/constants/winner";
 
 interface GameState {
@@ -51,8 +51,7 @@ export const gameSlice = createSlice({
     [generateGameData.type]: (state) => {
       state.gameField = generateMatrix(15, 15);
     },
-
-    [updateState.type]: (state, action: PayloadAction<IGameDataForRedux>) => {
+    [updateState.type]: (state, action: PayloadAction<IGameDataForDisplay>) => {
       state.gameField = action.payload.gameField;
       state.PlayerTurn = action.payload.PlayerTurn;
       state.availableCellsCount = action.payload.availableCellsCount;

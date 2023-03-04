@@ -48,7 +48,7 @@ export interface IGameData {
   playerTurn: number;
 }
 
-export interface IGameDataForRedux {
+export interface IGameDataForDisplay {
   gameField: ITableField;
   availableCellsCount: number;
   PlayerOneCellsCount: number,

@@ -1,21 +1,18 @@
-import { ICoordinates, ITableField } from "../shared/types";
+import { ICoordinates } from "../shared/types";
 import { Owner } from "../shared/constants";
-import {
-  findAllFreeNeighbors,
-  randomInt,
-  selectColorsFromArray,
-} from "../shared/GameFunctions";
+import { randomInt } from "../shared/GameFunctions";
+import { GameClass } from "../shared/GameClass";
 
-/// TODO refactor to return color.
-export function EasyBot(
-  matrix: ITableField,
-  PlayerOneColor: number
-): ICoordinates {
-  const allFreeNeighbors = findAllFreeNeighbors(matrix, Owner.playerTwo);
-  const allFreeColors = selectColorsFromArray(matrix, allFreeNeighbors);
-  const allAvailableColors = allFreeColors.filter((c) => c !== PlayerOneColor);
+export function EasyBot(game: GameClass): ICoordinates {
+  // TODO move this calculation into class.
+  const allFreeNeighbors = game.findAllFreeNeighbors(Owner.playerTwo);
+  const allFreeColors = game.selectColorsFromArray(allFreeNeighbors);
+  const allAvailableColors = allFreeColors.filter(
+    (c) => c !== game.playerOneColor
+  );
+
   const allAvailableNeighbors = allFreeNeighbors.filter((neighbor) =>
-    allAvailableColors.includes(matrix[neighbor.y][neighbor.x].color)
+    allAvailableColors.includes(game.matrix[neighbor.y][neighbor.x].color)
   );
 
   // console.log(allFreeNeighbors);
@@ -23,7 +20,7 @@ export function EasyBot(
   // console.log(PlayerOneColor);
   // console.log(allAvailableColors);
   // console.log(allAvailableNeighbors);
-  console.log(allAvailableNeighbors.length);
+  // console.log(allAvailableNeighbors.length);
 
   if (allAvailableColors.length === 0) {
     // Impossible to act

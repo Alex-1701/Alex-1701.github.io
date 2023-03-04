@@ -5,7 +5,9 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import { Owner } from "../../shared/constants";
 import { GameClass } from "../../shared/GameClass";
 import { requestGameData } from "../../store";
-import { IGameData } from "../../shared/types";
+import { ICoordinates, IGameData } from "../../shared/types";
+import { updateState } from "../../store/game/gameActions";
+import { EasyBot } from "../../enemy";
 
 export function GameTable() {
   const [gameInstance, setGameInstance] = useState<GameClass>();
@@ -14,27 +16,52 @@ export function GameTable() {
   const { gameField, PlayerTurn } = useAppSelector((state) => state.game);
 
   useEffect(() => {
-    setGameInstance(() => new GameClass());
     const fetchGameData = async () => dispatch(requestGameData()).unwrap();
 
     fetchGameData().then((data: IGameData) => {
-      gameInstance?.initGame(data);
+      setGameInstance(() => new GameClass(data));
     });
   }, []);
 
   useEffect(() => {
-    if (PlayerTurn === Owner.playerTwo) {
+    if (gameInstance) {
+      const gameData = gameInstance?.returnMainData();
+      if (gameData) {
+        dispatch(updateState(gameData));
+      }
+    }
+  }, [gameInstance]);
+
+  const handleTurn = (
+    turn: ICoordinates,
+    player: Owner.playerOne | Owner.playerTwo
+  ) => {
+    if (gameInstance) {
+      const clone = gameInstance.clone();
+      clone.registerTurn(turn, player);
+      setGameInstance(clone);
+      const gameData = clone.returnMainData();
+      if (gameData) {
+        dispatch(updateState(gameData));
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (PlayerTurn === Owner.playerTwo && gameInstance) {
       setTimeout(() => {
-        // gameInstance.registerTurn(Owner.playerTwo);
-        // dispatch(registerPlayerTwoTurn(EasyBot(gameField)));
-        // dispatch(recalculate());
+        handleTurn(EasyBot(gameInstance), Owner.playerTwo);
       }, 200);
     }
   }, [PlayerTurn]);
 
   const onUserClick = async (x: number, y: number) => {
-    gameInstance?.registerTurn({ x, y }, Owner.playerOne);
-    // dispatch(recalculate());
+    // I need to clone game class on every turn because there is type error.
+    // If I try to change class fields (even by it's own methods) when
+    // class Instance somehow "bind" to store or to useState, I see
+    // TypeError: Cannot assign to read only property 'owner' of object '#<Object>'
+    // Because register turn methods use assign to property of class property object.
+    handleTurn({ x, y }, Owner.playerOne);
   };
 
   const listRows = useMemo(() => {
