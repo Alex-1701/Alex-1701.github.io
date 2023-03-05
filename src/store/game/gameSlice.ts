@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IGameDataForDisplay, ITableField } from "../../shared/types";
 import { generateGameData, requestGameData, updateState } from "./gameActions";
-import { generateMatrix } from "../../shared/GameFunctions";
-import { Owner } from "../../shared/constants";
+import { IPlayer } from "../../shared/constants";
 import { IWinner } from "../../shared/constants/winner";
+import { GameClass } from "../../shared/GameClass";
 
 interface GameState {
   gameField: ITableField;
   isRequestingGameData: boolean;
-  PlayerTurn: Owner.playerOne | Owner.playerTwo;
+  PlayerTurn: IPlayer;
   PlayerOneColor: number;
   PlayerTwoColor: number;
   availableCellsCount: number;
@@ -49,8 +49,9 @@ export const gameSlice = createSlice({
     },
 
     [generateGameData.type]: (state) => {
-      state.gameField = generateMatrix(15, 15);
+      state.gameField = GameClass.generateMatrix(15, 15);
     },
+
     [updateState.type]: (state, action: PayloadAction<IGameDataForDisplay>) => {
       state.gameField = action.payload.gameField;
       state.PlayerTurn = action.payload.PlayerTurn;

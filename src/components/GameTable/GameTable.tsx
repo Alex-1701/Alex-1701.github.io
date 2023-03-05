@@ -2,15 +2,16 @@ import React, { useEffect, useMemo, useState } from "react";
 import { TableCell } from "../TableCell";
 import styles from "./GameTable.module.scss";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { Owner } from "../../shared/constants";
+import { IPlayer, Owner } from "../../shared/constants";
 import { GameClass } from "../../shared/GameClass";
 import { requestGameData } from "../../store";
-import { ICoordinates, IGameData } from "../../shared/types";
+import { ICoordinates, IGameDataNumeric } from "../../shared/types";
 import { updateState } from "../../store/game/gameActions";
 import { EasyBot } from "../../enemy";
 
 export function GameTable() {
   const [gameInstance, setGameInstance] = useState<GameClass>();
+  const [isGameLoaded, setIsGameLoaded] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
   const { gameField, PlayerTurn } = useAppSelector((state) => state.game);
@@ -18,30 +19,28 @@ export function GameTable() {
   useEffect(() => {
     const fetchGameData = async () => dispatch(requestGameData()).unwrap();
 
-    fetchGameData().then((data: IGameData) => {
+    fetchGameData().then((data: IGameDataNumeric) => {
       setGameInstance(() => new GameClass(data));
     });
   }, []);
 
   useEffect(() => {
-    if (gameInstance) {
+    if (gameInstance && !isGameLoaded) {
       const gameData = gameInstance?.returnMainData();
       if (gameData) {
         dispatch(updateState(gameData));
       }
+      setIsGameLoaded(true);
     }
-  }, [gameInstance]);
+  }, [gameInstance, isGameLoaded]);
 
-  const handleTurn = (
-    turn: ICoordinates,
-    player: Owner.playerOne | Owner.playerTwo
-  ) => {
+  const handleTurn = (turn: ICoordinates, player: IPlayer) => {
     if (gameInstance) {
       const clone = gameInstance.clone();
-      clone.registerTurn(turn, player);
+      const isTurnSuccessful = clone.registerTurn(turn, player);
       setGameInstance(clone);
       const gameData = clone.returnMainData();
-      if (gameData) {
+      if (gameData && isTurnSuccessful) {
         dispatch(updateState(gameData));
       }
     }

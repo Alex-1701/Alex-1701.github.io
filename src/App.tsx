@@ -21,7 +21,9 @@ export function App() {
           <div>All: {availableCellsCount}</div>
           <div>P1: {PlayerOneCellsCount}</div>
           <div>P2: {PlayerTwoCellsCount}</div>
-          <div>{winner}</div>
+          {winner && (
+            <div>Winner: {winner === 1 ? "PLAYER 1" : "PLAYER 2"}</div>
+          )}
         </div>
         <GameTable />
         <div className={styles.description}>
@@ -33,8 +35,10 @@ export function App() {
           </p>
           <p>Your goal is to take more cells than your enemy.</p>
           <p>Now your enemy is silly bot that chose actions randomly.</p>
-          <p>To expand your territory just choose color to repaint.</p>
-          <p>And tap any cell with this color.</p>
+          <p>
+            To expand your territory just choose color to repaint. And tap any
+            cell with this color.
+          </p>
           <p>
             Note that you can only choose colors which cells are connected with
             your territory.

@@ -1,4 +1,3 @@
-// import {ITurn} from "../constants";
 import {IWinner} from "../constants/winner";
 
 export interface ITableCell {
@@ -42,10 +41,17 @@ export interface ICoordinates {
 }
 
 export interface IGameData {
-  matrix: ITableFieldNumeric;
   currentPlayerNumber: number;
   enemyPlayerNumber: number;
   playerTurn: number;
+}
+
+export interface IGameDataNumeric extends IGameData{
+  matrix: ITableFieldNumeric;
+}
+
+export interface IGameDataEmoji extends IGameData{
+  matrix: ITableFieldEmoji;
 }
 
 export interface IGameDataForDisplay {

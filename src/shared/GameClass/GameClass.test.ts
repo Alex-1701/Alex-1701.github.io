@@ -1,25 +1,27 @@
 import { GameClass } from "./GameClass";
-import {ICoordinates, ITableField, ITableFieldEmoji, ITableFieldNumeric} from "../types";
+import {
+  ICoordinates,
+  IGameDataEmoji,
+  ITableField,
+  ITableFieldEmoji,
+  ITableFieldNumeric,
+} from "../types";
 import { Owner } from "../constants";
 
 describe("test", () => {
   test("constructor", () => {
-    const matrixEmoji: ITableFieldEmoji = [
-      ["💛", "🟢"],
-      ["🟠", "🔵"],
-      ["🟣", "🟥"],
-    ];
-
-    const matrix = GameClass.emojiToMatrixConverter(matrixEmoji);
-
-    const gameData = {
-      matrix,
+    const gameData: IGameDataEmoji = {
+      matrix: [
+        ["💛", "🟢"],
+        ["🟠", "🔵"],
+        ["🟣", "🟥"],
+      ],
       currentPlayerNumber: 1,
       enemyPlayerNumber: 2,
       playerTurn: 1,
     };
 
-    const gameClass = new GameClass(gameData);
+    const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
 
     // prettier-ignore
     const resMatrix: ITableField = [
@@ -33,23 +35,52 @@ describe("test", () => {
     expect(gameClass.matrixWidth).toEqual(2);
   });
 
-  test("successful P1 turn simple", () => {
-    const matrixEmoji: ITableFieldEmoji = [
-      ["💛", "🟢", "🔴"],
-      ["🟣", "🔴", "🟠"],
-      ["🔴", "🟠", "🟡"],
-    ];
-
-    const matrix = GameClass.emojiToMatrixConverter(matrixEmoji);
-
+  test("constructor error", () => {
     const gameData = {
-      matrix,
+      matrix: [
+        ["💛", "🟢"],
+        ["🟠", "🔵"],
+      ],
       currentPlayerNumber: 1,
       enemyPlayerNumber: 2,
       playerTurn: 1,
     };
 
-    const gameClass = new GameClass(gameData);
+    const gameClass = () =>
+      new GameClass(GameClass.gameDataConverter(gameData));
+    expect(gameClass).toThrow(Error);
+
+    const matrixEmoji2: ITableFieldEmoji = [
+      ["🟨", "🟢"],
+      ["🟠", "🔵"],
+    ];
+
+    const matrix2 = GameClass.emojiToMatrixConverter(matrixEmoji2);
+
+    const gameData2 = {
+      matrix: matrix2,
+      currentPlayerNumber: 1,
+      enemyPlayerNumber: 2,
+      playerTurn: 1,
+    };
+
+    const gameClass2 = () => new GameClass(gameData2);
+    expect(gameClass2).toThrow(Error);
+  });
+
+  test("successful P1 turn simple", () => {
+    const gameData: IGameDataEmoji = {
+      matrix: [
+        ["💛", "🟢", "🔴"],
+        ["🟣", "🔴", "🟠"],
+        ["🔴", "🟠", "🟥"],
+      ],
+      currentPlayerNumber: 1,
+      enemyPlayerNumber: 2,
+      playerTurn: 1,
+    };
+
+    const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
 
     gameClass.registerTurn({ x: 1, y: 0 }, Owner.playerOne); // Reachable cell.
 
@@ -57,7 +88,7 @@ describe("test", () => {
     const resMatrix: ITableField = [
       [{color: 5, owner: 1}, {color: 5, owner: 1}, {color: 1, owner: 3}],
       [{color: 6, owner: 3}, {color: 1, owner: 3}, {color: 2, owner: 3}],
-      [{color: 1, owner: 3}, {color: 2, owner: 3}, {color: 3, owner: 3}],
+      [{color: 1, owner: 3}, {color: 2, owner: 3}, {color: 1, owner: 2}],
     ];
 
     expect(gameClass.matrix).toEqual(resMatrix);
@@ -66,28 +97,24 @@ describe("test", () => {
   });
 
   test("successful P1 turn difficult", () => {
-    const matrixEmoji: ITableFieldEmoji = [
-      ["💛", "🟢", "🔴"],
-      ["🟣", "🔴", "🟣"],
-      ["🟣", "🟣", "🟣"],
-    ];
-
-    const matrix = GameClass.emojiToMatrixConverter(matrixEmoji);
-
     const gameData = {
-      matrix,
+      matrix: [
+        ["💛", "🟢", "🟦"],
+        ["🟣", "🔴", "🟣"],
+        ["🟣", "🟣", "🟣"],
+      ],
       currentPlayerNumber: 1,
       enemyPlayerNumber: 2,
       playerTurn: 1,
     };
 
-    const gameClass = new GameClass(gameData);
+    const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
 
     gameClass.registerTurn({ x: 2, y: 2 }, Owner.playerOne); // Reachable area.
 
     // prettier-ignore
     const resMatrix: ITableField = [
-      [{color: 6, owner: 1}, {color: 5, owner: 3}, {color: 1, owner: 3}],
+      [{color: 6, owner: 1}, {color: 5, owner: 3}, {color: 4, owner: 2}],
       [{color: 6, owner: 1}, {color: 1, owner: 3}, {color: 6, owner: 1}],
       [{color: 6, owner: 1}, {color: 6, owner: 1}, {color: 6, owner: 1}],
     ];
@@ -98,27 +125,24 @@ describe("test", () => {
   });
 
   test("unsuccessful P1 turns", () => {
-    const matrixEmoji: ITableFieldEmoji = [
-      ["💛", "🟢", "🔴"],
-      ["🟣", "🔴", "🟣"],
-      ["🟣", "🟣", "🟣"],
-    ];
-
-    const matrix = GameClass.emojiToMatrixConverter(matrixEmoji);
     const gameData = {
-      matrix,
+      matrix: [
+        ["💛", "🟢", "🟦"],
+        ["🟣", "🔴", "🟣"],
+        ["🟣", "🟣", "🟣"],
+      ],
       currentPlayerNumber: 1,
       enemyPlayerNumber: 2,
       playerTurn: 1,
     };
 
-    const gameClass = new GameClass(gameData);
+    const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
 
     gameClass.registerTurn({ x: 1, y: 1 }, Owner.playerOne); // Unreachable cell.
 
     // prettier-ignore
     const resMatrix: ITableField = [
-      [{color: 3, owner: 1}, {color: 5, owner: 3}, {color: 1, owner: 3}],
+      [{color: 3, owner: 1}, {color: 5, owner: 3}, {color: 4, owner: 2}],
       [{color: 6, owner: 3}, {color: 1, owner: 3}, {color: 6, owner: 3}],
       [{color: 6, owner: 3}, {color: 6, owner: 3}, {color: 6, owner: 3}],
     ];
@@ -137,23 +161,19 @@ describe("test", () => {
   });
 
   test("successful P1 - P2 turn simple", () => {
-    const matrixEmoji: ITableFieldEmoji = [
-      ["🧡", "🔴", "🟢", "🟢"],
-      ["🟢", "🟡", "🔴", "🟡"],
-      ["🟠", "🔴", "🟣", "🟠"],
-      ["🟣", "🟠", "🟢", "🟥"],
-    ];
-
-    const matrix = GameClass.emojiToMatrixConverter(matrixEmoji);
-
     const gameData = {
-      matrix,
+      matrix: [
+        ["🧡", "🔴", "🟢", "🟢"],
+        ["🟢", "🟡", "🔴", "🟡"],
+        ["🟠", "🔴", "🟣", "🟠"],
+        ["🟣", "🟠", "🟢", "🟥"],
+      ],
       currentPlayerNumber: 1,
       enemyPlayerNumber: 2,
       playerTurn: 1,
     };
 
-    const gameClass = new GameClass(gameData);
+    const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
 
     gameClass.registerTurn({ x: 1, y: 0 }, Owner.playerOne);
 
@@ -379,23 +399,19 @@ describe("methods", () => {
     expect(gameClass.checkCellNeighbors(1, 0, 1, "color")).toBe(false);
   });
 
-  test("findAllFreeNeighbors", () => {
-    const matrixEmoji: ITableFieldEmoji = [
-      ["🧡", "🔴", "🟢"],
-      ["🟠", "🟡", "🟣"],
-      ["🟣", "🟠", "🟥"],
-    ];
-
-    const matrix = GameClass.emojiToMatrixConverter(matrixEmoji);
-
+  test("findAllFreeNeighbors ", () => {
     const gameData = {
-      matrix,
+      matrix: [
+        ["🧡", "🔴", "🟢"],
+        ["🟠", "🟡", "🟣"],
+        ["🟣", "🟠", "🟥"],
+      ],
       currentPlayerNumber: 1,
       enemyPlayerNumber: 2,
       playerTurn: 1,
     };
 
-    const gameClass = new GameClass(gameData);
+    const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
 
     const playerOneNeighbors: ICoordinates[] = [
       { x: 1, y: 0 },
@@ -412,22 +428,18 @@ describe("methods", () => {
   });
 
   test("selectColorsFromArray", () => {
-    const matrixEmoji: ITableFieldEmoji = [
-      ["🧡", "🔴", "🟢"],
-      ["🟠", "🟡", "🟣"],
-      ["🟣", "🟠", "🟥"],
-    ];
-
-    const matrix = GameClass.emojiToMatrixConverter(matrixEmoji);
-
     const gameData = {
-      matrix,
+      matrix: [
+        ["🧡", "🔴", "🟢"],
+        ["🟠", "🟡", "🟣"],
+        ["🟣", "🟠", "🟥"],
+      ],
       currentPlayerNumber: 1,
       enemyPlayerNumber: 2,
       playerTurn: 1,
     };
 
-    const gameClass = new GameClass(gameData);
+    const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
 
     const cells: ICoordinates[] = [
       { x: 0, y: 0 },
@@ -440,23 +452,19 @@ describe("methods", () => {
     expect([2, 1, 6]).toEqual(colorArray);
   });
 
-  test("recalculate", () => {
-    const matrixEmoji: ITableFieldEmoji = [
-      ["🧡", "🔴", "🟢", "🟢"],
-      ["🧡", "🟡", "🟥", "🟥"],
-      ["🟣", "🟠", "🟢", "🟥"],
-    ];
-
-    const matrix = GameClass.emojiToMatrixConverter(matrixEmoji);
-
+  test("recalculate ", () => {
     const gameData = {
-      matrix,
+      matrix: [
+        ["🧡", "🔴", "🟢", "🟢"],
+        ["🧡", "🟡", "🟥", "🟥"],
+        ["🟣", "🟠", "🟢", "🟥"],
+      ],
       currentPlayerNumber: 1,
       enemyPlayerNumber: 2,
       playerTurn: 1,
     };
 
-    const gameClass = new GameClass(gameData);
+    const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
 
     const [availableCellsCount, PlayerOneCellsCount, PlayerTwoCellsCount] =
       gameClass.recalculate();
@@ -464,5 +472,82 @@ describe("methods", () => {
     expect(availableCellsCount).toEqual(12);
     expect(PlayerOneCellsCount).toEqual(2);
     expect(PlayerTwoCellsCount).toEqual(3);
+  });
+
+  test("registerTurn restrictions", () => {
+    const gameData = {
+      matrix: [
+        ["🧡", "🔴", "🟢", "🟢"],
+        ["🟢", "🟡", "🔴", "🟡"],
+        ["🟠", "🔴", "🟣", "🟠"],
+        ["🟣", "🟠", "🟢", "🟥"],
+      ],
+      currentPlayerNumber: 1,
+      enemyPlayerNumber: 2,
+      playerTurn: 1,
+    };
+
+    const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
+
+    const turnRes1 = gameClass.registerTurn({ x: 1, y: 1 }, Owner.playerOne);
+    expect(turnRes1).toEqual(false);
+    expect(gameClass.gameWinner).toEqual(null);
+
+    const turnRes2 = gameClass.registerTurn({ x: 2, y: 2 }, Owner.playerOne);
+    expect(turnRes2).toEqual(false);
+    expect(gameClass.gameWinner).toEqual(null);
+
+    const turnRes3 = gameClass.registerTurn({ x: -1, y: 0 }, Owner.playerOne);
+    expect(turnRes3).toEqual(false);
+    expect(gameClass.gameWinner).toEqual(null);
+
+    const turnRes4 = gameClass.registerTurn({ x: 0, y: -1 }, Owner.playerOne);
+    expect(turnRes4).toEqual(false);
+    expect(gameClass.gameWinner).toEqual(null);
+
+    const turnRes5 = gameClass.registerTurn({ x: 4, y: 0 }, Owner.playerOne);
+    expect(turnRes5).toEqual(false);
+    expect(gameClass.gameWinner).toEqual(null);
+
+    const turnRes6 = gameClass.registerTurn({ x: 0, y: 4 }, Owner.playerOne);
+    expect(turnRes6).toEqual(false);
+    expect(gameClass.gameWinner).toEqual(null);
+
+    const turnRes7 = gameClass.registerTurn({ x: 1, y: 1 }, Owner.playerTwo);
+    expect(turnRes7).toEqual(false);
+    expect(gameClass.gameWinner).toEqual(null);
+
+    const turnRes8 = gameClass.registerTurn({ x: 2, y: 2 }, Owner.playerTwo);
+    expect(turnRes8).toEqual(false);
+    expect(gameClass.gameWinner).toEqual(null);
+
+    const turnRes9 = gameClass.registerTurn({ x: -1, y: 0 }, Owner.playerTwo);
+    expect(turnRes9).toEqual(false);
+    expect(gameClass.gameWinner).toEqual(null);
+
+    const turnRes10 = gameClass.registerTurn({ x: 0, y: -1 }, Owner.playerTwo);
+    expect(turnRes10).toEqual(false);
+    expect(gameClass.gameWinner).toEqual(null);
+
+    const turnRes11 = gameClass.registerTurn({ x: 4, y: 0 }, Owner.playerTwo);
+    expect(turnRes11).toEqual(false);
+    expect(gameClass.gameWinner).toEqual(null);
+
+    const turnRes12 = gameClass.registerTurn({ x: 0, y: 4 }, Owner.playerTwo);
+    expect(turnRes12).toEqual(false);
+    expect(gameClass.gameWinner).toEqual(null);
+
+    const turnRes13 = gameClass.registerTurn({ x: 2, y: 1 }, Owner.playerOne);
+    expect(turnRes13).toEqual(true);
+    expect(gameClass.gameWinner).toEqual(null);
+
+    const afterTurn5: ITableFieldEmoji = [
+      ["❤️", "❤️", "🟢", "🟢"],
+      ["🟢", "🟡", "🔴", "🟡"],
+      ["🟠", "🔴", "🟣", "🟠"],
+      ["🟣", "🟠", "🟢", "🟥"],
+    ];
+    const matrixAfterTurn5 = GameClass.emojiToMatrixConverter(afterTurn5);
+    expect(gameClass.matrixNumbers).toEqual(matrixAfterTurn5);
   });
 });

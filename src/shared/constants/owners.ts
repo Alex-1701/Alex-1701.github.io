@@ -1,4 +1,4 @@
-// export type IOwner = 0 | 1 | 2 | 3;
+export type IOwner = 0 | 1 | 2 | 3;
 
 export enum Owner {
   unavailable = 0,
@@ -7,4 +7,4 @@ export enum Owner {
   free = 3,
 }
 
-// export type ITurn = Owner.playerOne | Owner.playerTwo;
+export type IPlayer = Owner.playerOne | Owner.playerTwo;

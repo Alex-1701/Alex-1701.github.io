@@ -1,23 +1,23 @@
-// import * as _ from "lodash";
 import {
   ICoordinates,
-  IGameData,
+  IGameDataEmoji,
   IGameDataForDisplay,
+  IGameDataNumeric,
   ITableField,
   ITableFieldEmoji,
   ITableFieldNumeric,
   ITableLine,
   ITableLineEmoji,
 } from "../types";
-import {mockGameData} from "./mockGameData";
-import {emojiCells, Owner} from "../constants";
-import {IWinner, Winner} from "../constants/winner";
+import { mockGameData } from "./mockGameData";
+import { Color, emojiCells, IPlayer, Owner } from "../constants";
+import { IWinner, Winner } from "../constants/winner";
 
 export class GameClass {
   private gameField: ITableField = [];
-  private PlayerTurn = 0;
-  private PlayerOneColor = 0;
-  private PlayerTwoColor = 0;
+  private PlayerTurn: IPlayer = 0;
+  private PlayerOneColor: Color = 0;
+  private PlayerTwoColor: Color = 0;
   private availableCellsCount = 0;
   private PlayerOneCellsCount = 0;
   private PlayerTwoCellsCount = 0;
@@ -34,8 +34,9 @@ export class GameClass {
   private readonly MatrixHeight: number;
   private readonly MatrixWidth: number;
 
-  public constructor(gameData?: IGameData) {
-    const {matrix, playerTurn} = gameData || mockGameData;
+  public constructor(gameData?: IGameDataNumeric) {
+    const { matrix, playerTurn } =
+      gameData || GameClass.gameDataConverter(mockGameData);
 
     // Matrix should be rectangle!!!
 
@@ -68,7 +69,40 @@ export class GameClass {
     }
 
     this.recalculate();
+
+    if (this.PlayerOneColor === 0 || this.PlayerTwoColor === 0)
+      throw new Error();
   }
+
+  public static generateMatrix = (
+    width: number,
+    height: number
+  ): ITableField => {
+    const matrix: ITableField = [];
+    const pureMatrix: ITableFieldNumeric = [];
+
+    for (let i = 0; i < height; i += 1) {
+      const newLine: ITableLine = [];
+      const pureLine: number[][] = [];
+      for (let j = 0; j < width; j += 1) {
+        const color = GameClass.randomInt(1, 6);
+        const owner = Owner.free;
+
+        newLine.push({
+          color,
+          owner,
+        });
+
+        pureLine.push([color, owner]);
+      }
+      matrix.push(newLine);
+      pureMatrix.push(pureLine);
+    }
+    return matrix;
+  };
+
+  public static randomInt = (min: number, max: number): number =>
+    Math.round(Math.random() * (max - min) + min);
 
   public clone(): GameClass {
     return new GameClass({
@@ -88,7 +122,7 @@ export class GameClass {
     for (let i = 0; i < this.matrixHeight; i += 1) {
       const newLine: number[][] = [];
       for (let j = 0; j < this.matrixWidth; j += 1) {
-        const {color, owner} = this.matrix[i][j];
+        const { color, owner } = this.matrix[i][j];
         newLine.push([color, owner]);
       }
       resMatrix.push(newLine);
@@ -146,11 +180,11 @@ export class GameClass {
   //   store.dispatch(updateState(clone));
   // }
 
-  public color(x: number, y: number): number {
+  public color(x: number, y: number): Color {
     return this.gameField[y][x].color;
   }
 
-  public owner(x: number, y: number): number {
+  public owner(x: number, y: number): Owner {
     return this.gameField[y][x].owner;
   }
 
@@ -189,7 +223,7 @@ export class GameClass {
           this.checkCellNeighbors(j, i, target, "owner") &&
           this.gameField[i][j].owner === Owner.free
         )
-          res.push({x: j, y: i});
+          res.push({ x: j, y: i });
       }
     }
 
@@ -198,7 +232,7 @@ export class GameClass {
   public selectColorsFromArray = (array: ICoordinates[]): number[] => {
     const colors: number[] = [];
     for (let i = 0; i < array.length; i += 1) {
-      const {color} = this.matrix[array[i].y][array[i].x];
+      const { color } = this.matrix[array[i].y][array[i].x];
       if (!colors.includes(color)) {
         colors.push(color);
       }
@@ -273,84 +307,92 @@ export class GameClass {
     return resEmojiMatrix;
   }
 
+  public static gameDataConverter(gameData: IGameDataEmoji): IGameDataNumeric {
+    return {
+      currentPlayerNumber: gameData.currentPlayerNumber,
+      enemyPlayerNumber: gameData.enemyPlayerNumber,
+      playerTurn: gameData.playerTurn,
+      matrix: GameClass.emojiToMatrixConverter(gameData.matrix),
+    };
+  }
+
   /**
    * @return is turn successful
    * @param turn
    * @param player
    */
-  public registerTurn(
-    turn: ICoordinates,
-    player: Owner.playerOne | Owner.playerTwo
-  ): void {
-    const {x, y} = turn;
+  public registerTurn(turn: ICoordinates, player: IPlayer): boolean {
+    const { x, y } = turn;
+    if (x < 0 || x >= this.MatrixWidth || y < 0 || y >= this.MatrixHeight)
+      return false;
 
-    if (x >= 0 && x < this.matrixWidth && y >= 0 && y < this.matrixHeight) {
-      const chosenColor = this.color(x, y);
+    const chosenColor: Color = this.color(x, y);
+    if (chosenColor < 0 || chosenColor > 6) return false;
 
-      let freeNeighbors: ICoordinates[] = this.findAllFreeNeighbors(player);
-      let freeNeighborsColors = this.selectColorsFromArray(freeNeighbors);
+    let freeNeighbors: ICoordinates[] = this.findAllFreeNeighbors(player);
+    let freeNeighborsColors = this.selectColorsFromArray(freeNeighbors);
 
-      // If this is P1 turn and cell is Owner.free.
-      if (
-        this.PlayerTurn === player &&
-        this.gameField[y][x].owner === Owner.free &&
-        freeNeighborsColors.includes(chosenColor)
-      ) {
-        do {
-          for (let i = 0; i < freeNeighbors.length; i += 1) {
-            if (
-              this.color(freeNeighbors[i].x, freeNeighbors[i].y) === chosenColor
-            ) {
-              this.gameField[freeNeighbors[i].y][freeNeighbors[i].x].owner =
-                this.PlayerTurn;
-              this.gameField[freeNeighbors[i].y][freeNeighbors[i].x].color =
-                this.PlayerOneColor;
-            }
-          }
-
-          freeNeighbors = this.findAllFreeNeighbors(player);
-
-          freeNeighborsColors = this.selectColorsFromArray(freeNeighbors);
-        } while (freeNeighborsColors.includes(chosenColor));
-
-        for (let i = 0; i < this.gameField.length; i += 1) {
-          for (let j = 0; j < this.gameField[i].length; j += 1) {
-            if (this.gameField[i][j].owner === player)
-              this.gameField[i][j].color = chosenColor;
+    // If this is P1 turn and cell is Owner.free.
+    if (
+      this.PlayerTurn === player &&
+      this.gameField[y][x].owner === Owner.free &&
+      freeNeighborsColors.includes(chosenColor)
+    ) {
+      do {
+        for (let i = 0; i < freeNeighbors.length; i += 1) {
+          if (
+            this.color(freeNeighbors[i].x, freeNeighbors[i].y) === chosenColor
+          ) {
+            this.gameField[freeNeighbors[i].y][freeNeighbors[i].x].owner =
+              this.PlayerTurn;
+            this.gameField[freeNeighbors[i].y][freeNeighbors[i].x].color =
+              this.PlayerOneColor;
           }
         }
 
-        // This is for initiate next turn.
-        this.PlayerTurn =
-          player === Owner.playerOne ? Owner.playerTwo : Owner.playerOne;
-        this.PlayerOneColor = chosenColor;
-        [
-          this.availableCellsCount,
-          this.PlayerOneCellsCount,
-          this.PlayerTwoCellsCount,
-        ] = this.recalculate();
+        freeNeighbors = this.findAllFreeNeighbors(player);
 
-        if (
-          this.availableCellsCount ===
-          this.PlayerOneCellsCount + this.PlayerTwoCellsCount
-        ) {
-          if (this.PlayerOneCellsCount === this.PlayerTwoCellsCount) {
-            this.winner = Winner.draw;
-          } else {
-            this.winner =
-              this.PlayerOneCellsCount > this.PlayerTwoCellsCount
-                ? Owner.playerOne
-                : Owner.playerTwo;
-          }
+        freeNeighborsColors = this.selectColorsFromArray(freeNeighbors);
+      } while (freeNeighborsColors.includes(chosenColor));
+
+      for (let i = 0; i < this.gameField.length; i += 1) {
+        for (let j = 0; j < this.gameField[i].length; j += 1) {
+          if (this.gameField[i][j].owner === player)
+            this.gameField[i][j].color = chosenColor;
         }
-      } else if (freeNeighborsColors.length === 0) {
-        this.winner =
-          player === Owner.playerOne ? Owner.playerTwo : Owner.playerOne;
       }
 
-      // return <IGameDataForRedux>
+      // This is for initiate next turn.
+      this.PlayerTurn =
+        player === Owner.playerOne ? Owner.playerTwo : Owner.playerOne;
+      this.PlayerOneColor = chosenColor;
+      [
+        this.availableCellsCount,
+        this.PlayerOneCellsCount,
+        this.PlayerTwoCellsCount,
+      ] = this.recalculate();
+
+      if (
+        this.availableCellsCount ===
+        this.PlayerOneCellsCount + this.PlayerTwoCellsCount
+      ) {
+        if (this.PlayerOneCellsCount === this.PlayerTwoCellsCount) {
+          this.winner = Winner.draw;
+        } else {
+          this.winner =
+            this.PlayerOneCellsCount > this.PlayerTwoCellsCount
+              ? Owner.playerOne
+              : Owner.playerTwo;
+        }
+      }
+    } else if (freeNeighborsColors.length === 0) {
+      this.winner =
+        player === Owner.playerOne ? Owner.playerTwo : Owner.playerOne;
+      return false;
     } else {
-      console.log("Error: out of matrix");
+      return false;
     }
+
+    return true;
   }
 }
