@@ -24,11 +24,6 @@ export function TableCell({ x, y, color, owner, onUserClick }: Props) {
     <td
       className={clsx(styles[colorClass], styles[ownerClass])}
       onClick={handleClick}
-    >
-      <div>
-        {owner === Owner.playerTwo && "💀"}
-        {owner === Owner.playerOne && "😀"}
-      </div>
-    </td>
+    />
   );
 }
