@@ -1,1 +1,1 @@
-export { EasyBot } from "./EasyBot";
+export * from "./EasyBot";

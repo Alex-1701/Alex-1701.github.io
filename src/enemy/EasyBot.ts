@@ -1,6 +1,5 @@
-import { ICoordinates } from "../shared/types";
-import { Owner } from "../shared/constants";
-import { GameClass } from "../shared/GameClass";
+import { ICoordinates } from "types";
+import { Owner, GameClass } from "shared";
 
 export function EasyBot(game: GameClass): ICoordinates {
   // TODO move this calculation into class.
@@ -15,7 +14,7 @@ export function EasyBot(game: GameClass): ICoordinates {
   );
 
   if (allAvailableColors.length === 0) {
-    // Impossible to act
+    // Impossible to turn
     return { x: -1, y: -1 };
   }
 

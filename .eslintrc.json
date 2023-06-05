@@ -9,7 +9,8 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:react-hooks/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "plugins": [
@@ -30,6 +31,7 @@
         ]
       }
     ],
+    "import/order": "warn",
     "import/no-unresolved": 0,
     "import/extensions": [
       "error",
@@ -52,9 +54,11 @@
       }
     ],
     "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": "error",
-    "prettier/prettier": ["warn"]
+    "prettier/prettier": ["warn"],
+    "prefer-const": "warn"
   },
   "settings": {
     "import/resolver": {

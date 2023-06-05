@@ -1,4 +1,4 @@
-import {IWinner} from "../constants/winner";
+import { IWinner } from "shared";
 
 export interface ITableCell {
   color: number;
@@ -40,25 +40,27 @@ export interface ICoordinates {
   y: number;
 }
 
+export type Area = ICoordinates[];
+
 export interface IGameData {
   currentPlayerNumber: number;
   enemyPlayerNumber: number;
   playerTurn: number;
 }
 
-export interface IGameDataNumeric extends IGameData{
+export interface IGameDataNumeric extends IGameData {
   matrix: ITableFieldNumeric;
 }
 
-export interface IGameDataEmoji extends IGameData{
+export interface IGameDataEmoji extends IGameData {
   matrix: ITableFieldEmoji;
 }
 
 export interface IGameDataForDisplay {
   gameField: ITableField;
   availableCellsCount: number;
-  PlayerOneCellsCount: number,
-  PlayerTwoCellsCount: number,
-  PlayerTurn: number,
-  winner: IWinner,
+  PlayerOneCellsCount: number;
+  PlayerTwoCellsCount: number;
+  PlayerTurn: number;
+  winner: IWinner;
 }

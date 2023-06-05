@@ -1,8 +1,9 @@
 import React from "react";
-import { useAppSelector } from "./hooks";
-import { GameTable } from "./components";
+import { useAppSelector } from "hooks";
+import { GameTable } from "components";
 
 import styles from "./App.module.scss";
+import { Winner } from "./shared";
 
 export function App() {
   const {
@@ -21,9 +22,9 @@ export function App() {
           <div>All: {availableCellsCount}</div>
           <div>P1: {PlayerOneCellsCount}</div>
           <div>P2: {PlayerTwoCellsCount}</div>
-          {winner && (
-            <div>Winner: {winner === 1 ? "PLAYER 1" : "PLAYER 2"}</div>
-          )}
+          {winner === Winner.one ||
+            (winner === Winner.two && <div>Winner: PLAYER {winner}</div>)}
+          {winner === Winner.draw && <div>Ничья</div>}
         </div>
         <GameTable />
         <div className={styles.description}>
@@ -47,6 +48,4 @@ export function App() {
       </div>
     </div>
   );
-
-
 }

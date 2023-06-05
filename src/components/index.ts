@@ -1,2 +1,2 @@
-export { TableCell } from "./TableCell";
-export { GameTable } from "./GameTable";
+export * from "./TableCell";
+export * from "./GameTable";

@@ -1,11 +1,12 @@
-import { GameClass } from "./GameClass";
 import {
   ICoordinates,
   IGameDataEmoji,
+  IGameDataNumeric,
   ITableField,
   ITableFieldEmoji,
   ITableFieldNumeric,
-} from "../types";
+} from "types";
+import { GameClass } from "./GameClass";
 import { Owner } from "../constants";
 
 describe("test", () => {
@@ -36,7 +37,7 @@ describe("test", () => {
   });
 
   test("constructor error", () => {
-    const gameData = {
+    const gameData: IGameDataEmoji = {
       matrix: [
         ["💛", "🟢"],
         ["🟠", "🔵"],
@@ -57,7 +58,7 @@ describe("test", () => {
 
     const matrix2 = GameClass.emojiToMatrixConverter(matrixEmoji2);
 
-    const gameData2 = {
+    const gameData2: IGameDataNumeric = {
       matrix: matrix2,
       currentPlayerNumber: 1,
       enemyPlayerNumber: 2,
@@ -97,7 +98,7 @@ describe("test", () => {
   });
 
   test("successful P1 turn difficult", () => {
-    const gameData = {
+    const gameData: IGameDataEmoji = {
       matrix: [
         ["💛", "🟢", "🟦"],
         ["🟣", "🔴", "🟣"],
@@ -125,7 +126,7 @@ describe("test", () => {
   });
 
   test("unsuccessful P1 turns", () => {
-    const gameData = {
+    const gameData: IGameDataEmoji = {
       matrix: [
         ["💛", "🟢", "🟦"],
         ["🟣", "🔴", "🟣"],
@@ -161,7 +162,7 @@ describe("test", () => {
   });
 
   test("successful P1 - P2 turn simple", () => {
-    const gameData = {
+    const gameData: IGameDataEmoji = {
       matrix: [
         ["🧡", "🔴", "🟢", "🟢"],
         ["🟢", "🟡", "🔴", "🟡"],
@@ -286,6 +287,34 @@ describe("test", () => {
     expect(gameClass.matrixNumbers).toEqual(matrixAfterTurn10);
     expect(gameClass.gameWinner).toEqual(Owner.playerOne);
   });
+
+  test("finish game with isolated areas", () => {
+    const gameData: IGameDataEmoji = {
+      matrix: [
+        ["🧡", "🧡", "🟢", "🟢"],
+        ["🧡", "🧡", "🧡", "🔵"],
+        ["🟡", "🧡", "🟥", "🟥"],
+        ["🟣", "🧡", "🟥", "🟥"],
+      ],
+      currentPlayerNumber: 1,
+      enemyPlayerNumber: 2,
+      playerTurn: 1,
+    };
+
+    const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
+
+    gameClass.registerTurn({ x: 3, y: 1 }, Owner.playerOne);
+
+    const afterTurn: ITableFieldEmoji = [
+      ["🧡", "🧡", "🧡", "🧡"],
+      ["🧡", "🧡", "🧡", "🧡"],
+      ["🧡", "🧡", "🟥", "🟥"],
+      ["🧡", "🧡", "🟥", "🟥"],
+    ];
+
+    const matrixAfterTurn = GameClass.emojiToMatrixConverter(afterTurn);
+    expect(gameClass.matrixNumbers).toEqual(matrixAfterTurn);
+  });
 });
 
 describe("methods", () => {
@@ -346,7 +375,7 @@ describe("methods", () => {
   });
 
   test("checkCell", () => {
-    const gameData = {
+    const gameData: IGameDataNumeric = {
       // prettier-ignore
       matrix: [
         [[3, 1], [5, 3]],
@@ -367,7 +396,7 @@ describe("methods", () => {
   });
 
   test("checkCellNeighbors", () => {
-    const gameData = {
+    const gameData: IGameDataNumeric = {
       // prettier-ignore
       matrix: [
         [[3, 1], [5, 1], [2, 3]],
@@ -400,7 +429,7 @@ describe("methods", () => {
   });
 
   test("findAllFreeNeighbors ", () => {
-    const gameData = {
+    const gameData: IGameDataEmoji = {
       matrix: [
         ["🧡", "🔴", "🟢"],
         ["🟠", "🟡", "🟣"],
@@ -428,7 +457,7 @@ describe("methods", () => {
   });
 
   test("selectColorsFromArray", () => {
-    const gameData = {
+    const gameData: IGameDataEmoji = {
       matrix: [
         ["🧡", "🔴", "🟢"],
         ["🟠", "🟡", "🟣"],
@@ -453,7 +482,7 @@ describe("methods", () => {
   });
 
   test("recalculate ", () => {
-    const gameData = {
+    const gameData: IGameDataEmoji = {
       matrix: [
         ["🧡", "🔴", "🟢", "🟢"],
         ["🧡", "🟡", "🟥", "🟥"],
@@ -475,7 +504,7 @@ describe("methods", () => {
   });
 
   test("registerTurn restrictions", () => {
-    const gameData = {
+    const gameData: IGameDataEmoji = {
       matrix: [
         ["🧡", "🔴", "🟢", "🟢"],
         ["🟢", "🟡", "🔴", "🟡"],
@@ -549,5 +578,105 @@ describe("methods", () => {
     ];
     const matrixAfterTurn5 = GameClass.emojiToMatrixConverter(afterTurn5);
     expect(gameClass.matrixNumbers).toEqual(matrixAfterTurn5);
+  });
+
+  test("findAllFreeCells ", () => {
+    const gameData: IGameDataEmoji = {
+      matrix: [
+        ["🧡", "🔴", "🟢", "🟢"],
+        ["🧡", "🟡", "🟥", "🟥"],
+        ["🟣", "🟠", "🟢", "🟥"],
+      ],
+      currentPlayerNumber: 1,
+      enemyPlayerNumber: 2,
+      playerTurn: 1,
+    };
+
+    const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
+
+    const freeCells: ICoordinates[] = gameClass.findAllFreeCells();
+
+    expect(freeCells.length).toEqual(7);
+
+    expect(freeCells).toEqual(
+      expect.arrayContaining([expect.objectContaining({ x: 0, y: 2 })])
+    );
+    expect(freeCells).toEqual(
+      expect.arrayContaining([expect.objectContaining({ x: 1, y: 0 })])
+    );
+    expect(freeCells).toEqual(
+      expect.arrayContaining([expect.objectContaining({ x: 1, y: 1 })])
+    );
+    expect(freeCells).toEqual(
+      expect.arrayContaining([expect.objectContaining({ x: 1, y: 2 })])
+    );
+    expect(freeCells).toEqual(
+      expect.arrayContaining([expect.objectContaining({ x: 2, y: 0 })])
+    );
+    expect(freeCells).toEqual(
+      expect.arrayContaining([expect.objectContaining({ x: 2, y: 2 })])
+    );
+    expect(freeCells).toEqual(
+      expect.arrayContaining([expect.objectContaining({ x: 3, y: 0 })])
+    );
+  });
+
+  test("joinIsolatedAreas 1", () => {
+    const gameData: IGameDataEmoji = {
+      matrix: [
+        ["🟡", "🧡", "🟥"],
+        ["🧡", "🟥", "🟢"],
+        ["🧡", "🟥", "🟢"],
+      ],
+      currentPlayerNumber: 1,
+      enemyPlayerNumber: 2,
+      playerTurn: 1,
+    };
+
+    const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
+
+    gameClass.joinIsolatedAreas(Owner.playerOne);
+    const afterJoin1: ITableFieldEmoji = [
+      ["🧡", "🧡", "🟥"],
+      ["🧡", "🟥", "🟢"],
+      ["🧡", "🟥", "🟢"],
+    ];
+    const matrixAfterJoin1 = GameClass.emojiToMatrixConverter(afterJoin1);
+    expect(gameClass.matrixNumbers).toEqual(matrixAfterJoin1);
+
+    gameClass.joinIsolatedAreas(Owner.playerTwo);
+    const afterJoin2: ITableFieldEmoji = [
+      ["🧡", "🧡", "🟥"],
+      ["🧡", "🟥", "🟥"],
+      ["🧡", "🟥", "🟥"],
+    ];
+    const matrixAfterJoin2 = GameClass.emojiToMatrixConverter(afterJoin2);
+    expect(gameClass.matrixNumbers).toEqual(matrixAfterJoin2);
+  });
+
+  test("joinIsolatedAreas 2", () => {
+    const gameData: IGameDataEmoji = {
+      matrix: [
+        ["❤️", "🟣", "🟢", "🟢"],
+        ["🟢", "🟡", "🔴", "🟡"],
+        ["🟠", "🔴", "🟣", "🟠"],
+        ["🟣", "🟠", "🟢", "🟩"],
+      ],
+      currentPlayerNumber: 1,
+      enemyPlayerNumber: 2,
+      playerTurn: 1,
+    };
+
+    const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
+
+    gameClass.joinIsolatedAreas(Owner.playerOne);
+    const afterJoin1: ITableFieldEmoji = [
+      ["❤️", "❤️", "❤️", "❤️"],
+      ["❤️", "❤️", "❤️", "❤️"],
+      ["❤️", "❤️", "❤️", "❤️"],
+      ["❤️", "❤️", "❤️", "🟩"],
+    ];
+    const matrixAfterJoin1 = GameClass.emojiToMatrixConverter(afterJoin1);
+    expect(gameClass.matrixNumbers).toEqual(matrixAfterJoin1);
   });
 });

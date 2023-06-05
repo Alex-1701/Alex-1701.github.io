@@ -1,20 +1,23 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useAppDispatch, useAppSelector } from "hooks";
+import { GameClass, IPlayer, Owner } from "shared";
+import { ICoordinates, IGameDataNumeric } from "types";
+import { requestGameData, updateState } from "store";
+import { EasyBot } from "enemy";
 import { TableCell } from "../TableCell";
+
 import styles from "./GameTable.module.scss";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { IPlayer, Owner } from "../../shared/constants";
-import { GameClass } from "../../shared/GameClass";
-import { requestGameData } from "../../store";
-import { ICoordinates, IGameDataNumeric } from "../../shared/types";
-import { updateState } from "../../store/game/gameActions";
-import { EasyBot } from "../../enemy";
 
 export function GameTable() {
   const [gameInstance, setGameInstance] = useState<GameClass>();
   const [isGameLoaded, setIsGameLoaded] = useState<boolean>(false);
+  const [botTimer, setBotTimer] = useState(null);
+
 
   const dispatch = useAppDispatch();
-  const { gameField, PlayerTurn } = useAppSelector((state) => state.game);
+  const { gameField, PlayerTurn, winner } = useAppSelector(
+    (state) => state.game
+  );
 
   useEffect(() => {
     const fetchGameData = async () => dispatch(requestGameData()).unwrap();
@@ -22,7 +25,7 @@ export function GameTable() {
     fetchGameData().then((data: IGameDataNumeric) => {
       setGameInstance(() => new GameClass(data));
     });
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (gameInstance && !isGameLoaded) {
@@ -32,36 +35,47 @@ export function GameTable() {
       }
       setIsGameLoaded(true);
     }
-  }, [gameInstance, isGameLoaded]);
+  }, [dispatch, gameInstance, isGameLoaded]);
 
-  const handleTurn = (turn: ICoordinates, player: IPlayer) => {
-    if (gameInstance) {
-      const clone = gameInstance.clone();
-      const isTurnSuccessful = clone.registerTurn(turn, player);
-      setGameInstance(clone);
-      const gameData = clone.returnMainData();
-      if (gameData && isTurnSuccessful) {
-        dispatch(updateState(gameData));
+  const handleTurn = useMemo(() => {
+    return (turn: ICoordinates, player: IPlayer) => {
+      console.log("try turn");
+      if (gameInstance && !winner) {
+        console.log("turn");
+        const clone = gameInstance.clone();
+        const isTurnSuccessful = clone.registerTurn(turn, player);
+        console.log(isTurnSuccessful);
+        setGameInstance(clone);
+        const gameData = clone.returnMainData();
+        if (gameData && isTurnSuccessful) {
+          dispatch(updateState(gameData));
+        }
       }
-    }
-  };
+    };
+  }, [dispatch, gameInstance, winner]);
 
   useEffect(() => {
-    if (PlayerTurn === Owner.playerTwo && gameInstance) {
-      setTimeout(() => {
+    if (PlayerTurn === Owner.playerTwo && gameInstance && !winner) {
+      const timer = setTimeout(() => {
         handleTurn(EasyBot(gameInstance), Owner.playerTwo);
       }, 200);
+      // if (winner) {
+      //   console.log("winner", winner, timer);
+      //   clearTimeout(timer);
+      // }
     }
-  }, [PlayerTurn]);
+  }, [PlayerTurn, gameInstance, handleTurn, winner]);
 
-  const onUserClick = async (x: number, y: number) => {
-    // I need to clone game class on every turn because there is type error.
-    // If I try to change class fields (even by it's own methods) when
-    // class Instance somehow "bind" to store or to useState, I see
-    // TypeError: Cannot assign to read only property 'owner' of object '#<Object>'
-    // Because register turn methods use assign to property of class property object.
-    handleTurn({ x, y }, Owner.playerOne);
-  };
+  const onUserClick = useMemo(() => {
+    return (x: number, y: number) => {
+      // I need to clone game class on every turn because there is type error.
+      // If I try to change class fields (even by it's own methods) when
+      // class Instance somehow "bind" to store or to useState, I see
+      // TypeError: Cannot assign to read only property 'owner' of object '#<Object>'
+      // Because register turn methods use assign to property of class property object.
+      handleTurn({ x, y }, Owner.playerOne);
+    };
+  }, [handleTurn]);
 
   const listRows = useMemo(() => {
     if (gameField) {
@@ -96,7 +110,7 @@ export function GameTable() {
     }
 
     return [];
-  }, [gameField]);
+  }, [gameField, onUserClick]);
 
   return (
     <table className={styles["game-table"]}>

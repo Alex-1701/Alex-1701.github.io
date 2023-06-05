@@ -1,1 +1,1 @@
-export { useAppDispatch, useAppSelector } from "./useDispatch";
+export * from "./useDispatch";

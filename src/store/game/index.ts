@@ -1,1 +1,1 @@
-export { requestGameData, generateGameData } from "./gameActions";
+export { requestGameData, generateGameData, updateState } from "./gameActions";

@@ -1,9 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IGameDataForDisplay, ITableField } from "../../shared/types";
+import { IGameDataForDisplay, ITableField } from "types";
+import { GameClass, IPlayer, IWinner } from "shared";
 import { generateGameData, requestGameData, updateState } from "./gameActions";
-import { IPlayer } from "../../shared/constants";
-import { IWinner } from "../../shared/constants/winner";
-import { GameClass } from "../../shared/GameClass";
 
 interface GameState {
   gameField: ITableField;
@@ -22,7 +20,7 @@ interface GameState {
 const initialState: GameState = {
   gameField: [],
   isRequestingGameData: false,
-  PlayerTurn: 0,
+  PlayerTurn: 1,
   PlayerOneColor: 0,
   PlayerTwoColor: 0,
   availableCellsCount: 0,
@@ -30,7 +28,7 @@ const initialState: GameState = {
   PlayerTwoCellsCount: 0,
   PlayerOneAvailableColors: [],
   PlayerTwoAvailableColors: [],
-  winner: 0,
+  winner: null,
 };
 
 export const gameSlice = createSlice({

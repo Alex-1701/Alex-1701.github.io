@@ -1,5 +1,3 @@
-export type IOwner = 0 | 1 | 2 | 3;
-
 export enum Owner {
   unavailable = 0,
   playerOne = 1,
