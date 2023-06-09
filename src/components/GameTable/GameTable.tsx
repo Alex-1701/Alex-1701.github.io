@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "hooks";
 import { GameClass, IPlayer, Owner } from "shared";
 import { ICoordinates, IGameDataNumeric } from "types";
 import { requestGameData, updateState } from "store";
-import { EasyBot } from "enemy";
+import { easyBot } from "enemy";
 import { TableCell } from "../TableCell";
 
 import styles from "./GameTable.module.scss";
@@ -11,8 +11,6 @@ import styles from "./GameTable.module.scss";
 export function GameTable() {
   const [gameInstance, setGameInstance] = useState<GameClass>();
   const [isGameLoaded, setIsGameLoaded] = useState<boolean>(false);
-  const [botTimer, setBotTimer] = useState(null);
-
 
   const dispatch = useAppDispatch();
   const { gameField, PlayerTurn, winner } = useAppSelector(
@@ -38,13 +36,10 @@ export function GameTable() {
   }, [dispatch, gameInstance, isGameLoaded]);
 
   const handleTurn = useMemo(() => {
-    return (turn: ICoordinates, player: IPlayer) => {
-      console.log("try turn");
+    return (turn: ICoordinates | null, player: IPlayer) => {
       if (gameInstance && !winner) {
-        console.log("turn");
         const clone = gameInstance.clone();
         const isTurnSuccessful = clone.registerTurn(turn, player);
-        console.log(isTurnSuccessful);
         setGameInstance(clone);
         const gameData = clone.returnMainData();
         if (gameData && isTurnSuccessful) {
@@ -56,13 +51,9 @@ export function GameTable() {
 
   useEffect(() => {
     if (PlayerTurn === Owner.playerTwo && gameInstance && !winner) {
-      const timer = setTimeout(() => {
-        handleTurn(EasyBot(gameInstance), Owner.playerTwo);
-      }, 200);
-      // if (winner) {
-      //   console.log("winner", winner, timer);
-      //   clearTimeout(timer);
-      // }
+      setTimeout(() => {
+        handleTurn(easyBot(gameInstance), Owner.playerTwo);
+      }, 10);
     }
   }, [PlayerTurn, gameInstance, handleTurn, winner]);
 

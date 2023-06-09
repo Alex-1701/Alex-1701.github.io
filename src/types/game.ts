@@ -40,7 +40,7 @@ export interface ICoordinates {
   y: number;
 }
 
-export type Area = ICoordinates[];
+export type Turn = ICoordinates | null;
 
 export interface IGameData {
   currentPlayerNumber: number;

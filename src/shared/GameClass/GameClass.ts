@@ -9,7 +9,7 @@ import {
   ITableLine,
   ITableLineEmoji,
 } from "types";
-import { mockGameData } from "./mockGameData";
+import { mock_labyrinth } from "./mockGameData";
 import {
   Color,
   emojiCells,
@@ -35,7 +35,7 @@ export class GameClass {
 
   public constructor(gameData?: IGameDataNumeric) {
     const { matrix, playerTurn } =
-      gameData || GameClass.gameDataConverter(mockGameData);
+      gameData || GameClass.gameDataConverter(mock_labyrinth);
 
     // Matrix should be rectangle!!!
 
@@ -215,25 +215,80 @@ export class GameClass {
     this.checkCell(x + 1, y, target, type) ||
     this.checkCell(x - 1, y, target, type);
 
-  public findAllFreeCells = (): ICoordinates[] => {
-    const res: ICoordinates[] = [];
+  /**
+   * get coordinates of all matrix cells
+   */
+  public getAllCells = (): ICoordinates[] => {
+    const coords: ICoordinates[] = [];
 
     for (let i = 0; i < this.MatrixHeight; i += 1) {
       for (let j = 0; j < this.MatrixWidth; j += 1) {
-        if (this.gameField[i][j].owner === Owner.free) res.push({ x: j, y: i });
+        coords.push({ x: j, y: i });
       }
     }
+
+    return coords;
+  };
+
+  /**
+   * get all cells of targeted owner
+   * @param owner
+   */
+  public findAllOwnerCells = (owner: Owner): ICoordinates[] => {
+    const res: ICoordinates[] = [];
+
+    this.getAllCells().forEach((cell) => {
+      if (this.gameField[cell.y][cell.x].owner === owner)
+        res.push({ x: cell.x, y: cell.y });
+    });
 
     return res;
   };
 
-  public findAllFreeNeighbors = (target: number): ICoordinates[] => {
+  public findAllFreeCells = (): ICoordinates[] => {
+    return this.findAllOwnerCells(Owner.free);
+  };
+
+  public findAllPlayerCells = (player: IPlayer): ICoordinates[] => {
+    return this.findAllOwnerCells(player);
+  };
+
+  /**
+   * Gets all cells that are neighbors with target.
+   * @param player
+   */
+  public findAllNeighbors = (player: IPlayer): ICoordinates[] => {
+    const allCells = this.getAllCells().filter((cell) =>
+      this.checkCellNeighbors(cell.x, cell.y, player, "owner")
+    );
+
+    return allCells.filter(
+      (cell) => this.gameField[cell.y][cell.x].owner !== player
+    );
+  };
+
+  /**
+   * Gets all cells that are neighbors and enemy with target .
+   * @param player
+   */
+  public findAllEnemyNeighbors = (player: IPlayer): ICoordinates[] => {
+    const allNeighbors = this.findAllNeighbors(player);
+
+    const enemy =
+      player === Owner.playerOne ? Owner.playerTwo : Owner.playerOne;
+
+    return allNeighbors.filter(
+      (cell) => this.gameField[cell.y][cell.x].owner === enemy
+    );
+  };
+
+  public findAllFreeNeighbors = (target: IPlayer): ICoordinates[] => {
     return this.findAllFreeCells().filter((cell) =>
       this.checkCellNeighbors(cell.x, cell.y, target, "owner")
     );
   };
 
-  public selectColorsFromArray = (array: ICoordinates[]): number[] => {
+  public selectColorsFromArray = (array: ICoordinates[]): Color[] => {
     const colors: number[] = [];
     for (let i = 0; i < array.length; i += 1) {
       const { color } = this.matrix[array[i].y][array[i].x];
@@ -321,15 +376,18 @@ export class GameClass {
   }
 
   public joinAllIsolatedAreas() {
-    console.log("join");
     this.joinIsolatedAreas(Owner.playerOne);
     this.joinIsolatedAreas(Owner.playerTwo);
+
+    [
+      this.availableCellsCount,
+      this.PlayerOneCellsCount,
+      this.PlayerTwoCellsCount,
+    ] = this.recalculate();
   }
 
   public joinIsolatedAreas(player: IPlayer) {
     let freeNeighbors: ICoordinates[] = this.findAllFreeNeighbors(player);
-
-    console.log(freeNeighbors);
 
     do {
       for (let i = 0; i < freeNeighbors.length; i += 1) {
@@ -345,40 +403,62 @@ export class GameClass {
   }
 
   /**
+   * Repaint all cells for chosen player in chosen color
+   * @param player
+   * @param newColor
+   */
+  public repaintForPlayer(player: IPlayer, newColor: Color) {
+    this.getAllCells().forEach((cell) => {
+      if (this.gameField[cell.x][cell.y].owner === player)
+        this.gameField[cell.x][cell.y].color = newColor;
+    });
+  }
+
+  /**
    * @return is turn successful
    * @param turn
    * @param player
    */
-  public registerTurn(turn: ICoordinates, player: IPlayer): boolean {
-    const { x, y } = turn;
-    if (x < 0 || x >= this.MatrixWidth || y < 0 || y >= this.MatrixHeight) {
-      if (x === -1 && y === -1) {
-        console.log("case");
+  public registerTurn(turn: ICoordinates | null, player: IPlayer): boolean {
+    if (turn === null) {
+      const freeNeighborsOne = this.findAllFreeNeighbors(Owner.playerOne);
+      const freeNeighborsTwo = this.findAllFreeNeighbors(Owner.playerTwo);
+
+      if (freeNeighborsOne.length === 0 || freeNeighborsTwo.length === 0) {
         this.joinAllIsolatedAreas();
+        // this.repaintForPlayer(player, chosenColor);
+        if (this.PlayerOneCellsCount === this.PlayerTwoCellsCount) {
+          this.winner = Winner.draw;
+        } else {
+          this.winner =
+            this.PlayerOneCellsCount > this.PlayerTwoCellsCount
+              ? Owner.playerOne
+              : Owner.playerTwo;
+        }
+
         return true;
       }
+      return true;
+    }
+    const { x, y } = turn;
+    if (x < 0 || x >= this.MatrixWidth || y < 0 || y >= this.MatrixHeight) {
       return false;
     }
 
     const chosenColor: Color = this.color(x, y);
     if (!Color[chosenColor]) {
-      console.log("error 2");
       return false;
     }
 
     let freeNeighbors: ICoordinates[] = this.findAllFreeNeighbors(player);
     let freeNeighborsColors = this.selectColorsFromArray(freeNeighbors);
 
-    console.log(player, freeNeighbors);
+    // if (freeNeighbors.length === 0) {
+    //   // impossible to make turn
+    //   this.joinAllIsolatedAreas();
+    //   return true;
+    // }
 
-    if (freeNeighbors.length === 0) {
-      // impossible to make turn
-      console.log("impossible to make a turn");
-      this.joinAllIsolatedAreas();
-      return true;
-    }
-
-    // If this is P1 turn and cell is Owner.free.
     if (
       this.PlayerTurn === player &&
       this.gameField[y][x].owner === Owner.free &&
@@ -391,8 +471,6 @@ export class GameClass {
           ) {
             this.gameField[freeNeighbors[i].y][freeNeighbors[i].x].owner =
               this.PlayerTurn;
-            this.gameField[freeNeighbors[i].y][freeNeighbors[i].x].color =
-              this.PlayerOneColor;
           }
         }
 
@@ -402,27 +480,30 @@ export class GameClass {
       } while (freeNeighborsColors.includes(chosenColor));
 
       // Перекраска в новый цвет.
-      for (let i = 0; i < this.gameField.length; i += 1) {
-        for (let j = 0; j < this.gameField[i].length; j += 1) {
-          if (this.gameField[i][j].owner === player)
-            this.gameField[i][j].color = chosenColor;
-        }
-      }
+      this.repaintForPlayer(player, chosenColor);
 
       // This is for initiate next turn.
       this.PlayerTurn =
         player === Owner.playerOne ? Owner.playerTwo : Owner.playerOne;
-      this.PlayerOneColor = chosenColor;
+
+      if (player === Owner.playerOne) {
+        this.PlayerOneColor = chosenColor;
+      } else {
+        this.PlayerTwoColor = chosenColor;
+      }
+
       [
         this.availableCellsCount,
         this.PlayerOneCellsCount,
         this.PlayerTwoCellsCount,
       ] = this.recalculate();
 
-      if (
-        this.availableCellsCount ===
-        this.PlayerOneCellsCount + this.PlayerTwoCellsCount
-      ) {
+      const freeNeighborsOne = this.findAllFreeNeighbors(Owner.playerOne);
+      const freeNeighborsTwo = this.findAllFreeNeighbors(Owner.playerTwo);
+
+      if (freeNeighborsOne.length === 0 || freeNeighborsTwo.length === 0) {
+        this.joinAllIsolatedAreas();
+        this.repaintForPlayer(player, chosenColor);
         if (this.PlayerOneCellsCount === this.PlayerTwoCellsCount) {
           this.winner = Winner.draw;
         } else {
@@ -431,15 +512,15 @@ export class GameClass {
               ? Owner.playerOne
               : Owner.playerTwo;
         }
-      }
 
+        return true;
+      }
     } else if (freeNeighborsColors.length === 0) {
       this.winner =
         player === Owner.playerOne ? Owner.playerTwo : Owner.playerOne;
-      console.log("error 3");
+
       return false;
     } else {
-      console.log("error 4");
       return false;
     }
 

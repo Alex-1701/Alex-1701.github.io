@@ -1,12 +1,12 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { IGameDataForDisplay } from "types";
-import { GameClass, mockGameData } from "shared";
+import { GameClass, mock_5x5 } from "shared";
 
 export const requestGameData = createAsyncThunk(
   "game/requestGameData",
   async (_, thunkApi) => {
     try {
-      return GameClass.gameDataConverter(mockGameData);
+      return GameClass.gameDataConverter(mock_5x5);
     } catch {
       return thunkApi.rejectWithValue("something went wrong");
     }

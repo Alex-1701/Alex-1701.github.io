@@ -58,7 +58,12 @@
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": "error",
     "prettier/prettier": ["warn"],
-    "prefer-const": "warn"
+    "prefer-const": "warn",
+    "spaced-comment": "warn",
+    "react/destructuring-assignment": "warn",
+    "camelcase": "warn",
+    "class-methods-use-this": "warn",
+    "no-useless-return": "warn"
   },
   "settings": {
     "import/resolver": {

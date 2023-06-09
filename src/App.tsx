@@ -22,9 +22,12 @@ export function App() {
           <div>All: {availableCellsCount}</div>
           <div>P1: {PlayerOneCellsCount}</div>
           <div>P2: {PlayerTwoCellsCount}</div>
-          {winner === Winner.one ||
-            (winner === Winner.two && <div>Winner: PLAYER {winner}</div>)}
-          {winner === Winner.draw && <div>Ничья</div>}
+          <div>
+            Winner:
+            {winner === Winner.one && "PLAYER 1 😀"}
+            {winner === Winner.two && "PLAYER 2 💀"}
+            {winner === Winner.draw && "Draw"}
+          </div>
         </div>
         <GameTable />
         <div className={styles.description}>
