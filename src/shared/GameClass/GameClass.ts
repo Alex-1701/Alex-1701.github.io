@@ -409,8 +409,8 @@ export class GameClass {
    */
   public repaintForPlayer(player: IPlayer, newColor: Color) {
     this.getAllCells().forEach((cell) => {
-      if (this.gameField[cell.x][cell.y].owner === player)
-        this.gameField[cell.x][cell.y].color = newColor;
+      if (this.gameField[cell.y][cell.x].owner === player)
+        this.gameField[cell.y][cell.x].color = newColor;
     });
   }
 

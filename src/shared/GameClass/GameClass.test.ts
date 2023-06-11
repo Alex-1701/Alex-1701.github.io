@@ -717,9 +717,10 @@ describe("methods", () => {
     const gameData: IGameDataEmoji = {
       matrix: [
         ["❤️", "🧡", "🟢", "🟢"],
-        ["💙", "💛", "💜", "🟡"],
-        ["🟢", "💙", "🟨", "🟥"],
-        ["🟣", "🔵", "🟪", "🟩"],
+        ["💙", "💛", "🟩", "🟡"],
+        ["🟢", "💙", "🟨", "🟩"],
+        ["🟣", "🔵", "🟪", "🟥"],
+        ["🟡", "🟢", "🟦", "🟩"],
       ],
       currentPlayerNumber: 1,
       enemyPlayerNumber: 2,
@@ -732,9 +733,10 @@ describe("methods", () => {
 
     const afterRepaint1: ITableFieldEmoji = [
       ["🧡", "🧡", "🟢", "🟢"],
-      ["🧡", "🧡", "🧡", "🟡"],
-      ["🟢", "🧡", "🟨", "🟥"],
-      ["🟣", "🔵", "🟪", "🟩"],
+      ["🧡", "🧡", "🟩", "🟡"],
+      ["🟢", "🧡", "🟨", "🟩"],
+      ["🟣", "🔵", "🟪", "🟥"],
+      ["🟡", "🟢", "🟦", "🟩"],
     ];
 
     const matrixAfterRepaint1 = GameClass.emojiToMatrixConverter(afterRepaint1);
@@ -743,9 +745,10 @@ describe("methods", () => {
     gameClass.repaintForPlayer(Owner.playerTwo, Color.red);
     const afterRepaint2: ITableFieldEmoji = [
       ["🧡", "🧡", "🟢", "🟢"],
-      ["🧡", "🧡", "🧡", "🟡"],
+      ["🧡", "🧡", "🟥", "🟡"],
       ["🟢", "🧡", "🟥", "🟥"],
       ["🟣", "🔵", "🟥", "🟥"],
+      ["🟡", "🟢", "🟥", "🟥"],
     ];
     const matrixAfterRepaint2 = GameClass.emojiToMatrixConverter(afterRepaint2);
     expect(gameClass.matrixNumbers).toEqual(matrixAfterRepaint2);
