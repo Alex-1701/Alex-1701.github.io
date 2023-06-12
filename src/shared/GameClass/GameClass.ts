@@ -8,6 +8,7 @@ import {
   ITableFieldNumeric,
   ITableLine,
   ITableLineEmoji,
+  ITableLineNumeric,
 } from "types";
 import { mock_labyrinth } from "./mockGameData";
 import {
@@ -322,6 +323,11 @@ export class GameClass {
         }
       }
     }
+
+    this.availableCellsCount = availableCellsCount;
+    this.PlayerOneCellsCount = PlayerOneCellsCount;
+    this.PlayerTwoCellsCount = PlayerTwoCellsCount;
+
     return [availableCellsCount, PlayerOneCellsCount, PlayerTwoCellsCount];
   };
 
@@ -330,7 +336,7 @@ export class GameClass {
   ): ITableFieldNumeric {
     const resMatrix: ITableFieldNumeric = [];
     for (let i = 0; i < emojiMatrix.length; i += 1) {
-      const newLine: number[][] = [];
+      const newLine: ITableLineNumeric = [];
       for (let j = 0; j < emojiMatrix[0].length; j += 1) {
         const emojiCell = emojiCells.find(
           (cell) => cell.emoji === emojiMatrix[i][j]
@@ -379,11 +385,8 @@ export class GameClass {
     this.joinIsolatedAreas(Owner.playerOne);
     this.joinIsolatedAreas(Owner.playerTwo);
 
-    [
-      this.availableCellsCount,
-      this.PlayerOneCellsCount,
-      this.PlayerTwoCellsCount,
-    ] = this.recalculate();
+    // [this.availableCellsCount, this.PlayerOneCellsCount, this.PlayerTwoCellsCount] =
+    this.recalculate();
   }
 
   public joinIsolatedAreas(player: IPlayer) {
@@ -492,11 +495,8 @@ export class GameClass {
         this.PlayerTwoColor = chosenColor;
       }
 
-      [
-        this.availableCellsCount,
-        this.PlayerOneCellsCount,
-        this.PlayerTwoCellsCount,
-      ] = this.recalculate();
+      // [this.availableCellsCount, this.PlayerOneCellsCount, this.PlayerTwoCellsCount] =
+      this.recalculate();
 
       const freeNeighborsOne = this.findAllFreeNeighbors(Owner.playerOne);
       const freeNeighborsTwo = this.findAllFreeNeighbors(Owner.playerTwo);
