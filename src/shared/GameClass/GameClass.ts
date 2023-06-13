@@ -3,6 +3,7 @@ import {
   IGameDataEmoji,
   IGameDataForDisplay,
   IGameDataNumeric,
+  ITableCell,
   ITableField,
   ITableFieldEmoji,
   ITableFieldNumeric,
@@ -10,19 +11,19 @@ import {
   ITableLineEmoji,
   ITableLineNumeric,
 } from "types";
-import { mock_labyrinth } from "./mockGameData";
 import {
   Color,
   emojiCells,
-  IPlayer,
   IWinner,
   Owner,
+  Player,
   Winner,
-} from "../constants";
+} from "shared/constants";
+import { mock_labyrinth } from "./mockGameData";
 
 export class GameClass {
   private gameField: ITableField = [];
-  private PlayerTurn: IPlayer = 1;
+  private PlayerTurn: Player = 1;
   private PlayerOneColor: Color = 0;
   private PlayerTwoColor: Color = 0;
   private availableCellsCount = 0;
@@ -51,13 +52,13 @@ export class GameClass {
           owner: matrix[i][j][1],
         });
       }
-      this.gameField.push(newLine);
+      this.matrix.push(newLine);
     }
 
     this.PlayerTurn = playerTurn;
 
     // Now we know color of each player.
-    for (const line of this.gameField) {
+    for (const line of this.matrix) {
       for (const cell of line) {
         if (cell.owner === Owner.playerOne) {
           this.PlayerOneColor = cell.color;
@@ -115,6 +116,18 @@ export class GameClass {
 
   public get matrix(): ITableField {
     return this.gameField;
+  }
+
+  /**
+   * Safe method to access cell.
+   * @param x
+   * @param y
+   */
+  public cell(x: number, y: number): ITableCell | null {
+    if (x >= 0 && x < this.MatrixWidth && y >= 0 && y < this.MatrixHeight) {
+      return this.matrix[y][x];
+    }
+    return null;
   }
 
   public get matrixNumbers(): ITableFieldNumeric {
@@ -181,11 +194,11 @@ export class GameClass {
   // }
 
   public color(x: number, y: number): Color {
-    return this.gameField[y][x].color;
+    return this.matrix[y][x].color;
   }
 
   public owner(x: number, y: number): Owner {
-    return this.gameField[y][x].owner;
+    return this.matrix[y][x].owner;
   }
 
   public checkCell = (
@@ -196,11 +209,11 @@ export class GameClass {
   ): boolean => {
     if (
       y >= 0 &&
-      y < this.gameField.length &&
+      y < this.matrix.length &&
       x >= 0 &&
-      x < this.gameField[y].length
+      x < this.matrix[y].length
     ) {
-      return this.gameField[y][x][type] === target;
+      return this.matrix[y][x][type] === target;
     }
     return false;
   };
@@ -219,7 +232,7 @@ export class GameClass {
   /**
    * get coordinates of all matrix cells
    */
-  public getAllCells = (): ICoordinates[] => {
+  public getAllCellsCoordinates = (): ICoordinates[] => {
     const coords: ICoordinates[] = [];
 
     for (let i = 0; i < this.MatrixHeight; i += 1) {
@@ -232,25 +245,48 @@ export class GameClass {
   };
 
   /**
+   * get all cells of matrix
+   */
+  public getAllCells = (): ITableCell[] => {
+    const cells: ITableCell[] = [];
+
+    this.getAllCellsCoordinates().forEach((cellCoordinate) => {
+      const cell = this.cell(cellCoordinate.x, cellCoordinate.y);
+      if (cell) {
+        cells.push(cell);
+      }
+    });
+
+    return cells;
+  };
+
+  /**
    * get all cells of targeted owner
    * @param owner
    */
   public findAllOwnerCells = (owner: Owner): ICoordinates[] => {
     const res: ICoordinates[] = [];
 
-    this.getAllCells().forEach((cell) => {
-      if (this.gameField[cell.y][cell.x].owner === owner)
+    this.getAllCellsCoordinates().forEach((cell) => {
+      if (this.matrix[cell.y][cell.x].owner === owner)
         res.push({ x: cell.x, y: cell.y });
     });
 
     return res;
   };
 
+  /**
+   * finds coordinates of all free cells.
+   */
   public findAllFreeCells = (): ICoordinates[] => {
     return this.findAllOwnerCells(Owner.free);
   };
 
-  public findAllPlayerCells = (player: IPlayer): ICoordinates[] => {
+  /**
+   * finds coordinates of all cells by player owner
+   * @param player Player number
+   */
+  public findAllPlayerCells = (player: Player): ICoordinates[] => {
     return this.findAllOwnerCells(player);
   };
 
@@ -258,13 +294,13 @@ export class GameClass {
    * Gets all cells that are neighbors with target.
    * @param player
    */
-  public findAllNeighbors = (player: IPlayer): ICoordinates[] => {
-    const allCells = this.getAllCells().filter((cell) =>
+  public findAllNeighbors = (player: Player): ICoordinates[] => {
+    const allCells = this.getAllCellsCoordinates().filter((cell) =>
       this.checkCellNeighbors(cell.x, cell.y, player, "owner")
     );
 
     return allCells.filter(
-      (cell) => this.gameField[cell.y][cell.x].owner !== player
+      (cell) => this.matrix[cell.y][cell.x].owner !== player
     );
   };
 
@@ -272,29 +308,33 @@ export class GameClass {
    * Gets all cells that are neighbors and enemy with target .
    * @param player
    */
-  public findAllEnemyNeighbors = (player: IPlayer): ICoordinates[] => {
+  public findAllEnemyNeighbors = (player: Player): ICoordinates[] => {
     const allNeighbors = this.findAllNeighbors(player);
 
     const enemy =
       player === Owner.playerOne ? Owner.playerTwo : Owner.playerOne;
 
     return allNeighbors.filter(
-      (cell) => this.gameField[cell.y][cell.x].owner === enemy
+      (cell) => this.matrix[cell.y][cell.x].owner === enemy
     );
   };
 
-  public findAllFreeNeighbors = (target: IPlayer): ICoordinates[] => {
+  public findAllFreeNeighbors = (target: Player): ICoordinates[] => {
     return this.findAllFreeCells().filter((cell) =>
       this.checkCellNeighbors(cell.x, cell.y, target, "owner")
     );
   };
 
-  public selectColorsFromArray = (array: ICoordinates[]): Color[] => {
-    const colors: number[] = [];
-    for (let i = 0; i < array.length; i += 1) {
-      const { color } = this.matrix[array[i].y][array[i].x];
-      if (!colors.includes(color)) {
-        colors.push(color);
+  /**
+   * Gives array of colors for passed coords.
+   * @param coordinates
+   */
+  public selectColorsFromArray = (coordinates: ICoordinates[]): Color[] => {
+    const colors: Color[] = [];
+    for (let i = 0; i < coordinates.length; i += 1) {
+      const cell = this.cell(coordinates[i].x, coordinates[i].y);
+      if (cell && !colors.includes(cell.color)) {
+        colors.push(cell.color);
       }
     }
     return colors;
@@ -308,21 +348,20 @@ export class GameClass {
     let availableCellsCount = 0;
     let PlayerOneCellsCount = 0;
     let PlayerTwoCellsCount = 0;
-    for (const line of this.matrix) {
-      for (const cell of line) {
-        if (cell.owner !== Owner.unavailable) {
-          availableCellsCount += 1;
-        }
 
-        if (cell.owner === Owner.playerOne) {
-          PlayerOneCellsCount += 1;
-        }
-
-        if (cell.owner === Owner.playerTwo) {
-          PlayerTwoCellsCount += 1;
-        }
+    this.getAllCells().forEach((cell) => {
+      if (cell.owner !== Owner.unavailable) {
+        availableCellsCount += 1;
       }
-    }
+
+      if (cell.owner === Owner.playerOne) {
+        PlayerOneCellsCount += 1;
+      }
+
+      if (cell.owner === Owner.playerTwo) {
+        PlayerTwoCellsCount += 1;
+      }
+    });
 
     this.availableCellsCount = availableCellsCount;
     this.PlayerOneCellsCount = PlayerOneCellsCount;
@@ -389,13 +428,13 @@ export class GameClass {
     this.recalculate();
   }
 
-  public joinIsolatedAreas(player: IPlayer) {
+  public joinIsolatedAreas(player: Player) {
     let freeNeighbors: ICoordinates[] = this.findAllFreeNeighbors(player);
 
     do {
       for (let i = 0; i < freeNeighbors.length; i += 1) {
-        this.gameField[freeNeighbors[i].y][freeNeighbors[i].x].owner = player;
-        this.gameField[freeNeighbors[i].y][freeNeighbors[i].x].color =
+        this.matrix[freeNeighbors[i].y][freeNeighbors[i].x].owner = player;
+        this.matrix[freeNeighbors[i].y][freeNeighbors[i].x].color =
           player === Owner.playerOne
             ? this.PlayerOneColor
             : this.PlayerTwoColor;
@@ -410,10 +449,10 @@ export class GameClass {
    * @param player
    * @param newColor
    */
-  public repaintForPlayer(player: IPlayer, newColor: Color) {
-    this.getAllCells().forEach((cell) => {
-      if (this.gameField[cell.y][cell.x].owner === player)
-        this.gameField[cell.y][cell.x].color = newColor;
+  public repaintForPlayer(player: Player, newColor: Color) {
+    this.getAllCellsCoordinates().forEach((cell) => {
+      if (this.matrix[cell.y][cell.x].owner === player)
+        this.matrix[cell.y][cell.x].color = newColor;
     });
   }
 
@@ -422,7 +461,7 @@ export class GameClass {
    * @param turn
    * @param player
    */
-  public registerTurn(turn: ICoordinates | null, player: IPlayer): boolean {
+  public registerTurn(turn: ICoordinates | null, player: Player): boolean {
     if (turn === null) {
       const freeNeighborsOne = this.findAllFreeNeighbors(Owner.playerOne);
       const freeNeighborsTwo = this.findAllFreeNeighbors(Owner.playerTwo);
@@ -464,7 +503,7 @@ export class GameClass {
 
     if (
       this.PlayerTurn === player &&
-      this.gameField[y][x].owner === Owner.free &&
+      this.matrix[y][x].owner === Owner.free &&
       freeNeighborsColors.includes(chosenColor)
     ) {
       do {
@@ -472,7 +511,7 @@ export class GameClass {
           if (
             this.color(freeNeighbors[i].x, freeNeighbors[i].y) === chosenColor
           ) {
-            this.gameField[freeNeighbors[i].y][freeNeighbors[i].x].owner =
+            this.matrix[freeNeighbors[i].y][freeNeighbors[i].x].owner =
               this.PlayerTurn;
           }
         }

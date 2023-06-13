@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IGameDataForDisplay, ITableField } from "types";
-import { GameClass, IPlayer, IWinner } from "shared";
+import { GameClass, Player, IWinner } from "shared";
 import { generateGameData, requestGameData, updateState } from "./gameActions";
 
 interface GameState {
   gameField: ITableField;
   isRequestingGameData: boolean;
-  PlayerTurn: IPlayer;
+  PlayerTurn: Player;
   PlayerOneColor: number;
   PlayerTwoColor: number;
   availableCellsCount: number;

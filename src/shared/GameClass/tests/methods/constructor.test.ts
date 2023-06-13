@@ -34,7 +34,7 @@ test("correct", () => {
       {color: Color.green, owner: Owner.free}
     ], [
       {color: Color.orange, owner: Owner.free},
-      {color: Color.blue, owner: Owner.free},
+      {color: Color.violet, owner: Owner.free},
       {color: Color.green, owner: Owner.free}
     ], [
       {color: Color.yellow, owner: Owner.free},

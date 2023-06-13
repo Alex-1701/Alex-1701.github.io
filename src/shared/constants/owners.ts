@@ -5,4 +5,4 @@ export enum Owner {
   free = 3,
 }
 
-export type IPlayer = Owner.playerOne | Owner.playerTwo;
+export type Player = Owner.playerOne | Owner.playerTwo;

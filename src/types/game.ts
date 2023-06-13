@@ -1,8 +1,8 @@
-import { IWinner } from "shared";
+import { Color, IWinner, Owner, Player } from "shared";
 
 export interface ITableCell {
-  color: number;
-  owner: number;
+  color: Color;
+  owner: Owner;
 }
 
 type ITableCellEmoji = string;
@@ -45,7 +45,7 @@ export type Turn = ICoordinates | null;
 export interface IGameData {
   currentPlayerNumber: number;
   enemyPlayerNumber: number;
-  playerTurn: number;
+  playerTurn: Player;
 }
 
 export interface IGameDataNumeric extends IGameData {

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "hooks";
-import { GameClass, IPlayer, Owner } from "shared";
+import { GameClass, Player, Owner } from "shared";
 import { ICoordinates, IGameDataNumeric } from "types";
 import { requestGameData, updateState } from "store";
 import { easyBot } from "enemy";
@@ -36,7 +36,7 @@ export function GameTable() {
   }, [dispatch, gameInstance, isGameLoaded]);
 
   const handleTurn = useMemo(() => {
-    return (turn: ICoordinates | null, player: IPlayer) => {
+    return (turn: ICoordinates | null, player: Player) => {
       if (gameInstance && !winner) {
         const clone = gameInstance.clone();
         const isTurnSuccessful = clone.registerTurn(turn, player);

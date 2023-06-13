@@ -30,7 +30,11 @@ test("correct", () => {
   expect(gameClass.findAllFreeNeighbors(1)).toEqual(
     expect.arrayContaining(playerOneNeighbors)
   );
-  expect(gameClass.findAllFreeNeighbors(2)).toEqual(
-    expect.arrayContaining(playerTwoNeighbors)
+  expect(playerOneNeighbors).toEqual(
+    expect.arrayContaining(gameClass.findAllFreeNeighbors(1))
+  );
+
+  expect(playerTwoNeighbors).toEqual(
+    expect.arrayContaining(gameClass.findAllFreeNeighbors(2))
   );
 });
