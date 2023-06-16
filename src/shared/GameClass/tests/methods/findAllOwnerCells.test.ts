@@ -1,6 +1,5 @@
 import { ICoordinates, IGameDataEmoji } from "types";
-import { GameClass } from "shared/GameClass";
-import { Owner } from "shared/constants";
+import { GameClass, Owner } from "shared";
 
 test("get all cells for owner", () => {
   const gameData: IGameDataEmoji = {

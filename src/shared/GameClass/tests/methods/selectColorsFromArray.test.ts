@@ -1,5 +1,5 @@
 import { ICoordinates, IGameDataEmoji } from "types";
-import { GameClass } from "shared/GameClass";
+import { GameClass } from "shared";
 
 test("correct", () => {
   const gameData: IGameDataEmoji = {

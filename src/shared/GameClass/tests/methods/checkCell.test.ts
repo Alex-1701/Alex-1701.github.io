@@ -1,6 +1,5 @@
 import { IGameDataEmoji } from "types";
-import { GameClass } from "shared/GameClass";
-import { Color, Owner } from "shared/constants";
+import { Color, GameClass, Owner } from "shared";
 
 const gameData: IGameDataEmoji = {
   matrix: [

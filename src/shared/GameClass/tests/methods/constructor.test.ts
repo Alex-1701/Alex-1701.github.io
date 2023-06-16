@@ -4,8 +4,7 @@ import {
   ITableField,
   ITableFieldEmoji,
 } from "types";
-import { GameClass } from "shared/GameClass";
-import { Color, Owner } from "shared/constants";
+import { Color, GameClass, Owner } from "shared";
 
 test("correct", () => {
   // blue circle is ignored.

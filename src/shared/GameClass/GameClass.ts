@@ -11,14 +11,7 @@ import {
   ITableLineEmoji,
   ITableLineNumeric,
 } from "types";
-import {
-  Color,
-  emojiCells,
-  IWinner,
-  Owner,
-  Player,
-  Winner,
-} from "shared/constants";
+import { Color, emojiCells, IWinner, Owner, Player, Winner } from "shared";
 import { mock_labyrinth } from "./mockGameData";
 
 export class GameClass {
@@ -86,7 +79,7 @@ export class GameClass {
       const newLine: ITableLine = [];
       const pureLine: number[][] = [];
       for (let j = 0; j < width; j += 1) {
-        const color = GameClass.randomInt(1, 6);
+        const color = this.randomInt(1, 6);
         const owner = Owner.free;
 
         newLine.push({
@@ -193,12 +186,12 @@ export class GameClass {
   //   store.dispatch(updateState(clone));
   // }
 
-  public color(x: number, y: number): Color {
-    return this.matrix[y][x].color;
+  public color(x: number, y: number): Color | null {
+    return this.cell(x, y)?.color || null;
   }
 
-  public owner(x: number, y: number): Owner {
-    return this.matrix[y][x].owner;
+  public owner(x: number, y: number): Owner | null {
+    return this.cell(x, y)?.owner || null;
   }
 
   public checkCell = (
@@ -416,7 +409,7 @@ export class GameClass {
       currentPlayerNumber: gameData.currentPlayerNumber,
       enemyPlayerNumber: gameData.enemyPlayerNumber,
       playerTurn: gameData.playerTurn,
-      matrix: GameClass.emojiToMatrixConverter(gameData.matrix),
+      matrix: this.emojiToMatrixConverter(gameData.matrix),
     };
   }
 
@@ -424,7 +417,6 @@ export class GameClass {
     this.joinIsolatedAreas(Owner.playerOne);
     this.joinIsolatedAreas(Owner.playerTwo);
 
-    // [this.availableCellsCount, this.PlayerOneCellsCount, this.PlayerTwoCellsCount] =
     this.recalculate();
   }
 
@@ -457,53 +449,71 @@ export class GameClass {
   }
 
   /**
+   * Checks if player can make a turn or not.
+   * @param player
+   */
+  public areTherePossibleTurns(player: Player): boolean {
+    const allEnemyNeighbors = this.findAllEnemyNeighbors(player);
+    const allFreeNeighbors = this.findAllFreeNeighbors(player);
+
+    const allEnemyNeighborsColors =
+      this.selectColorsFromArray(allEnemyNeighbors);
+
+    const allFreeNeighborsColors = this.selectColorsFromArray(allFreeNeighbors);
+
+    const allAvailableColors = allFreeNeighborsColors.filter(
+      (color) => !allEnemyNeighborsColors.includes(color)
+    );
+
+    return allAvailableColors.length !== 0;
+  }
+
+  public finishGame() {
+    const freeNeighborsOne = this.findAllFreeNeighbors(Owner.playerOne);
+    const freeNeighborsTwo = this.findAllFreeNeighbors(Owner.playerTwo);
+
+    if (freeNeighborsOne.length === 0 || freeNeighborsTwo.length === 0) {
+      this.joinAllIsolatedAreas();
+      // this.repaintForPlayer(player, chosenColor);
+      if (this.PlayerOneCellsCount === this.PlayerTwoCellsCount) {
+        this.winner = Winner.draw;
+      } else {
+        this.winner =
+          this.PlayerOneCellsCount > this.PlayerTwoCellsCount
+            ? Owner.playerOne
+            : Owner.playerTwo;
+      }
+    }
+  }
+
+  /**
    * @return is turn successful
    * @param turn
    * @param player
    */
   public registerTurn(turn: ICoordinates | null, player: Player): boolean {
-    if (turn === null) {
-      const freeNeighborsOne = this.findAllFreeNeighbors(Owner.playerOne);
-      const freeNeighborsTwo = this.findAllFreeNeighbors(Owner.playerTwo);
+    const isCurrentTurnMightBePossible = this.areTherePossibleTurns(player);
 
-      if (freeNeighborsOne.length === 0 || freeNeighborsTwo.length === 0) {
-        this.joinAllIsolatedAreas();
-        // this.repaintForPlayer(player, chosenColor);
-        if (this.PlayerOneCellsCount === this.PlayerTwoCellsCount) {
-          this.winner = Winner.draw;
-        } else {
-          this.winner =
-            this.PlayerOneCellsCount > this.PlayerTwoCellsCount
-              ? Owner.playerOne
-              : Owner.playerTwo;
-        }
+    let isTurnExecuted = false;
 
-        return true;
-      }
-      return true;
+    if (turn === null || !isCurrentTurnMightBePossible) {
+      this.finishGame();
+      return false;
     }
+
     const { x, y } = turn;
-    if (x < 0 || x >= this.MatrixWidth || y < 0 || y >= this.MatrixHeight) {
-      return false;
-    }
-
-    const chosenColor: Color = this.color(x, y);
-    if (!Color[chosenColor]) {
-      return false;
+    const chosenColor = this.color(x, y);
+    if (!chosenColor || !Color[chosenColor]) {
+      throw new Error();
     }
 
     let freeNeighbors: ICoordinates[] = this.findAllFreeNeighbors(player);
     let freeNeighborsColors = this.selectColorsFromArray(freeNeighbors);
 
-    // if (freeNeighbors.length === 0) {
-    //   // impossible to make turn
-    //   this.joinAllIsolatedAreas();
-    //   return true;
-    // }
-
     if (
+      // if turn possible
       this.PlayerTurn === player &&
-      this.matrix[y][x].owner === Owner.free &&
+      this.cell(x, y)?.owner === Owner.free &&
       freeNeighborsColors.includes(chosenColor)
     ) {
       do {
@@ -534,35 +544,20 @@ export class GameClass {
         this.PlayerTwoColor = chosenColor;
       }
 
-      // [this.availableCellsCount, this.PlayerOneCellsCount, this.PlayerTwoCellsCount] =
       this.recalculate();
-
-      const freeNeighborsOne = this.findAllFreeNeighbors(Owner.playerOne);
-      const freeNeighborsTwo = this.findAllFreeNeighbors(Owner.playerTwo);
-
-      if (freeNeighborsOne.length === 0 || freeNeighborsTwo.length === 0) {
-        this.joinAllIsolatedAreas();
-        this.repaintForPlayer(player, chosenColor);
-        if (this.PlayerOneCellsCount === this.PlayerTwoCellsCount) {
-          this.winner = Winner.draw;
-        } else {
-          this.winner =
-            this.PlayerOneCellsCount > this.PlayerTwoCellsCount
-              ? Owner.playerOne
-              : Owner.playerTwo;
-        }
-
-        return true;
-      }
-    } else if (freeNeighborsColors.length === 0) {
-      this.winner =
-        player === Owner.playerOne ? Owner.playerTwo : Owner.playerOne;
-
-      return false;
-    } else {
-      return false;
+      isTurnExecuted = true;
     }
 
-    return true;
+    const enemyPlayer =
+      player === Owner.playerOne ? Owner.playerTwo : Owner.playerOne;
+    const isNextTurnPossible = this.areTherePossibleTurns(enemyPlayer);
+
+    if (!isNextTurnPossible) {
+
+      this.joinAllIsolatedAreas();
+      this.finishGame();
+    }
+
+    return isTurnExecuted;
   }
 }
