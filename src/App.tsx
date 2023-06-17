@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAppSelector } from "hooks";
 import { GameTable } from "components";
+import { FirestoreAPI, Winner } from "./shared";
 
 import styles from "./App.module.scss";
-import { Winner } from "./shared";
 
 export function App() {
   const {
@@ -13,6 +13,10 @@ export function App() {
     PlayerTurn,
     winner,
   } = useAppSelector((state) => state.game);
+
+  useEffect(() => {
+    FirestoreAPI.getDocs("users");
+  }, []);
 
   return (
     <div className={styles.App}>
