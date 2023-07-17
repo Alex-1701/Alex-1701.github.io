@@ -1,5 +1,5 @@
-import { IGameDataEmoji, ITableFieldEmoji } from "types";
-import { GameClass, Color, Owner } from "shared";
+import { IGameDataEmoji, ITableFieldEmoji } from "@types";
+import { GameClass, Color, Owner } from "@shared";
 
 test("repaint cells for new owner", () => {
   const gameData: IGameDataEmoji = {

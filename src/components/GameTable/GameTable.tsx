@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useAppDispatch, useAppSelector } from "hooks";
-import { GameClass, Player, Owner } from "shared";
-import { ICoordinates, IGameDataNumeric } from "types";
-import { requestGameData, updateState } from "store";
-import { easyBot } from "enemy";
+import { useAppDispatch, useAppSelector } from "@hooks";
+import { GameClass, Player, Owner } from "@shared";
+import { ICoordinates, IGameDataNumeric } from "@types";
+import { requestGameData, updateState } from "@store";
+import { easyBot } from "@enemy";
 import { TableCell } from "../TableCell";
 
 import styles from "./GameTable.module.scss";
@@ -104,7 +104,7 @@ export function GameTable() {
   }, [gameField, onUserClick]);
 
   return (
-    <table className={styles["game-table"]}>
+    <table className={styles.gameTable}>
       <tbody>{listRows}</tbody>
     </table>
   );

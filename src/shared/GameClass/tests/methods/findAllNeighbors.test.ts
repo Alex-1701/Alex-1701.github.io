@@ -1,5 +1,5 @@
-import { ICoordinates, IGameDataEmoji } from "types";
-import { GameClass, Owner } from "shared";
+import { ICoordinates, IGameDataEmoji } from "@types";
+import { GameClass, Owner } from "@shared";
 
 test("get all neighbors", () => {
   const gameData: IGameDataEmoji = {

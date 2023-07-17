@@ -3,8 +3,8 @@ import {
   IGameDataNumeric,
   ITableField,
   ITableFieldEmoji,
-} from "types";
-import { Color, GameClass, Owner } from "shared";
+} from "@types";
+import { Color, GameClass, Owner } from "@shared";
 
 test("correct", () => {
   // blue circle is ignored.

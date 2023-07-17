@@ -3,6 +3,7 @@ import {
   IGameDataEmoji,
   IGameDataForDisplay,
   IGameDataNumeric,
+  IGameDataNumericForStore,
   ITableCell,
   ITableField,
   ITableFieldEmoji,
@@ -10,8 +11,8 @@ import {
   ITableLine,
   ITableLineEmoji,
   ITableLineNumeric,
-} from "types";
-import { Color, emojiCells, IWinner, Owner, Player, Winner } from "shared";
+} from "@types";
+import { Color, emojiCells, IWinner, Owner, Player, Winner } from "@shared";
 import { mock_labyrinth } from "./mockGameData";
 
 export class GameClass {
@@ -413,6 +414,21 @@ export class GameClass {
     };
   }
 
+  public static gameDataNumericForStore(
+    gameData: IGameDataNumeric
+  ): IGameDataNumericForStore {
+    const { matrix, currentPlayerNumber, enemyPlayerNumber, playerTurn } = {
+      ...gameData,
+    };
+
+    return {
+      currentPlayerNumber,
+      enemyPlayerNumber,
+      playerTurn,
+      matrix: JSON.stringify(matrix),
+    };
+  }
+
   public joinAllIsolatedAreas() {
     this.joinIsolatedAreas(Owner.playerOne);
     this.joinIsolatedAreas(Owner.playerTwo);
@@ -553,7 +569,6 @@ export class GameClass {
     const isNextTurnPossible = this.areTherePossibleTurns(enemyPlayer);
 
     if (!isNextTurnPossible) {
-
       this.joinAllIsolatedAreas();
       this.finishGame();
     }
