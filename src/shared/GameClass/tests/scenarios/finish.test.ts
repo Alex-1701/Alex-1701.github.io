@@ -1,5 +1,5 @@
-import { IGameDataEmoji, ITableFieldEmoji } from "types";
-import { GameClass, Owner } from "shared";
+import { IGameDataEmoji, ITableFieldEmoji } from "@types";
+import { GameClass, Owner } from "@shared";
 
 test("successful P1 - P2 turn simple", () => {
   const gameData: IGameDataEmoji = {

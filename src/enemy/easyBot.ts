@@ -1,5 +1,5 @@
-import { Turn } from "types";
-import { GameClass, Owner } from "shared";
+import { Turn } from "@types";
+import { GameClass, Owner } from "@shared";
 
 export const easyBot = (game: GameClass): Turn => {
   // TODO move this calculation into class.

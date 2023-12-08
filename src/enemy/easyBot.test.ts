@@ -1,5 +1,5 @@
-import { IGameDataEmoji, Turn } from "types";
-import { GameClass } from "shared";
+import { IGameDataEmoji, Turn } from "@types";
+import { GameClass } from "@shared";
 import { easyBot } from "./easyBot";
 
 describe("easy bot", () => {

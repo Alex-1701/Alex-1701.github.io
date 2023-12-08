@@ -1,4 +1,4 @@
-import { Color, IWinner, Owner, Player } from "shared";
+import { Color, IWinner, Owner, Player } from "@shared";
 
 export interface ITableCell {
   color: Color;
@@ -50,6 +50,10 @@ export interface IGameData {
 
 export interface IGameDataNumeric extends IGameData {
   matrix: ITableFieldNumeric;
+}
+
+export interface IGameDataNumericForStore extends IGameData {
+  matrix: string;
 }
 
 export interface IGameDataEmoji extends IGameData {

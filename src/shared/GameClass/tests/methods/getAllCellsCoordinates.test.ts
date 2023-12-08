@@ -1,5 +1,5 @@
-import { ICoordinates, IGameDataEmoji } from "types";
-import { GameClass } from "shared";
+import { ICoordinates, IGameDataEmoji } from "@types";
+import { GameClass } from "@shared";
 
 test("get all cells", () => {
   const gameData: IGameDataEmoji = {

@@ -1,5 +1,5 @@
-import { IGameDataEmoji } from "types";
-import { Color, GameClass, Owner } from "shared";
+import { IGameDataEmoji } from "@types";
+import { Color, GameClass, Owner } from "@shared";
 
 const gameData: IGameDataEmoji = {
   matrix: [

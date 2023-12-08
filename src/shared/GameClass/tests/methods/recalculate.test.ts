@@ -1,5 +1,5 @@
-import { IGameDataEmoji } from "types";
-import { GameClass } from "shared";
+import { IGameDataEmoji } from "@types";
+import { GameClass } from "@shared";
 
 test("success", () => {
   const gameData: IGameDataEmoji = {

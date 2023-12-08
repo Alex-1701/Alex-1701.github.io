@@ -1,5 +1,5 @@
-import { ITableFieldEmoji, ITableFieldNumeric } from "types";
-import { GameClass } from "shared";
+import { ITableFieldEmoji, ITableFieldNumeric } from "@types";
+import { GameClass } from "@shared";
 
 const matrixEmoji: ITableFieldEmoji = [
   ["❤️", "🧡", "💛", "💙", "💚", "💜"],

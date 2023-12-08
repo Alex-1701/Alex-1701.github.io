@@ -1,4 +1,4 @@
-import { IGameDataEmoji } from "types";
+import { IGameDataEmoji } from "@types";
 
 export const mock_labyrinth: IGameDataEmoji = {
   // prettier-ignore
