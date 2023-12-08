@@ -2,42 +2,18 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
-      "@components/*": [
-        "components/*"
-      ],
-      "@components": [
-        "components"
-      ],
-      "@enemy/*": [
-        "enemy/*"
-      ],
-      "@enemy": [
-        "enemy"
-      ],
-      "@hooks/*": [
-        "hooks/*"
-      ],
-      "@hooks": [
-        "hooks"
-      ],
-      "@shared/*": [
-        "shared/*"
-      ],
-      "@shared": [
-        "shared"
-      ],
-      "@store/*": [
-        "store/*"
-      ],
-      "@store": [
-        "store"
-      ],
-      "@types/*": [
-        "types/*"
-      ],
-      "@types": [
-        "types"
-      ]
+      "@components/*": ["components/*"],
+      "@components": ["components"],
+      "@enemy/*": ["enemy/*"],
+      "@enemy": ["enemy"],
+      "@hooks/*": ["hooks/*"],
+      "@hooks": ["hooks"],
+      "@shared/*": ["shared/*"],
+      "@shared": ["shared"],
+      "@store/*": ["store/*"],
+      "@store": ["store"],
+      "@types/*": ["types/*"],
+      "@types": ["types"]
     }
   }
 }

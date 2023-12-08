@@ -8,27 +8,17 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier",
-    "plugin:prettier/recommended",
     "plugin:react-hooks/recommended"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "react",
-    "@typescript-eslint",
-    "react-hooks"
-  ],
+  "plugins": ["react", "@typescript-eslint", "react-hooks"],
   "rules": {
     "lines-between-class-members": "off",
     "import/prefer-default-export": 0,
     "react/jsx-filename-extension": [
       2,
       {
-        "extensions": [
-          ".js",
-          ".ts",
-          ".tsx"
-        ]
+        "extensions": [".js", ".ts", ".tsx"]
       }
     ],
     "import/order": "warn",
@@ -43,10 +33,7 @@
         "tsx": "never"
       }
     ],
-    "no-restricted-syntax": [
-      "warn",
-      "ForInStatement"
-    ],
+    "no-restricted-syntax": ["warn", "ForInStatement"],
     "no-param-reassign": [
       "error",
       {
@@ -57,7 +44,6 @@
     "react-hooks/exhaustive-deps": "warn",
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": "error",
-    "prettier/prettier": ["warn"],
     "prefer-const": "warn",
     "spaced-comment": "warn",
     "react/destructuring-assignment": "warn",
@@ -68,12 +54,7 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [
-          ".js",
-          ".json",
-          ".ts",
-          ".tsx"
-        ]
+        "extensions": [".js", ".json", ".ts", ".tsx"]
       }
     }
   }

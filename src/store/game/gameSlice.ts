@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IGameDataForDisplay, ITableField } from "@types";
-import { GameClass, Player, IWinner } from "@shared";
+import { createSlice } from "@reduxjs/toolkit";
+import { ITableField } from "@types";
+import { GameClass, IWinner, Player } from "@shared";
 import { generateGameData, requestGameData, updateState } from "./gameActions";
 
 interface GameState {
@@ -35,29 +35,31 @@ export const gameSlice = createSlice({
   name: "game",
   initialState,
   reducers: {},
-  extraReducers: {
-    [requestGameData.pending.type]: (state) => {
+  extraReducers: (builder) => {
+    builder.addCase(requestGameData.pending, (state) => {
       state.isRequestingGameData = true;
-    },
-    [requestGameData.fulfilled.type]: (state) => {
-      state.isRequestingGameData = false;
-    },
-    [requestGameData.rejected.type]: (state) => {
-      state.isRequestingGameData = false;
-    },
+    });
 
-    [generateGameData.type]: (state) => {
+    builder.addCase(requestGameData.fulfilled, (state) => {
+      state.isRequestingGameData = false;
+    });
+
+    builder.addCase(requestGameData.rejected, (state) => {
+      state.isRequestingGameData = false;
+    });
+
+    builder.addCase(generateGameData, (state) => {
       state.gameField = GameClass.generateMatrix(15, 15);
-    },
+    });
 
-    [updateState.type]: (state, action: PayloadAction<IGameDataForDisplay>) => {
-      state.gameField = action.payload.gameField;
-      state.PlayerTurn = action.payload.PlayerTurn;
-      state.availableCellsCount = action.payload.availableCellsCount;
-      state.PlayerOneCellsCount = action.payload.PlayerOneCellsCount;
-      state.PlayerTwoCellsCount = action.payload.PlayerTwoCellsCount;
-      state.winner = action.payload.winner;
-    },
+    builder.addCase(updateState, (state, { payload }) => {
+      state.gameField = payload.gameField;
+      state.PlayerTurn = payload.PlayerTurn;
+      state.availableCellsCount = payload.availableCellsCount;
+      state.PlayerOneCellsCount = payload.PlayerOneCellsCount;
+      state.PlayerTwoCellsCount = payload.PlayerTwoCellsCount;
+      state.winner = payload.winner;
+    });
   },
 });
 

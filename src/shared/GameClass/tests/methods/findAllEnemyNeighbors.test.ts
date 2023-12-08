@@ -33,6 +33,10 @@ test("get all enemy neighbors", () => {
       { x: 2, y: 1 },
     ])
   );
+  expect([
+    { x: 3, y: 0 },
+    { x: 2, y: 1 },
+  ]).toEqual(expect.arrayContaining(P1EnemyNeighbours));
 
   expect(P2EnemyNeighbours).toEqual(
     expect.arrayContaining([
@@ -40,4 +44,8 @@ test("get all enemy neighbors", () => {
       { x: 1, y: 1 },
     ])
   );
+  expect([
+    { x: 2, y: 0 },
+    { x: 1, y: 1 },
+  ]).toEqual(expect.arrayContaining(P2EnemyNeighbours));
 });

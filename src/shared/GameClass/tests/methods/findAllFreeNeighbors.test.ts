@@ -37,4 +37,7 @@ test("correct", () => {
   expect(playerTwoNeighbors).toEqual(
     expect.arrayContaining(gameClass.findAllFreeNeighbors(2))
   );
+  expect(gameClass.findAllFreeNeighbors(2)).toEqual(
+    expect.arrayContaining(playerTwoNeighbors)
+  );
 });
