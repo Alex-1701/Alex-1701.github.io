@@ -68,6 +68,5 @@ test("incorrect", () => {
   ];
   const colors = gameClass.selectColorsFromArray(coordinates);
 
-  expect([]).toEqual(expect.arrayContaining(colors));
-  expect(colors).toEqual(expect.arrayContaining([]));
+  expect(colors.length).toEqual(0);
 });

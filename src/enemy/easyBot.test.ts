@@ -62,8 +62,6 @@ describe("easy bot", () => {
 
     const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
 
-    const turn = easyBot(gameClass);
-
     const turnAbleCells: Turn[] = [
       { x: 1, y: 0 },
       { x: 0, y: 1 },
@@ -71,8 +69,12 @@ describe("easy bot", () => {
       { x: 1, y: 2 },
     ];
 
-    expect(turnAbleCells).toEqual(
-      expect.arrayContaining([expect.objectContaining(turn)])
-    );
+    // Why not lol
+    for (let i = 0; i < 100; i++) {
+      const turn = easyBot(gameClass);
+      expect(turnAbleCells).toEqual(
+        expect.arrayContaining([expect.objectContaining(turn)])
+      );
+    }
   });
 });
