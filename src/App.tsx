@@ -30,6 +30,8 @@ export function App() {
     // FirestoreAPI.getDocs(dbCollections.MAPS);
     FirestoreAPI.getAllDocs(dbCollections.MAPS);
 
+    console.log(gameData);
+
     // FirestoreAPI.setDocDB(dbCollections.MAPS, "lol kek", data);
   };
 
