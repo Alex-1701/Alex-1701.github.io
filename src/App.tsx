@@ -5,6 +5,7 @@ import {
   dbCollections,
   FirestoreAPI,
   GameClass,
+  MapsAPI,
   mock_fortress,
   Winner,
 } from "@shared";
@@ -20,17 +21,17 @@ export function App() {
     winner,
   } = useAppSelector((state) => state.game);
 
-  const request = () => {
-    const gameData = GameClass.gameDataConverter(mock_fortress);
-    const data = GameClass.gameDataNumericForStore(gameData);
+  const request = async () => {
     // FirestoreAPI.pushDoc(
     //   collections.MAPS,
     //   data
     // );
-    // FirestoreAPI.getDocs(dbCollections.MAPS);
-    FirestoreAPI.getAllDocs(dbCollections.MAPS);
 
-    console.log(gameData);
+    const maps = await MapsAPI.getAllMaps();
+    console.log(maps);
+
+    const map = await MapsAPI.getMap("lol");
+    console.log(map);
 
     // FirestoreAPI.setDocDB(dbCollections.MAPS, "lol kek", data);
   };

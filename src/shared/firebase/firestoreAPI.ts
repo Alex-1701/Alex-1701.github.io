@@ -4,13 +4,18 @@ import {
   collectionGroup,
   doc,
   getDoc,
+  getDocs,
   setDoc,
 } from "firebase/firestore";
 import { IGameDataNumericForStore } from "@types";
 import { db, dbCollections } from "./firebase.config";
 
-export class FirestoreAPI {
-  public static async pushDoc(
+interface Value {
+  id: string;
+}
+
+export const FirestoreAPI = {
+  pushDoc: async function (
     collectionName: string,
     value: IGameDataNumericForStore
   ) {
@@ -20,9 +25,9 @@ export class FirestoreAPI {
     } catch (e) {
       console.error("Error adding document: ", e);
     }
-  }
+  },
 
-  public static async getDocs(collectionName: string) {
+  getDocs: async function (collectionName: string) {
     const docRef = doc(db, `${collectionName}/lol`);
     console.log(docRef);
 
@@ -35,27 +40,39 @@ export class FirestoreAPI {
     }
     console.log("No such document!");
     return null;
-  }
+  },
 
-  public static async setDocDB(
+  setDocDB: async function (
     collectionName: dbCollections,
     name: string,
     value: IGameDataNumericForStore
   ) {
     const citiesRef = collection(db, collectionName);
     await setDoc(doc(citiesRef, name), value);
-  }
+  },
 
-  public static async getAllDocs(collectionName: string) {
+  getAllDocs: async function (collectionName: string) {
     const collectionRef = collection(db, collectionName);
-    console.log(collectionRef);
+    const docsSnap = await getDocs(collectionRef);
+    const res: any[] = [];
+    docsSnap.forEach((doc) => {
+      res.push({ ...doc.data(), id: doc.id });
+    });
+    return res;
+  },
 
-    await collectionGroup(db, "lol");
-  }
+  getDocById: async function (collectionName: string, id: string) {
+    const docRef = doc(db, collectionName, id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      return docSnap.data();
+    } else {
+      console.log("No such document!");
+    }
+  },
 
-  // public static getDocById() {}
-  //
   // public static updateDocById() {}
   //
   // public static deleteDocById() {}
-}
+};

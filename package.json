@@ -7,7 +7,7 @@
     "prettier": "prettier -c ./**/*.{ts,tsx,js,scss} --write",
     "lint": "eslint \"src",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -b main -d build",
+    "deploy": "npm run predeploy & gh-pages -b git-hub-pages -d dist",
     "start": "webpack serve --mode=development --config config/webpack.dev.js",
     "build": "webpack --config config/webpack.prod.js",
     "test": "jest",
