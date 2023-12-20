@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router";
 import { Admin, Game, Login, NotFound } from "./pages";
 import { ProtectedRoute } from "@components";
 import { BrowserRouter } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@shared";
 
 export function App() {
+  useEffect(() => {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        console.log(user);
+      }
+    });
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>

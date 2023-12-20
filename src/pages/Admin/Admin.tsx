@@ -1,3 +1,4 @@
+import { Layout } from "@components/Layout";
 import { MapsAPI } from "@shared";
 import React from "react";
 
@@ -18,11 +19,11 @@ export function Admin() {
   };
 
   return (
-    <div>
+    <Layout>
       <h1>Admin</h1>
       <button type="button" onClick={request}>
         button
       </button>
-    </div>
+    </Layout>
   );
 }

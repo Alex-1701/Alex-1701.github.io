@@ -1,8 +1,8 @@
+import React from "react";
 import { useAppSelector } from "@hooks";
 import { MapsAPI, Winner } from "@shared";
-import { GameTable } from "@components";
-import React from "react";
-import styles from "../../App.module.scss";
+import { GameTable, Layout } from "@components";
+import styles from "./Game.modules.scss";
 
 export function Game() {
   const {
@@ -14,8 +14,7 @@ export function Game() {
   } = useAppSelector((state) => state.game);
 
   return (
-    <div className={styles.App}>
-      <div className={styles.content}>
+    <Layout>
         <div>
           <div>Turn: {PlayerTurn === 1 ? "PLAYER 1" : "PLAYER 2"}</div>
           <div>All: {availableCellsCount}</div>
@@ -47,7 +46,6 @@ export function Game() {
             your territory.
           </p>
         </div>
-      </div>
-    </div>
+      </Layout>
   );
 }

@@ -49,7 +49,7 @@
     "react/destructuring-assignment": "warn",
     "camelcase": "warn",
     "class-methods-use-this": "warn",
-    "no-useless-return": "warn"
+    "no-useless-return": "warn",
   },
   "settings": {
     "import/resolver": {
