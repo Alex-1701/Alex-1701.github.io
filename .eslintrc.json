@@ -50,6 +50,14 @@
     "camelcase": "warn",
     "class-methods-use-this": "warn",
     "no-useless-return": "warn",
+    "semi": "off",
+    "quotes": "off",
+    "object-curly-newline": [
+      "warn",
+      {
+        "minProperties": 3
+      }
+    ]
   },
   "settings": {
     "import/resolver": {

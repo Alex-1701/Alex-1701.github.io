@@ -1,9 +1,9 @@
-import { Owner } from "./owners";
-import { Color } from "./color";
+import { Owner } from "./owners"
+import { Color } from "./color"
 
 export interface EmojiCell {
-  emoji: string;
-  cell: number[];
+  emoji: string
+  cell: number[]
 }
 
 export const emojiCells: EmojiCell[] = [
@@ -39,4 +39,4 @@ export const emojiCells: EmojiCell[] = [
   { emoji: "💜", cell: [Color.violet, Owner.playerOne] },
   { emoji: "🟪", cell: [Color.violet, Owner.playerTwo] },
   { emoji: "🟣", cell: [Color.violet, Owner.free] },
-];
+]

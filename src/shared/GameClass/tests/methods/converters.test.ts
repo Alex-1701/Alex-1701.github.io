@@ -1,12 +1,12 @@
-import { ITableFieldEmoji, ITableFieldNumeric } from "@types";
-import { GameClass } from "@shared";
+import { ITableFieldEmoji, ITableFieldNumeric } from "@types"
+import { GameClass } from "@shared"
 
 const matrixEmoji: ITableFieldEmoji = [
   ["❤️", "🧡", "💛", "💙", "💚", "💜"],
   ["🔴", "🟠", "🟡", "🔵", "🟢", "🟣"],
   ["🟥", "🟧", "🟨", "🟦", "🟩", "🟪"],
   ["❌", "❌", "❌", "❌", "❌", "❌"],
-];
+]
 
 // prettier-ignore
 const matrixNumber: ITableFieldNumeric = [
@@ -17,11 +17,11 @@ const matrixNumber: ITableFieldNumeric = [
 ]
 
 test("emoji to numeric", () => {
-  const matrix = GameClass.emojiToMatrixConverter(matrixEmoji);
-  expect(matrix).toEqual(matrixNumber);
-});
+  const matrix = GameClass.emojiToMatrixConverter(matrixEmoji)
+  expect(matrix).toEqual(matrixNumber)
+})
 
 test("numeric to emoji", () => {
-  const matrix = GameClass.matrixToEmojiConverter(matrixNumber);
-  expect(matrix).toEqual(matrixEmoji);
-});
+  const matrix = GameClass.matrixToEmojiConverter(matrixNumber)
+  expect(matrix).toEqual(matrixEmoji)
+})

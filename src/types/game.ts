@@ -1,70 +1,70 @@
-import { Color, IWinner, Owner, Player } from "@shared";
+import { Color, IWinner, Owner, Player } from "@shared"
 
 export interface ITableCell {
-  color: Color;
-  owner: Owner;
+  color: Color
+  owner: Owner
 }
 
-type ITableCellEmoji = string;
+type ITableCellEmoji = string
 
 export interface ITableCellNumeric {
-  [index: number]: number;
+  [index: number]: number
 }
 
 export interface ITableLine extends Array<ITableCell> {
-  [index: number]: ITableCell;
+  [index: number]: ITableCell
 }
 
 export interface ITableLineEmoji extends Array<string> {
-  [index: number]: ITableCellEmoji;
+  [index: number]: ITableCellEmoji
 }
 
 export interface ITableLineNumeric extends Array<ITableCellNumeric> {
-  [index: number]: ITableCellNumeric;
+  [index: number]: ITableCellNumeric
 }
 
 export interface ITableField extends Array<ITableLine> {
-  [index: number]: ITableLine;
+  [index: number]: ITableLine
 }
 
 export interface ITableFieldEmoji extends Array<ITableLineEmoji> {
-  [index: number]: ITableLineEmoji;
+  [index: number]: ITableLineEmoji
 }
 
 export interface ITableFieldNumeric extends Array<ITableLineNumeric> {
-  [index: number]: ITableLineNumeric;
+  [index: number]: ITableLineNumeric
 }
 
 export interface ICoordinates {
-  x: number;
-  y: number;
+  x: number
+  y: number
 }
 
-export type Turn = ICoordinates | null;
+export type Turn = ICoordinates | null
 
 export interface IGameData {
-  currentPlayerNumber: number;
-  enemyPlayerNumber: number;
-  playerTurn: Player;
+  currentPlayerNumber: number
+  enemyPlayerNumber: number
+  playerTurn: Player
 }
 
 export interface IGameDataNumeric extends IGameData {
-  matrix: ITableFieldNumeric;
+  matrix: ITableFieldNumeric
 }
 
 export interface IGameDataNumericForStore extends IGameData {
-  matrix: string;
+  matrix: string
 }
 
 export interface IGameDataEmoji extends IGameData {
-  matrix: ITableFieldEmoji;
+  matrix: ITableFieldEmoji
 }
 
 export interface IGameDataForDisplay {
-  gameField: ITableField;
-  availableCellsCount: number;
-  PlayerOneCellsCount: number;
-  PlayerTwoCellsCount: number;
-  PlayerTurn: number;
-  winner: IWinner;
+  gameField: ITableField
+  availableCellsCount: number
+  PlayerOneCellsCount: number
+  PlayerTwoCellsCount: number
+  PlayerTurn: number
+  winner: IWinner
 }

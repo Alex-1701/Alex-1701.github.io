@@ -4,4 +4,4 @@ module.exports = {
   moduleNameMapper: {
     "^@shared$": "<rootDir>/src/shared/",
   },
-};
+}

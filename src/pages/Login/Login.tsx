@@ -1,22 +1,32 @@
-import React, { useState } from "react";
-import styles from "./Login.module.scss";
-import { Layout } from "@components/Layout";
-import { UserActions } from "@shared/firebase";
+import React, { FormEvent, useState } from "react"
+import styles from "./Login.module.scss"
+import { Layout } from "@components/Layout"
+import { UserActions } from "@shared/firebase"
+import { useNavigate } from "react-router"
+import { Pages } from "../config"
 
 export function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
-  const handleSubmit = () => {
-    UserActions.loginWithEmailAndPassword(email, password);
-  };
+  const navigate = useNavigate()
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault()
+    UserActions.loginWithEmailAndPassword(email, password)
+      .then(() => {
+        navigate(Pages.admin.path)
+      })
+      .catch(() => {
+        alert("Error")
+      })
+  }
 
   return (
     <Layout>
       <h1>Login</h1>
-      <p>admin@example.com - qwerty</p>
 
-      <form className={styles.authForm}>
+      <form className={styles.authForm} onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email">Email</label>
           <input
@@ -24,7 +34,7 @@ export function Login() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-          ></input>
+          />
         </div>
 
         <div>
@@ -34,13 +44,11 @@ export function Login() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          ></input>
+          />
         </div>
 
-        <button type="button" onClick={handleSubmit}>
-          Login
-        </button>
+        <button type="button">Login</button>
       </form>
     </Layout>
-  );
+  )
 }

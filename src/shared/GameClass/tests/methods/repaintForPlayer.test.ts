@@ -1,5 +1,5 @@
-import { IGameDataEmoji, ITableFieldEmoji } from "@types";
-import { GameClass, Color, Owner } from "@shared";
+import { IGameDataEmoji, ITableFieldEmoji } from "@types"
+import { GameClass, Color, Owner } from "@shared"
 
 test("repaint cells for new owner", () => {
   const gameData: IGameDataEmoji = {
@@ -13,11 +13,11 @@ test("repaint cells for new owner", () => {
     currentPlayerNumber: 1,
     enemyPlayerNumber: 2,
     playerTurn: 1,
-  };
+  }
 
-  const gameClass = new GameClass(GameClass.gameDataConverter(gameData));
+  const gameClass = new GameClass(GameClass.gameDataConverter(gameData))
 
-  gameClass.repaintForPlayer(Owner.playerOne, Color.orange);
+  gameClass.repaintForPlayer(Owner.playerOne, Color.orange)
 
   const afterRepaint1: ITableFieldEmoji = [
     ["🧡", "🧡", "🟢", "🟢"],
@@ -25,19 +25,19 @@ test("repaint cells for new owner", () => {
     ["🟢", "🧡", "🟨", "🟩"],
     ["🟣", "🔵", "🟪", "🟥"],
     ["🟡", "🟢", "🟦", "🟩"],
-  ];
+  ]
 
-  const matrixAfterRepaint1 = GameClass.emojiToMatrixConverter(afterRepaint1);
-  expect(gameClass.matrixNumbers).toEqual(matrixAfterRepaint1);
+  const matrixAfterRepaint1 = GameClass.emojiToMatrixConverter(afterRepaint1)
+  expect(gameClass.matrixNumbers).toEqual(matrixAfterRepaint1)
 
-  gameClass.repaintForPlayer(Owner.playerTwo, Color.red);
+  gameClass.repaintForPlayer(Owner.playerTwo, Color.red)
   const afterRepaint2: ITableFieldEmoji = [
     ["🧡", "🧡", "🟢", "🟢"],
     ["🧡", "🧡", "🟥", "🟡"],
     ["🟢", "🧡", "🟥", "🟥"],
     ["🟣", "🔵", "🟥", "🟥"],
     ["🟡", "🟢", "🟥", "🟥"],
-  ];
-  const matrixAfterRepaint2 = GameClass.emojiToMatrixConverter(afterRepaint2);
-  expect(gameClass.matrixNumbers).toEqual(matrixAfterRepaint2);
-});
+  ]
+  const matrixAfterRepaint2 = GameClass.emojiToMatrixConverter(afterRepaint2)
+  expect(gameClass.matrixNumbers).toEqual(matrixAfterRepaint2)
+})

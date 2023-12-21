@@ -1,11 +1,11 @@
-import { dbCollections, FirestoreAPI } from "@shared";
+import { dbCollections, FirestoreAPI } from "@shared"
 
 export const MapsAPI = {
   getAllMaps: async function () {
-    return FirestoreAPI.getAllDocs(dbCollections.MAPS);
+    return FirestoreAPI.getAllDocs(dbCollections.MAPS)
   },
 
   getMap: async function (id: string) {
-    return FirestoreAPI.getDocById(dbCollections.MAPS, id);
+    return FirestoreAPI.getDocById(dbCollections.MAPS, id)
   },
-};
+}

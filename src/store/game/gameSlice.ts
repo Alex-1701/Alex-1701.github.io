@@ -1,20 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { ITableField } from "@types";
-import { GameClass, IWinner, Player } from "@shared";
-import { generateGameData, requestGameData, updateState } from "./gameActions";
+import { createSlice } from "@reduxjs/toolkit"
+import { ITableField } from "@types"
+import { GameClass, IWinner, Player } from "@shared"
+import { generateGameData, requestGameData, updateState } from "./gameActions"
 
 interface GameState {
-  gameField: ITableField;
-  isRequestingGameData: boolean;
-  PlayerTurn: Player;
-  PlayerOneColor: number;
-  PlayerTwoColor: number;
-  availableCellsCount: number;
-  PlayerOneCellsCount: number;
-  PlayerTwoCellsCount: number;
-  PlayerOneAvailableColors: number[];
-  PlayerTwoAvailableColors: number[];
-  winner: IWinner;
+  gameField: ITableField
+  isRequestingGameData: boolean
+  PlayerTurn: Player
+  PlayerOneColor: number
+  PlayerTwoColor: number
+  availableCellsCount: number
+  PlayerOneCellsCount: number
+  PlayerTwoCellsCount: number
+  PlayerOneAvailableColors: number[]
+  PlayerTwoAvailableColors: number[]
+  winner: IWinner
 }
 
 const initialState: GameState = {
@@ -29,7 +29,7 @@ const initialState: GameState = {
   PlayerOneAvailableColors: [],
   PlayerTwoAvailableColors: [],
   winner: null,
-};
+}
 
 export const gameSlice = createSlice({
   name: "game",
@@ -37,30 +37,30 @@ export const gameSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(requestGameData.pending, (state) => {
-      state.isRequestingGameData = true;
-    });
+      state.isRequestingGameData = true
+    })
 
     builder.addCase(requestGameData.fulfilled, (state) => {
-      state.isRequestingGameData = false;
-    });
+      state.isRequestingGameData = false
+    })
 
     builder.addCase(requestGameData.rejected, (state) => {
-      state.isRequestingGameData = false;
-    });
+      state.isRequestingGameData = false
+    })
 
     builder.addCase(generateGameData, (state) => {
-      state.gameField = GameClass.generateMatrix(15, 15);
-    });
+      state.gameField = GameClass.generateMatrix(15, 15)
+    })
 
     builder.addCase(updateState, (state, { payload }) => {
-      state.gameField = payload.gameField;
-      state.PlayerTurn = payload.PlayerTurn;
-      state.availableCellsCount = payload.availableCellsCount;
-      state.PlayerOneCellsCount = payload.PlayerOneCellsCount;
-      state.PlayerTwoCellsCount = payload.PlayerTwoCellsCount;
-      state.winner = payload.winner;
-    });
+      state.gameField = payload.gameField
+      state.PlayerTurn = payload.PlayerTurn
+      state.availableCellsCount = payload.availableCellsCount
+      state.PlayerOneCellsCount = payload.PlayerOneCellsCount
+      state.PlayerTwoCellsCount = payload.PlayerTwoCellsCount
+      state.winner = payload.winner
+    })
   },
-});
+})
 
-export default gameSlice.reducer;
+export default gameSlice.reducer

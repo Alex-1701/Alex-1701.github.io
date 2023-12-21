@@ -1,3 +1,3 @@
-export * from "./constants";
-export * from "./GameClass";
-export * from "./firebase";
+export * from "./constants"
+export * from "./GameClass"
+export * from "./firebase"

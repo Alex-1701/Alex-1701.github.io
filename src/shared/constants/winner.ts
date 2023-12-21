@@ -6,7 +6,7 @@
  * 2 - player two won,
  * null - not finished yet,
  */
-export type IWinner = 0 | 1 | 2 | null;
+export type IWinner = 0 | 1 | 2 | null
 
 export enum Winner {
   draw = 0,

@@ -1,2 +1,2 @@
-export { GameClass } from "./GameClass";
-export * from "./mockGameData";
+export { GameClass } from "./GameClass"
+export * from "./mockGameData"

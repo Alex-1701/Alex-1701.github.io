@@ -1,20 +1,20 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const aliases = require("../tsconfig.aliases.json");
+const path = require("path")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const CopyWebpackPlugin = require("copy-webpack-plugin")
+const aliases = require("../tsconfig.aliases.json")
 
 function getWebpackAliasesFromPaths(configPaths) {
   return Object.entries(configPaths).reduce(
     (webpackAliases, [configAlias, configPathList]) => {
-      const [aliasKey] = configAlias.split("/");
-      const [relativePathToDir] = configPathList[0].split("/*");
+      const [aliasKey] = configAlias.split("/")
+      const [relativePathToDir] = configPathList[0].split("/*")
       return {
         ...webpackAliases,
         [aliasKey]: path.resolve("./src", relativePathToDir),
-      };
+      }
     },
     {}
-  );
+  )
 }
 
 module.exports = {
@@ -75,4 +75,4 @@ module.exports = {
       ],
     }),
   ],
-};
+}

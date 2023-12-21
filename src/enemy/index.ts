@@ -1,1 +1,1 @@
-export * from "./easyBot";
+export * from "./easyBot"

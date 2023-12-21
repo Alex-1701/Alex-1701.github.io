@@ -1,6 +1,6 @@
-import { Layout } from "@components/Layout";
-import { MapsAPI } from "@shared";
-import React from "react";
+import { Layout } from "@components/Layout"
+import { MapsAPI } from "@shared"
+import React from "react"
 
 export function Admin() {
   const request = async () => {
@@ -9,14 +9,14 @@ export function Admin() {
     //   data
     // );
 
-    const maps = await MapsAPI.getAllMaps();
-    console.log(maps);
+    const maps = await MapsAPI.getAllMaps()
+    console.log(maps)
 
-    const map = await MapsAPI.getMap("lol");
-    console.log(map);
+    const map = await MapsAPI.getMap("lol")
+    console.log(map)
 
     // FirestoreAPI.setDocDB(dbCollections.MAPS, "lol kek", data);
-  };
+  }
 
   return (
     <Layout>
@@ -25,5 +25,5 @@ export function Admin() {
         button
       </button>
     </Layout>
-  );
+  )
 }
