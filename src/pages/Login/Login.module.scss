@@ -4,3 +4,8 @@
   row-gap: 20px;
   width: 200px;
 }
+
+.input-with-label {
+  display: flex;
+  flex-direction: column;
+}

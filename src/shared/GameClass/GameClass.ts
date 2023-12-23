@@ -15,6 +15,7 @@ import {
 import { Color, emojiCells, IWinner, Owner, Player, Winner } from "@shared"
 import { mock_labyrinth } from "./mockGameData"
 
+// TODO replace class with object
 export class GameClass {
   private gameField: ITableField = []
   private PlayerTurn: Player = 1

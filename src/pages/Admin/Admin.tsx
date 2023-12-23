@@ -1,8 +1,12 @@
-import { Layout } from "@components/Layout"
-import { MapsAPI } from "@shared"
 import React from "react"
+import { useNavigate } from "react-router"
+import { Layout } from "@components"
+import { MapsAPI, UserActions } from "@shared"
+import { Pages } from "../config"
 
 export function Admin() {
+  const navigate = useNavigate()
+
   const request = async () => {
     // FirestoreAPI.pushDoc(
     //   collections.MAPS,
@@ -18,11 +22,20 @@ export function Admin() {
     // FirestoreAPI.setDocDB(dbCollections.MAPS, "lol kek", data);
   }
 
+  const logOut = async () => {
+    await UserActions.logout()
+    navigate(Pages.login.path)
+  }
+
   return (
     <Layout>
       <h1>Admin</h1>
       <button type="button" onClick={request}>
         button
+      </button>
+
+      <button type="button" onClick={logOut}>
+        log out
       </button>
     </Layout>
   )

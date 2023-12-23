@@ -1,30 +1,29 @@
 import React, { useEffect } from "react"
-import { Route, Routes } from "react-router"
-import { Admin, Game, Login, NotFound, Pages } from "./pages"
-import { ProtectedRoute } from "@components"
-import { BrowserRouter } from "react-router-dom"
+import { Route, Routes, useNavigate } from "react-router"
 import { onAuthStateChanged } from "firebase/auth"
 import { auth } from "@shared"
+import { ProtectedRoute } from "@components"
+import { Admin, Game, Login, NotFound, Pages } from "./pages"
 
 export function App() {
+  const navigate = useNavigate()
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         console.log(user)
+        navigate(Pages.admin.path)
       }
     })
   }, [])
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Game />} path={Pages.game.path} />
-        <Route element={<Login />} path={Pages.login.path} />
-        <Route element={<NotFound />} path={"*"} />
-        <Route element={<ProtectedRoute />}>
-          <Route element={<Admin />} path={Pages.admin.path} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route element={<Game />} path={Pages.game.path} />
+      <Route element={<Login />} path={Pages.login.path} />
+      <Route element={<NotFound />} path={"*"} />
+      <Route element={<ProtectedRoute />}>
+        <Route element={<Admin />} path={Pages.admin.path} />
+      </Route>
+    </Routes>
   )
 }
