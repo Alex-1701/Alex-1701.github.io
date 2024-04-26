@@ -1,6 +1,6 @@
 import React from "react"
 import clsx from "clsx"
-import { Owner } from "@shared"
+import { emojiOwners, Owner } from "@shared"
 
 import styles from "./TableCell.module.scss"
 
@@ -9,12 +9,12 @@ interface Props {
   y: number
   color: number
   owner: number
-  onUserClick: (x: number, y: number) => void
+  onUserClick?: (x: number, y: number) => void
 }
 
 export function TableCell({ x, y, color, owner, onUserClick }: Props) {
   function handleClick() {
-    onUserClick(x, y)
+    if (onUserClick) onUserClick(x, y)
   }
 
   const colorClass = `color${color}`
@@ -31,10 +31,7 @@ export function TableCell({ x, y, color, owner, onUserClick }: Props) {
       className={clsx(styles[colorClass], styles[ownerClass])}
       onClick={handleClick}
     >
-      <div>
-        {owner === Owner.playerTwo && "💀"}
-        {owner === Owner.playerOne && "😀"}
-      </div>
+      <div>{emojiOwners[owner].emoji}</div>
     </td>
   )
 }

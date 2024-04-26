@@ -66,10 +66,10 @@ export const mock_3x3: IGameDataEmoji = {
 
 export const mock_4x4: IGameDataEmoji = {
   matrix: [
-    ["🧡", "🔴", "🟢", "🔵"],
-    ["🔴", "🟡", "🟣", "🟢"],
-    ["🟠", "🔵", "🟡", "🔵"],
-    ["🟣", "🟠", "🟣", "🟥"],
+    ["🧡", "🟢", "🔴", "🔵"],
+    ["🔴", "🟡", "🟠", "🟢"],
+    ["🟢", "🔵", "🟡", "🟠"],
+    ["🟣", "🔴", "🟣", "🟥"],
   ],
   currentPlayerNumber: 1,
   enemyPlayerNumber: 2,

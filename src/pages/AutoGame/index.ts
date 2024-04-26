@@ -1,0 +1,1 @@
+export { AutoGame } from "./AutoGame"

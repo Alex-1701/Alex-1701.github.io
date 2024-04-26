@@ -8,6 +8,9 @@ export const Pages = {
   game: {
     path: "",
   },
+  autoGame: {
+    path: "/auto-game",
+  },
   notFound: {
     path: "/not-found",
   },

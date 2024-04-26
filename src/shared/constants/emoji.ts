@@ -40,3 +40,15 @@ export const emojiCells: EmojiCell[] = [
   { emoji: "🟪", cell: [Color.violet, Owner.playerTwo] },
   { emoji: "🟣", cell: [Color.violet, Owner.free] },
 ]
+
+export interface EmojiOwner {
+  emoji: string
+  owner: Owner
+}
+
+export const emojiOwners: EmojiOwner[] = [
+  { emoji: "", owner: Owner.playerOne },
+  { emoji: "😀", owner: Owner.playerTwo },
+  { emoji: "💀", owner: Owner.playerTwo },
+  { emoji: "", owner: Owner.playerTwo },
+]

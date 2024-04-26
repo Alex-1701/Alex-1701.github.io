@@ -1,10 +1,11 @@
 import { Turn } from "@types"
-import { GameClass, Owner } from "@shared"
+import { GameClass, Owner, Player } from "@shared"
 
-export const easyBot = (game: GameClass): Turn => {
+export const easyBot = (game: GameClass, player: Player): Turn => {
   // TODO move this calculation into class.
-  const allEnemyNeighbors = game.findAllEnemyNeighbors(Owner.playerTwo)
-  const allFreeNeighbors = game.findAllFreeNeighbors(Owner.playerTwo)
+  const enemy = player === Owner.playerOne ? Owner.playerTwo : Owner.playerOne
+  const allEnemyNeighbors = game.findAllEnemyNeighbors(enemy)
+  const allFreeNeighbors = game.findAllFreeNeighbors(player)
 
   const allEnemyNeighborsColors = game.selectColorsFromArray(allEnemyNeighbors)
   const allFreeNeighborsColors = game.selectColorsFromArray(allFreeNeighbors)

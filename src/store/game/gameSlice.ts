@@ -1,7 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { ITableField } from "@types"
-import { GameClass, IWinner, Player } from "@shared"
-import { generateGameData, requestGameData, updateState } from "./gameActions"
+import { GameClass, IWinner, Owner, Player } from "@shared"
+import {
+  changeTurn,
+  generateGameData,
+  requestGameData,
+  updateState,
+} from "./gameActions"
 
 interface GameState {
   gameField: ITableField
@@ -59,6 +64,14 @@ export const gameSlice = createSlice({
       state.PlayerOneCellsCount = payload.PlayerOneCellsCount
       state.PlayerTwoCellsCount = payload.PlayerTwoCellsCount
       state.winner = payload.winner
+    })
+
+    builder.addCase(changeTurn, (state) => {
+      if (state.PlayerTurn === Owner.playerOne) {
+        state.PlayerTurn = Owner.playerTwo
+      } else {
+        state.PlayerTurn = Owner.playerOne
+      }
     })
   },
 })

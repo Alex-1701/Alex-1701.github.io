@@ -9,6 +9,7 @@ export function Game() {
     availableCellsCount,
     PlayerOneCellsCount,
     PlayerTwoCellsCount,
+    gameField,
     PlayerTurn,
     winner,
   } = useAppSelector((state) => state.game)
@@ -27,7 +28,11 @@ export function Game() {
           {winner === Winner.draw && "Draw"}
         </div>
       </div>
-      <GameTable />
+      {/*<GameTable*/}
+      {/*  gameField={gameField}*/}
+      {/*  PlayerTurn={PlayerTurn}*/}
+      {/*  winner={winner}*/}
+      {/*/>*/}
       <div className={styles.description}>
         <h3>Description:</h3>
         <p>This is the noname mini game.</p>

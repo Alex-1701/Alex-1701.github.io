@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
 import { IGameDataForDisplay } from "@types"
-import { GameClass, mock_fortress } from "@shared"
+import { GameClass, mock_3x3, mock_4x4, mock_fortress } from "@shared"
 
 export const requestGameData = createAsyncThunk(
   "game/requestGameData",
@@ -16,3 +16,5 @@ export const requestGameData = createAsyncThunk(
 export const generateGameData = createAction("game/generateGameData")
 
 export const updateState = createAction<IGameDataForDisplay>("game/updateState")
+
+export const changeTurn = createAction("game/changeTurn")

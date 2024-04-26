@@ -1,5 +1,5 @@
 import { IGameDataEmoji, Turn } from "@types"
-import { GameClass } from "@shared"
+import { GameClass, Owner } from "@shared"
 import { easyBot } from "./easyBot"
 
 describe("easy bot", () => {
@@ -13,7 +13,7 @@ describe("easy bot", () => {
 
     const gameClass = new GameClass(GameClass.gameDataConverter(gameData))
 
-    const turn = easyBot(gameClass)
+    const turn = easyBot(gameClass, Owner.playerOne)
 
     expect(turn).toEqual(null)
   })
@@ -28,7 +28,7 @@ describe("easy bot", () => {
 
     const gameClass = new GameClass(GameClass.gameDataConverter(gameData))
 
-    const turn = easyBot(gameClass)
+    const turn = easyBot(gameClass, Owner.playerOne)
 
     expect(turn).toEqual({ x: 2, y: 0 })
   })
@@ -43,7 +43,7 @@ describe("easy bot", () => {
 
     const gameClass = new GameClass(GameClass.gameDataConverter(gameData))
 
-    const turn = easyBot(gameClass)
+    const turn = easyBot(gameClass, Owner.playerOne)
 
     expect(turn).toEqual(null)
   })
@@ -71,7 +71,7 @@ describe("easy bot", () => {
 
     // Why not lol
     for (let i = 0; i < 100; i++) {
-      const turn = easyBot(gameClass)
+      const turn = easyBot(gameClass, Owner.playerOne)
       expect(turnAbleCells).toEqual(
         expect.arrayContaining([expect.objectContaining(turn)])
       )
